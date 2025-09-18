@@ -92,9 +92,8 @@ export default function LoginPage() {
                   </Link>
                 </div>
               </div>
-              <Link href={"/chat"}>
-                <AuthButton name="Login" />
-              </Link>
+
+              <AuthButton name="Login" />
             </form>
 
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs text-text-secondary">
