@@ -19,10 +19,7 @@ export default function LoginPage() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const email = String(form.get("email") || "");
-    // Never log passwords in production; this is placeholder wiring only.
-    console.log("login submit", { email });
+    // TODO: Implement login logic
   }
 
   return (

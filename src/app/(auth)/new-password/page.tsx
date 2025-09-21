@@ -24,8 +24,7 @@ export default function NewPasswordPage() {
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!canSubmit) return;
-    // Wire to password-reset endpoint/action
-    console.log("create new password");
+    // TODO: Implement password reset logic
   }
 
   return (

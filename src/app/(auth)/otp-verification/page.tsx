@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, FormEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  FormEvent,
+  Suspense,
+} from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
@@ -11,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 const OTP_LENGTH = 6;
 
-export default function OtpVerificationPage() {
+function OtpForm() {
   const params = useSearchParams();
   const emailParam = params.get("email") || "abcd***@server.com";
 
@@ -77,7 +84,7 @@ export default function OtpVerificationPage() {
     e.preventDefault();
     if (!canVerify) return;
     // Hook up to your verification endpoint here
-    console.log("verify otp", code);
+    // TODO: Implement OTP verification logic
   }
 
   return (
@@ -144,5 +151,13 @@ export default function OtpVerificationPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function OtpVerificationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpForm />
+    </Suspense>
   );
 }

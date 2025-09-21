@@ -2,47 +2,59 @@
 
 import React from "react";
 import Logo from "../shared/logo";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Bell, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 import { FullScreenIcon } from "@/icons/full-screen";
 import { SplitscreenIcon } from "@/icons/split-screen";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { useAppStore, useSplitScreen } from "@/stores/app-store";
+
+import { SearchInput } from "../shared/search-input";
 
 function NavBar() {
+  const isSplitScreen = useSplitScreen();
+  const toggleSplitScreen = useAppStore((state) => state.toggleSplitScreen);
+
   return (
-    <nav className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 sm:h-16 2xl:h-16 max-w-screen-2xl items-center gap-2 sm:gap-3 2xl:gap-4 px-2 sm:px-4 2xl:px-4">
+    <nav className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="mx-auto flex h-14 sm:h-16 2xl:h-16 items-center gap-2 sm:gap-3 2xl:gap-4 px-2 sm:px-4 2xl:px-4">
         {/* Left: Brand + controls */}
         <div className="flex min-w-0 items-center gap-3">
+          {/* <SidebarTrigger className="md:hidden" aria-label="Toggle sidebar" /> */}
           <Logo />
 
-          {/* Small control group (visual only to match design) */}
+          {/* Small control group with functional split screen toggle */}
           <div className="hidden md:flex items-center border border-primary">
             <button
               type="button"
-              aria-label="Primary state"
-              className="size-9 lg:size-10 2xl:size-12 bg-primary text-primary-foreground grid place-items-center"
+              aria-label="Full screen"
+              className={`size-9 lg:size-10 2xl:size-12 grid place-items-center ${
+                !isSplitScreen
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-primary bg-white text-primary"
+              }`}
             >
               <FullScreenIcon className="size-6" />
             </button>
             <button
               type="button"
-              aria-label="Secondary state"
-              className="size-9 lg:size-10 2xl:size-12 border border-primary bg-white text-primary grid place-items-center"
+              aria-label="Split screen"
+              onClick={toggleSplitScreen}
+              className={`size-9 lg:size-10 2xl:size-12 grid place-items-center ${
+                isSplitScreen
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-primary bg-white text-primary"
+              }`}
             >
-              <SplitscreenIcon className="size-6 fill-primary" />
+              <SplitscreenIcon
+                className={`size-6 ${
+                  isSplitScreen ? "fill-white" : "fill-primary"
+                }`}
+              />
             </button>
           </div>
         </div>
@@ -101,51 +113,6 @@ function Avatar({ src, name }: { src?: string; name?: string }) {
         </span>
       )}
     </button>
-  );
-}
-
-function SearchInput() {
-  return (
-    <>
-      {/* Desktop / tablet search field */}
-      <label className="hidden sm:flex w-48 md:w-64 lg:w-72 xl:w-[20rem] 2xl:min-w-[360px] 2xl:w-[36rem] py-1.5 px-3 border border-light-bg bg-light-bg text-base items-center gap-2">
-        <span className="sr-only">Search</span>
-        <Search className="size-5 text-text-secondary" aria-hidden />
-        <Input
-          placeholder="Search"
-          className="shadow-none border-none outline-none ring-0 p-0 text-base placeholder:text-base flex-1 bg-transparent"
-          aria-label="Search"
-        />
-      </label>
-
-      {/* Mobile sheet search */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="sm:hidden size-9 border border-Bg-Dark bg-light-bg text-primary"
-            aria-label="Open search"
-          >
-            <Search className="size-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="top" className="p-4">
-          <SheetHeader>
-            <SheetTitle>Search</SheetTitle>
-          </SheetHeader>
-          <label className="mt-2 flex w-full items-center gap-2 rounded-md border border-light-bg bg-light-bg py-2 px-3">
-            <Search className="size-5 text-text-secondary" aria-hidden />
-            <Input
-              autoFocus
-              placeholder="Search"
-              className="shadow-none border-none outline-none ring-0 p-0 text-base placeholder:text-base flex-1 bg-transparent"
-              aria-label="Search"
-            />
-          </label>
-        </SheetContent>
-      </Sheet>
-    </>
   );
 }
 

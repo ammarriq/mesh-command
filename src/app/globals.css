@@ -31,7 +31,7 @@
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-light: var(--primary-light);
   --color-primary: var(--primary);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
