@@ -34,6 +34,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-text-primary: var(--text-primary);
+  --color-primary-light: var(--primary-light);
   --color-text-secondary: var(--text-secondary);
   --color-text-ternary: var(--text-ternary);
   --color-dark-bg: var(--dark-bg);

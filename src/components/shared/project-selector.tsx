@@ -1,19 +1,11 @@
 "use client";
 
+import * as React from "react";
+
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { CustomTabTrigger } from "../shared/custom-tab-trigger";
 import { SearchInput } from "../shared/search-input";
-import { AddIcon } from "@/icons/add";
-import {
-  useChatStore,
-  useSelectedChat,
-  useProjectStore,
-  useSplitScreen,
-} from "@/stores";
-import { useRouter } from "next/navigation";
-
-// Import the ProjectContentItem component from project-selector
-import React, { useState, useEffect } from "react";
+import { useProjectStore, type Project } from "@/stores";
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,53 +13,113 @@ import {
 } from "../ui/collapsible";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import type { Project } from "@/stores";
+import { useState, useEffect } from "react";
 
-function ChatTab() {
-  const { chats, setSelectedChat, createNewChat } = useChatStore();
-  const { categories } = useProjectStore();
-  const selectedChat = useSelectedChat();
+interface ProjectSelectorProps {
+  showCreateButton?: boolean;
+  onCreateProject?: () => void;
+  className?: string;
+}
+
+function ProjectSelector({
+  showCreateButton = false,
+  onCreateProject,
+  className = "w-[496px]",
+}: ProjectSelectorProps) {
+  const { categories, selectedProjectId, setSelectedProject } =
+    useProjectStore();
+
+  // Set default selection to first project of first active category
+  useEffect(() => {
+    if (!selectedProjectId && categories.length > 0) {
+      const activeCategories = categories.filter((category) =>
+        category.projects.some((project) => project.status === "active")
+      );
+      if (activeCategories.length > 0) {
+        const firstActiveCategory = activeCategories[0];
+        const firstActiveProject = firstActiveCategory.projects.find(
+          (project) => project.status === "active"
+        );
+        if (firstActiveProject) {
+          setSelectedProject(firstActiveProject.id);
+        }
+      }
+    }
+  }, [categories, selectedProjectId, setSelectedProject]);
+
+  // Filter categories based on project status
+  const getFilteredCategories = (
+    status: "active" | "on-hold" | "completed"
+  ) => {
+    return categories.filter((category) =>
+      category.projects.some((project) => project.status === status)
+    );
+  };
+
+  const activeCategories = getFilteredCategories("active");
+  const onHoldCategories = getFilteredCategories("on-hold");
+  const completedCategories = getFilteredCategories("completed");
 
   return (
-    <Tabs defaultValue="private" className="w-[496px]">
+    <Tabs defaultValue="active" className={className}>
       <TabsList className="w-full border-b border-r border-r-Bg-Dark border-b-Bg-Dark">
-        <CustomTabTrigger title="Private" value="private" />
-        <CustomTabTrigger title="Projects" value="projects" />
+        <CustomTabTrigger title="Active" value="active" />
+        <CustomTabTrigger title="On-hold" value="onhold" />
+        <CustomTabTrigger title="Completed" value="completed" />
       </TabsList>
       <div className="p-2 flex items-center gap-2">
         <SearchInput />
-        <button onClick={createNewChat} className="bg-primary p-3">
-          <AddIcon className="size-6" />
-        </button>
+        {showCreateButton && (
+          <button
+            onClick={onCreateProject}
+            className="bg-primary py-2.5 px-6 text-sm font-medium leading-5 shadow-sm rounded-xs text-white"
+          >
+            New Project
+          </button>
+        )}
       </div>
       <TabsContent
-        value="private"
-        className="p-2 flex flex-col border-r border-r-Bg-Dark"
-      >
-        {chats.length !== 0 &&
-          selectedChat &&
-          chats.map((chat) => (
-            <button
-              onClick={() => setSelectedChat(chat.id)}
-              key={chat.id}
-              className={`${
-                selectedChat.id === chat.id && "bg-Bg-Dark"
-              } p-2 text-text-primary text-start`}
-            >
-              {chat.name}
-            </button>
-          ))}
-      </TabsContent>
-      <TabsContent
-        value="projects"
+        value="active"
         className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3"
       >
-        {categories.map((category) => (
+        {activeCategories.map((category) => (
           <ProjectContentItem
             key={category.id}
             title={category.name}
-            projects={category.projects}
-            showCreateButton={false}
+            projects={category.projects.filter(
+              (project) => project.status === "active"
+            )}
+            showCreateButton={showCreateButton}
+          />
+        ))}
+      </TabsContent>
+      <TabsContent
+        value="onhold"
+        className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3"
+      >
+        {onHoldCategories.map((category) => (
+          <ProjectContentItem
+            key={category.id}
+            title={category.name}
+            projects={category.projects.filter(
+              (project) => project.status === "on-hold"
+            )}
+            showCreateButton={showCreateButton}
+          />
+        ))}
+      </TabsContent>
+      <TabsContent
+        value="completed"
+        className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3"
+      >
+        {completedCategories.map((category) => (
+          <ProjectContentItem
+            key={category.id}
+            title={category.name}
+            projects={category.projects.filter(
+              (project) => project.status === "completed"
+            )}
+            showCreateButton={showCreateButton}
           />
         ))}
       </TabsContent>
@@ -87,19 +139,6 @@ function ProjectContentItem({
   showCreateButton = false,
 }: ProjectContentItemProps) {
   const { setSelectedProject, selectedProjectId } = useProjectStore();
-  const isSplitScreen = useSplitScreen();
-  const router = useRouter();
-
-  // Handle project selection based on split screen state
-  const handleProjectClick = (projectId: number) => {
-    setSelectedProject(projectId);
-
-    if (!isSplitScreen) {
-      // Navigate to projects page when split screen is off
-      router.push("/projects");
-    }
-    // When split screen is on, just setting the selected project will show it in the right panel
-  };
 
   // Check if any project in this category is currently selected
   const hasSelectedProject = projects.some(
@@ -166,7 +205,7 @@ function ProjectContentItem({
             return (
               <button
                 key={project.id}
-                onClick={() => handleProjectClick(project.id)}
+                onClick={() => setSelectedProject(project.id)}
                 className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary ${
                   selectedProjectId === project.id ? "bg-Bg-Dark p-2" : ""
                 }`}
@@ -184,4 +223,4 @@ function ProjectContentItem({
   );
 }
 
-export default ChatTab;
+export default ProjectSelector;

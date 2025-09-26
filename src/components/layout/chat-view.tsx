@@ -9,7 +9,7 @@ import { ProjectIcon } from "@/icons/project";
 import Pill from "../shared/pill";
 import { DeepseekIcon } from "@/icons/deep-seek";
 import { OpenaiIcon } from "@/icons/open-ai";
-import { useSelectedChat, useAppStore } from "@/stores/app-store";
+import { useSelectedChat, useChatStore } from "@/stores";
 import type { MessagePair, SelectedModel } from "@/types/chat";
 
 // Helper function to get model display info
@@ -35,7 +35,7 @@ export default function ChatView() {
   const [isRenamingChat, setIsRenamingChat] = useState(false);
   const [chatName, setChatName] = useState("");
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-  const updateChat = useAppStore((state) => state.updateChat);
+  const updateChat = useChatStore((state) => state.updateChat);
 
   if (!selectedChat) return null;
 
@@ -109,6 +109,8 @@ export default function ChatView() {
       <header className="flex items-center justify-between border-b border-b-Bg-Dark px-4 py-2">
         <div className="flex items-center gap-2 text-text-primary">
           <RobotIcon className="size-6" />
+
+          {/* Renaming Chat */}
           {isRenamingChat ? (
             <div className="flex items-center gap-2">
               <input
@@ -189,54 +191,56 @@ export default function ChatView() {
             </div>
           )}
 
-          <textarea
-            className="w-full resize-none p-3 bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
-            rows={4}
-            placeholder="Write message here....."
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
+          <div>
+            <textarea
+              className="w-full resize-none p-3 bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
+              rows={4}
+              placeholder="Write message here....."
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
 
-          <div className="bg-white flex items-center justify-between">
-            <label className="px-3 py-2 text-sm font-medium text-primary inline-flex items-center gap-2 cursor-pointer hover:text-primary/90">
-              <Paperclip className="size-5 text-primary" /> Attach files
-              <input
-                type="file"
-                multiple
-                onChange={handleFileAttach}
-                className="hidden"
-                accept="*/*"
-              />
-            </label>
+            <div className="bg-white flex items-center justify-between">
+              <label className="px-3 py-2 text-sm font-medium text-primary inline-flex items-center gap-2 cursor-pointer hover:text-primary/90">
+                <Paperclip className="size-5 text-primary" /> Attach files
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleFileAttach}
+                  className="hidden"
+                  accept="*/*"
+                />
+              </label>
 
-            <div className="flex items-center justify-end gap-4">
-              {(() => {
-                const modelInfo = getModelDisplay(
-                  selectedChat.selectedModel || "Deepseek-R1"
-                );
-                const IconComponent = modelInfo.icon;
-                return (
-                  <p
-                    className={`h-12 flex items-center justify-center gap-2 ${modelInfo.color}`}
-                  >
-                    <IconComponent
-                      className={`${modelInfo.strokeColor} w-6 h-auto`}
-                    />
-                    <span className="font-medium">
-                      {selectedChat.selectedModel || "Deepseek-R1"}
-                    </span>
-                  </p>
-                );
-              })()}
-              <button
-                className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white p-3 disabled:opacity-50"
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim()}
-              >
-                <Send className="size-4" />
-                Send
-              </button>
+              <div className="flex items-center justify-end gap-4">
+                {(() => {
+                  const modelInfo = getModelDisplay(
+                    selectedChat.selectedModel || "Deepseek-R1"
+                  );
+                  const IconComponent = modelInfo.icon;
+                  return (
+                    <p
+                      className={`h-12 flex items-center justify-center gap-2 ${modelInfo.color}`}
+                    >
+                      <IconComponent
+                        className={`${modelInfo.strokeColor} w-6 h-auto`}
+                      />
+                      <span className="font-medium">
+                        {selectedChat.selectedModel || "Deepseek-R1"}
+                      </span>
+                    </p>
+                  );
+                })()}
+                <button
+                  className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white p-3 disabled:opacity-50"
+                  onClick={handleSendMessage}
+                  disabled={!inputMessage.trim()}
+                >
+                  <Send className="size-4" />
+                  Send
+                </button>
+              </div>
             </div>
           </div>
         </div>

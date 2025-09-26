@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { PaymentBadge } from "@/components/shared/payment-badge";
 import { cn } from "@/lib/utils";
 
 export interface Column<T> {
@@ -30,14 +31,20 @@ export function DataTable<T>({
   onRowClick,
 }: DataTableProps<T>) {
   return (
-    <div className={cn("rounded-md border", className)}>
-      <Table>
+    <div className={cn("bg-white rounded-xl border", className)}>
+      <Table className="rounded-2xl">
         <TableHeader>
-          <TableRow>
+          <TableRow className="bg-light-bg border border-Bg-Dark">
             {columns.map((column, index) => (
               <TableHead
                 key={index}
-                className={cn("font-medium text-gray-600", column.className)}
+                className={cn(
+                  "font-medium text-gray-600",
+                  index === 0
+                    ? "w-full min-w-[180px]"
+                    : "text-right min-w-[120px]",
+                  column.className
+                )}
               >
                 {column.header}
               </TableHead>
@@ -49,7 +56,8 @@ export function DataTable<T>({
             <TableRow
               key={rowIndex}
               className={cn(
-                "hover:bg-gray-50 transition-colors",
+                (rowIndex + 1) % 2 === 0 ? "bg-light-bg" : "",
+                "border border-Bg-Dark hover:bg-gray-50 transition-colors",
                 onRowClick && "cursor-pointer"
               )}
               onClick={() => onRowClick?.(row)}
@@ -57,7 +65,11 @@ export function DataTable<T>({
               {columns.map((column, colIndex) => (
                 <TableCell
                   key={colIndex}
-                  className={cn("py-4", column.className)}
+                  className={cn(
+                    "py-4",
+                    colIndex === 0 ? "w-full" : "text-right",
+                    column.className
+                  )}
                 >
                   {column.cell
                     ? column.cell(row)
@@ -114,22 +126,7 @@ export function InvoiceTable({
     {
       key: "status",
       header: "Status",
-      cell: (row) => (
-        <span
-          className={cn(
-            "inline-flex items-center gap-1 text-sm",
-            row.status === "Active" ? "text-green-600" : "text-gray-600"
-          )}
-        >
-          <div
-            className={cn(
-              "w-2 h-2 rounded-full",
-              row.status === "Active" ? "bg-green-500" : "bg-gray-400"
-            )}
-          />
-          {row.status}
-        </span>
-      ),
+      cell: (row) => <PaymentBadge status={row.status} />,
     },
     {
       key: "amount",

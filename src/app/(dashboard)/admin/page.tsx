@@ -1,143 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Copy, Edit, Users } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Copy, Edit, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/shared/status-badge";
 import {
-  useAppStore,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  useAdminStore,
+  useDirectoryStore,
   type Manager,
   type SubManager,
   type Employee,
   type Contractor,
   type Auditor,
-} from "@/stores/app-store";
+} from "@/stores";
 import { cn } from "@/lib/utils";
-
-// Admin User Avatar Component
-function AdminUserAvatar({
-  user,
-}: {
-  user: Manager | SubManager | Employee | Contractor | Auditor;
-}) {
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
-
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium">
-        {initials}
-      </div>
-      <div>
-        <div className="font-medium text-gray-900">{user.name}</div>
-        <div className="text-sm text-gray-500">{user.email}</div>
-      </div>
-    </div>
-  );
-}
-
-// Action Buttons Component
-function ActionButtons() {
-  return (
-    <div className="flex items-center gap-2">
-      <button className="p-1 text-gray-400 hover:text-gray-600">
-        <Copy className="w-4 h-4" />
-      </button>
-      <button className="p-1 text-gray-400 hover:text-gray-600">
-        <Edit className="w-4 h-4" />
-      </button>
-    </div>
-  );
-}
-
-// Admin Table Component
-interface AdminTableProps<T> {
-  data: T[];
-  columns: {
-    key: keyof T;
-    label: string;
-    render?: (value: unknown, item: T) => React.ReactNode;
-  }[];
-  onAdd: () => void;
-  addButtonText: string;
-  title: string;
-  description?: string;
-}
-
-function AdminTable<T extends { id: number; name: string; email?: string }>({
-  data,
-  columns,
-  onAdd,
-  addButtonText,
-  title,
-  description,
-}: AdminTableProps<T>) {
-  return (
-    <div className="space-y-4">
-      {/* Section Header */}
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
-        {description && (
-          <p className="text-sm text-gray-600 mb-4">{description}</p>
-        )}
-      </div>
-
-      {/* Add Button */}
-      <Button
-        onClick={onAdd}
-        className="bg-red-100 text-red-600 hover:bg-red-200"
-      >
-        {addButtonText}
-      </Button>
-
-      {/* Table */}
-      <div className="bg-white rounded-lg border">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                {columns.map((column) => (
-                  <th
-                    key={String(column.key)}
-                    className="text-left p-4 text-sm font-medium text-gray-600"
-                  >
-                    {column.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-gray-100 hover:bg-gray-50"
-                >
-                  {columns.map((column) => (
-                    <td key={String(column.key)} className="p-4 text-sm">
-                      {column.render
-                        ? column.render(item[column.key], item)
-                        : String(item[column.key])}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { SearchInput } from "@/components/shared/search-input";
+import { CustomTabTrigger } from "@/components/shared/custom-tab-trigger";
 
 export default function AdminPage() {
-  const { managers, subManagers, employees, contractors, auditors } =
-    useAppStore();
-  const [searchQuery, setSearchQuery] = useState("");
+  const { managers, subManagers, auditors } = useAdminStore();
+  const { employees, contractors } = useDirectoryStore();
   const [activeMainTab, setActiveMainTab] = useState("People Management");
   const [activePeopleTab, setActivePeopleTab] = useState("Managers");
 
@@ -297,30 +188,20 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-white flex-1 py-4 ">
       <div className="p-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-            Admin Management
-          </h1>
-          <p className="text-gray-600">
-            Manage your team members and their account permissions here.
-          </p>
-        </div>
-
-        {/* Search */}
-        <div className="mb-6 max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
+        <header className="flex justify-between items-start">
+          <hgroup className="mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+              Admin Management
+            </h1>
+            <p className="text-gray-600">
+              Manage your team members and their account permissions here.
+            </p>
+          </hgroup>
+          <SearchInput />
+        </header>
 
         {/* Main Tabs */}
         <Tabs
@@ -328,31 +209,16 @@ export default function AdminPage() {
           onValueChange={setActiveMainTab}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-3 mb-8 max-w-md">
-            <TabsTrigger
+          <TabsList className="grid w-full grid-cols-3 mb-8 w">
+            <CustomTabTrigger
               value="People Management"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              People Management
-            </TabsTrigger>
-            <TabsTrigger
+              title="People Management"
+            />
+            <CustomTabTrigger
+              title="Dockets Management"
               value="Dockets Management"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Dockets Management
-            </TabsTrigger>
-            <TabsTrigger
-              value="Integrations"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Integrations
-            </TabsTrigger>
+            />
+            <CustomTabTrigger value="Integrations" title="Integrations" />
           </TabsList>
 
           {/* People Management Tab */}
@@ -363,11 +229,11 @@ export default function AdminPage() {
               onValueChange={setActivePeopleTab}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-5 mb-8">
+              <TabsList className="flex w-full max-w-[520px] rounded-xl">
                 <TabsTrigger
                   value="Managers"
                   className={cn(
-                    "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-l-lg"
                   )}
                 >
                   Managers
@@ -375,7 +241,7 @@ export default function AdminPage() {
                 <TabsTrigger
                   value="Sub-Manager"
                   className={cn(
-                    "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
                   )}
                 >
                   Sub-Manager
@@ -383,7 +249,7 @@ export default function AdminPage() {
                 <TabsTrigger
                   value="Employee"
                   className={cn(
-                    "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
                   )}
                 >
                   Employee
@@ -391,7 +257,7 @@ export default function AdminPage() {
                 <TabsTrigger
                   value="Contractor"
                   className={cn(
-                    "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
                   )}
                 >
                   Contractor
@@ -399,7 +265,7 @@ export default function AdminPage() {
                 <TabsTrigger
                   value="Auditor"
                   className={cn(
-                    "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-r-lg"
                   )}
                 >
                   Auditor
@@ -505,6 +371,130 @@ export default function AdminPage() {
           </TabsContent>
         </Tabs>
       </div>
+    </main>
+  );
+}
+
+// Admin User Avatar Component
+function AdminUserAvatar({
+  user,
+}: {
+  user: Manager | SubManager | Employee | Contractor | Auditor;
+}) {
+  const initials = user.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+
+  return (
+    <main className="flex items-center gap-3">
+      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium">
+        {initials}
+      </div>
+      <div>
+        <div className="font-medium text-gray-900">{user.name}</div>
+        <div className="text-sm text-gray-500">{user.email}</div>
+      </div>
+    </main>
+  );
+}
+
+// Action Buttons Component
+function ActionButtons() {
+  return (
+    <div className="flex items-center gap-2">
+      <button className="p-1 text-gray-400 hover:text-gray-600">
+        <Copy className="w-4 h-4" />
+      </button>
+      <button className="p-1 text-gray-400 hover:text-gray-600">
+        <Edit className="w-4 h-4" />
+      </button>
     </div>
+  );
+}
+
+// Admin Table Component
+interface AdminTableProps<T> {
+  data: T[];
+  columns: {
+    key: keyof T;
+    label: string;
+    render?: (value: unknown, item: T) => React.ReactNode;
+  }[];
+  onAdd: () => void;
+  addButtonText: string;
+  title: string;
+  description?: string;
+}
+
+function AdminTable<T extends { id: number; name: string; email?: string }>({
+  data,
+  columns,
+  onAdd,
+  addButtonText,
+  title,
+  description,
+}: AdminTableProps<T>) {
+  return (
+    <section className="flex gap-8">
+      {/* Section Header */}
+      <hgroup>
+        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+        {description && <p className="text-sm text-gray-600">{description}</p>}
+        <Button
+          onClick={onAdd}
+          className="bg-primary-light text-primary hover:bg-primary/80 rounded-xs mt-4"
+        >
+          {addButtonText}
+        </Button>
+      </hgroup>
+
+      {/* Table */}
+      <div className="bg-white rounded-xl border flex-1">
+        <Table className="rounded-2xl">
+          <TableHeader>
+            <TableRow className="bg-light-bg border border-Bg-Dark">
+              {columns.map((column) => (
+                <TableHead
+                  key={String(column.key)}
+                  className={cn(
+                    column.key === "name"
+                      ? "w-full min-w-[180px]"
+                      : "text-right min-w-[120px]"
+                  )}
+                >
+                  {column.label}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((item, index) => (
+              <TableRow
+                key={item.id}
+                className={
+                  (cn((index + 1) % 2 === 0 ? "bg-light-bg " : ""),
+                  "border border-Bg-Dark")
+                }
+              >
+                {columns.map((column) => (
+                  <TableCell
+                    key={String(column.key)}
+                    className={cn(
+                      column.key === "name" ? "w-full" : "text-right"
+                    )}
+                  >
+                    {column.render
+                      ? column.render(item[column.key], item)
+                      : String(item[column.key])}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </section>
   );
 }

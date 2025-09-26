@@ -8,16 +8,22 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Bell } from "lucide-react";
 import { FullScreenIcon } from "@/icons/full-screen";
 import { SplitscreenIcon } from "@/icons/split-screen";
-import { useAppStore, useSplitScreen } from "@/stores/app-store";
+import { useChatStore, useSplitScreen } from "@/stores";
 
 import { SearchInput } from "../shared/search-input";
 
 function NavBar() {
   const isSplitScreen = useSplitScreen();
-  const toggleSplitScreen = useAppStore((state) => state.toggleSplitScreen);
+  const { toggleSplitScreen } = useChatStore();
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -32,13 +38,18 @@ function NavBar() {
             <button
               type="button"
               aria-label="Full screen"
+              onClick={toggleSplitScreen}
               className={`size-9 lg:size-10 2xl:size-12 grid place-items-center ${
                 !isSplitScreen
                   ? "bg-primary text-primary-foreground"
                   : "border border-primary bg-white text-primary"
               }`}
             >
-              <FullScreenIcon className="size-6" />
+              <FullScreenIcon
+                className={`size-6 ${
+                  isSplitScreen ? "fill-primary" : "fill-white"
+                }`}
+              />
             </button>
             <button
               type="button"
@@ -94,25 +105,35 @@ function Avatar({ src, name }: { src?: string; name?: string }) {
       .join("")
       .slice(0, 2)
       .toUpperCase() || "A";
+
   return (
-    <button
-      type="button"
-      aria-label={name ? `${name} profile` : "Profile"}
-      className="size-9 sm:size-10 2xl:size-12 border border-Bg-Dark bg-light-bg text-primary "
-    >
-      {src ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={name || "Profile"}
-          className="size-full object-cover"
-        />
-      ) : (
-        <span className="grid size-full place-items-center text-sm font-medium text-foreground/80">
-          {initials}
-        </span>
-      )}
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label={name ? `${name} profile` : "Profile"}
+          className="size-9 sm:size-10 2xl:size-12 border border-Bg-Dark bg-light-bg text-primary "
+        >
+          {src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={src}
+              alt={name || "Profile"}
+              className="size-full object-cover"
+            />
+          ) : (
+            <span className="grid size-full place-items-center text-sm font-medium text-foreground/80">
+              {initials}
+            </span>
+          )}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuItem>View linked Projects</DropdownMenuItem>
+        <DropdownMenuItem>Linked Dockets</DropdownMenuItem>
+        <DropdownMenuItem>Revert to 1:1</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

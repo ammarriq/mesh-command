@@ -2,29 +2,19 @@
 
 import React, { useState } from "react";
 import {
-  Search,
   Plus,
   MoreHorizontal,
   Edit,
   FileText,
   Calendar,
-  DollarSign,
-  User,
   Users,
 } from "lucide-react";
-import {
-  useAppStore,
-  useSelectedProject,
-  Project,
-  Task,
-} from "@/stores/app-store";
-import { StatusBadge } from "@/components/shared/status-badge";
-import { CircularProgress } from "@/components/shared/circular-progress";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Project, Task, useSelectedProject } from "@/stores";
+import { ProjectHeader } from "@/components/shared/project-header";
+import { InfoItem } from "@/components/shared/info-item";
+import ProjectTab from "@/components/layout/project-tab";
 
 function ProjectsPage() {
-  const { projects, setSelectedProject, selectedProjectId } = useAppStore();
   const selectedProject = useSelectedProject();
   const [showBottomSheet, setShowBottomSheet] = useState(false);
 
@@ -41,19 +31,24 @@ function ProjectsPage() {
     }
   };
 
-  const getTasksByStatus = (tasks: Task[], status: string) => {
-    return tasks.filter((task) => task.status === status);
+  const getTasksByStatus = (project: Project, status: string) => {
+    switch (status) {
+      case "To Do":
+        return project.todo;
+      case "In-Progress":
+        return project.inProgress;
+      case "Completed":
+        return project.completed;
+      default:
+        return [];
+    }
   };
 
   if (!selectedProject) {
     return (
-      <section className="flex-1 flex">
+      <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
         {/* Left Sidebar - Project List */}
-        <ProjectSidebar
-          projects={projects}
-          selectedProjectId={selectedProjectId}
-          onSelectProject={setSelectedProject}
-        />
+        <ProjectTab />
 
         {/* Main Content - No Project Selected */}
         <div className="flex-1 flex items-center justify-center bg-gray-50">
@@ -64,202 +59,40 @@ function ProjectsPage() {
   }
 
   return (
-    <section className="flex-1 flex relative">
+    <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
       {/* Left Sidebar - Project List */}
-      <ProjectSidebar
-        projects={projects}
-        selectedProjectId={selectedProjectId}
-        onSelectProject={setSelectedProject}
-      />
-      {/* Main Content Area */}
+      <ProjectTab />
       <div className="flex-1 flex flex-col bg-white">
-        {/* Project Header */}
         <ProjectHeader project={selectedProject} />
 
-        {/* Task Board */}
-        <div className="flex-1 p-4">
-          <div className="grid grid-cols-3 gap-4 h-full">
-            {/* To Do Column */}
-            <TaskColumn
-              title="To Do"
-              count={getTasksByStatus(selectedProject.tasks, "To Do").length}
-              tasks={getTasksByStatus(selectedProject.tasks, "To Do")}
-              getPriorityColor={getPriorityColor}
-            />
+        <section className="grid grid-cols-3 gap-2 h-full ">
+          <TaskColumn
+            title="To Do"
+            count={getTasksByStatus(selectedProject, "To Do").length}
+            tasks={getTasksByStatus(selectedProject, "To Do")}
+            getPriorityColor={getPriorityColor}
+          />
 
-            {/* In-Progress Column */}
-            <TaskColumn
-              title="In-Progress"
-              count={
-                getTasksByStatus(selectedProject.tasks, "In-Progress").length
-              }
-              tasks={getTasksByStatus(selectedProject.tasks, "In-Progress")}
-              getPriorityColor={getPriorityColor}
-            />
+          <TaskColumn
+            title="In-Progress"
+            count={getTasksByStatus(selectedProject, "In-Progress").length}
+            tasks={getTasksByStatus(selectedProject, "In-Progress")}
+            getPriorityColor={getPriorityColor}
+          />
 
-            {/* Completed Column */}
-            <TaskColumn
-              title="Completed"
-              count={
-                getTasksByStatus(selectedProject.tasks, "Completed").length
-              }
-              tasks={getTasksByStatus(selectedProject.tasks, "Completed")}
-              getPriorityColor={getPriorityColor}
-            />
-          </div>
-        </div>
+          <TaskColumn
+            title="Completed"
+            count={getTasksByStatus(selectedProject, "Completed").length}
+            tasks={getTasksByStatus(selectedProject, "Completed")}
+            getPriorityColor={getPriorityColor}
+          />
+        </section>
       </div>
-      {/* Right Sidebar */}
-      <RightSidebar onShowBottomSheet={() => setShowBottomSheet(true)} />{" "}
-      {/* Bottom Sheet */}
+      <RightSidebar onShowBottomSheet={() => setShowBottomSheet(true)} />
       {showBottomSheet && (
         <BottomSheet onClose={() => setShowBottomSheet(false)} />
       )}
     </section>
-  );
-}
-
-// Project Sidebar Component
-function ProjectSidebar({
-  projects,
-  selectedProjectId,
-  onSelectProject,
-}: {
-  projects: Project[];
-  selectedProjectId: number | null;
-  onSelectProject: (id: number | null) => void;
-}) {
-  return (
-    <div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">
-      {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Projects</h2>
-          <button className="p-1 text-gray-400 hover:text-gray-600">
-            <MoreHorizontal className="size-5" />
-          </button>
-        </div>
-
-        {/* Tabs */}
-        <div className="flex text-sm">
-          <button className="px-3 py-1 text-red-600 border-b-2 border-red-600">
-            Active
-          </button>
-          <button className="px-3 py-1 text-gray-500 hover:text-gray-700">
-            On-hold
-          </button>
-          <button className="px-3 py-1 text-gray-500 hover:text-gray-700">
-            Completed
-          </button>
-        </div>
-
-        {/* Search and New Project */}
-        <div className="mt-4 space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 size-4" />
-            <Input type="text" placeholder="Search" className="pl-10" />
-          </div>
-          <Button className="w-full bg-red-700 hover:bg-red-800">
-            New Project
-          </Button>
-        </div>
-      </div>
-
-      {/* Project List */}
-      <div className="flex-1 overflow-y-auto">
-        {projects.map((project) => (
-          <button
-            key={project.id}
-            onClick={() => onSelectProject(project.id)}
-            className={`w-full p-4 text-left border-b border-gray-100 hover:bg-white transition-colors ${
-              selectedProjectId === project.id
-                ? "bg-white border-l-4 border-l-red-600"
-                : ""
-            }`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              <span className="font-medium text-gray-900 text-sm">
-                {project.name}
-              </span>
-              <StatusBadge status={project.status} size="sm" />
-            </div>
-
-            <div className="text-xs text-gray-500 space-y-1">
-              {project.tasks.map((task, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span>
-                    {task.title.length > 30
-                      ? task.title.substring(0, 30) + "..."
-                      : task.title}
-                  </span>
-                  <StatusBadge status={task.status} size="sm" />
-                </div>
-              ))}
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Project Header Component
-function ProjectHeader({ project }: { project: Project }) {
-  return (
-    <div className="border-b border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
-          <StatusBadge status={project.status} />
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-1">
-              <Calendar className="size-4 text-gray-500" />
-              <span className="text-gray-600">
-                Deadline: {project.deadline}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="size-4 text-gray-500" />
-            <span className="text-gray-600">Budget: {project.budget}</span>
-          </div>
-
-          <div className="flex items-center gap-1 text-sm">
-            <User className="size-4 text-gray-500" />
-            <span className="text-gray-600">
-              Contractor: {project.contractor}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-6">
-        <CircularProgress
-          value={project.budgetConsumed}
-          label="Budget Consumed"
-          size="md"
-        />
-
-        <CircularProgress value={project.progress} label="Progress" size="md" />
-
-        <div className="flex -space-x-2">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="w-8 h-8 bg-gray-300 rounded-full border-2 border-white"
-            ></div>
-          ))}
-          <div className="w-8 h-8 bg-red-600 rounded-full border-2 border-white flex items-center justify-center">
-            <Plus className="size-4 text-white" />
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -275,28 +108,47 @@ function TaskColumn({
   tasks: Task[];
   getPriorityColor: (priority: string) => string;
 }) {
-  return (
-    <div className="flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <div
-            className={`w-3 h-3 rounded-full ${
-              title === "To Do"
-                ? "bg-blue-500"
-                : title === "In-Progress"
-                ? "bg-yellow-500"
-                : "bg-green-500"
-            }`}
-          ></div>
-          <h3 className="font-semibold text-gray-900">{title}</h3>
-          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
-            {count}
-          </span>
-        </div>
-        <Plus className="size-4 text-gray-400" />
-      </div>
+  const getBorderColor = () => {
+    switch (title) {
+      case "To Do":
+        return "#5030E5";
+      case "In-Progress":
+        return "#FFA500";
+      case "Completed":
+        return "#68B266";
+      default:
+        return "#E5E7EB";
+    }
+  };
 
-      <div className="space-y-3 flex-1 overflow-y-auto">
+  return (
+    <section className="flex flex-col bg-light-bg">
+      <header
+        className="flex items-center justify-between px-2 py-4 border-b-2"
+        style={{ borderBottomColor: getBorderColor() }}
+      >
+        <div className="flex items-center gap-2 justify-between w-full">
+          <hgroup className="flex items-center gap-2">
+            <div
+              className={`w-3 h-3 rounded-full ${
+                title === "To Do"
+                  ? "bg-blue-500"
+                  : title === "In-Progress"
+                  ? "bg-yellow-500"
+                  : "bg-green-500"
+              }`}
+            ></div>
+            <h3 className="font-semibold text-gray-900">{title}</h3>
+            <span className="bg-Bg-Dark text-gray-600 text-xs px-2 py-1 rounded-full">
+              {count}
+            </span>
+          </hgroup>
+
+          {title === "To Do" && <Plus className="ml-auto size-4 " />}
+        </div>
+      </header>
+
+      <div className="space-y-3 flex-1 overflow-y-auto px-2 py-4">
         {tasks.map((task) => (
           <TaskCard
             key={task.id}
@@ -305,7 +157,7 @@ function TaskColumn({
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -335,20 +187,15 @@ function TaskCard({
         {task.description}
       </p>
 
-      <div className="space-y-2 text-xs text-gray-500">
-        <div className="flex items-center gap-1">
-          <Users className="size-3" />
-          <span>Assigned to: {task.assignedTo}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <Calendar className="size-3" />
-          <span>Deadline: {task.deadline}</span>
-        </div>
+      <div className="space-y-2">
+        <InfoItem icon={Users} label="Assigned to" value={task.assignedTo} />
+        <InfoItem icon={Calendar} label="Deadline" value={task.deadline} />
         {task.linkedDocs && task.linkedDocs.length > 0 && (
-          <div className="flex items-center gap-1">
-            <FileText className="size-3" />
-            <span>Linked Docs: {task.linkedDocs.join(", ")}</span>
-          </div>
+          <InfoItem
+            icon={FileText}
+            label="Linked Docs"
+            value={task.linkedDocs.join(", ")}
+          />
         )}
       </div>
 

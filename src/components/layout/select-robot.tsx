@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { useAppStore, useSelectedChat } from "@/stores/app-store";
+import { useChatStore, useSelectedChat } from "@/stores";
 import { DeepseekIcon } from "@/icons/deep-seek";
 import { OpenaiIcon } from "@/icons/open-ai";
 
 export default function SelectRobot() {
-  const { updateChat } = useAppStore();
+  const { updateChat } = useChatStore();
   const selectedChat = useSelectedChat();
 
   function choose(model: "Deepseek-R1" | "OpenAI 04") {

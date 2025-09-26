@@ -1,23 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Copy, Edit } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Copy, Edit, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/shared/status-badge";
 import {
-  useAppStore,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  useDirectoryStore,
   type Employee,
   type Contractor,
   type Team,
   type Vendor,
   type Equipment,
   type Location,
-} from "@/stores/app-store";
+} from "@/stores";
 import { cn } from "@/lib/utils";
+import { SearchInput } from "@/components/shared/search-input";
+import { CustomTabTrigger } from "@/components/shared/custom-tab-trigger";
 
-// Directory Table Component for reusability
+// Directory Table Component
 interface DirectoryTableProps<T> {
   data: T[];
   columns: {
@@ -27,108 +36,103 @@ interface DirectoryTableProps<T> {
   }[];
   onAdd: () => void;
   addButtonText: string;
+  title: string;
+  description?: string;
 }
 
-function DirectoryTable<
-  T extends { id: number; name: string; email?: string }
->({ data, columns, onAdd, addButtonText }: DirectoryTableProps<T>) {
+function DirectoryTable<T extends { id: number; name: string }>({
+  data,
+  columns,
+  onAdd,
+  addButtonText,
+  title,
+  description,
+}: DirectoryTableProps<T>) {
   return (
-    <div className="space-y-4">
-      {/* Add Button */}
-      <Button
-        onClick={onAdd}
-        className="bg-red-100 text-red-600 hover:bg-red-200"
-      >
-        {addButtonText}
-      </Button>
+    <section className="flex gap-8">
+      {/* Section Header */}
+      <hgroup>
+        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+        {description && <p className="text-sm text-gray-600">{description}</p>}
+        <Button
+          onClick={onAdd}
+          className="bg-primary-light text-primary hover:bg-primary/80 rounded-xs mt-4"
+        >
+          {addButtonText}
+        </Button>
+      </hgroup>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                {columns.map((column) => (
-                  <th
-                    key={String(column.key)}
-                    className="text-left p-4 text-sm font-medium text-gray-600"
-                  >
-                    {column.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item) => (
-                <tr
-                  key={item.id}
-                  className="border-b border-gray-100 hover:bg-gray-50"
+      <div className="bg-white rounded-xl border flex-1">
+        <Table className="rounded-2xl">
+          <TableHeader>
+            <TableRow className="bg-light-bg border border-Bg-Dark">
+              {columns.map((column) => (
+                <TableHead
+                  key={String(column.key)}
+                  className={cn(
+                    column.key === "name"
+                      ? "w-full min-w-[180px]"
+                      : "text-right min-w-[120px]"
+                  )}
                 >
-                  {columns.map((column) => (
-                    <td key={String(column.key)} className="p-4 text-sm">
-                      {column.render
-                        ? column.render(item[column.key], item)
-                        : String(item[column.key])}
-                    </td>
-                  ))}
-                </tr>
+                  {column.label}
+                </TableHead>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((item, index) => (
+              <TableRow
+                key={item.id}
+                className={
+                  (cn((index + 1) % 2 === 0 ? "bg-light-bg " : ""),
+                  "border border-Bg-Dark")
+                }
+              >
+                {columns.map((column) => (
+                  <TableCell
+                    key={String(column.key)}
+                    className={cn(
+                      column.key === "name" ? "w-full" : "text-right"
+                    )}
+                  >
+                    {column.render
+                      ? column.render(item[column.key], item)
+                      : String(item[column.key])}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
-    </div>
+    </section>
   );
 }
 
-// Generic Avatar Component
-function PersonAvatar({ person }: { person: { name: string; email: string } }) {
-  const initials = person.name
+// Directory User Avatar Component
+function DirectoryUserAvatar({
+  user,
+}: {
+  user: Employee | Contractor | Team | Vendor;
+}) {
+  const initials = user.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase();
 
   return (
-    <div className="flex items-center gap-3">
+    <main className="flex items-center gap-3">
       <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium">
         {initials}
       </div>
       <div>
-        <div className="font-medium text-gray-900">{person.name}</div>
-        <div className="text-sm text-gray-500">{person.email}</div>
+        <div className="font-medium text-gray-900">{user.name}</div>
+        <div className="text-sm text-gray-500">{user.email}</div>
       </div>
-    </div>
-  );
-}
-
-// Team Initial Avatar Component
-function TeamAvatar({ team }: { team: Team }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-xs font-medium text-white">
-        {team.initials}
-      </div>
-      <div>
-        <div className="font-medium text-gray-900">{team.name}</div>
-        <div className="text-sm text-gray-500">{team.email}</div>
-      </div>
-    </div>
-  );
-}
-
-// Vendor Initial Avatar Component
-function VendorAvatar({ vendor }: { vendor: Vendor }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-xs font-medium text-white">
-        {vendor.initials}
-      </div>
-      <div>
-        <div className="font-medium text-gray-900">{vendor.name}</div>
-        <div className="text-sm text-gray-500">{vendor.email}</div>
-      </div>
-    </div>
+    </main>
   );
 }
 
@@ -148,9 +152,9 @@ function ActionButtons() {
 
 export default function DirectoryPage() {
   const { employees, contractors, teams, vendors, equipments, locations } =
-    useAppStore();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("Employees");
+    useDirectoryStore();
+  const [activeMainTab, setActiveMainTab] = useState("People Management");
+  const [activePeopleTab, setActivePeopleTab] = useState("Employees");
 
   // Employee columns configuration
   const employeeColumns = [
@@ -158,7 +162,7 @@ export default function DirectoryPage() {
       key: "name" as keyof Employee,
       label: "Name",
       render: (_: unknown, employee: Employee) => (
-        <PersonAvatar person={employee} />
+        <DirectoryUserAvatar user={employee} />
       ),
     },
     {
@@ -193,7 +197,7 @@ export default function DirectoryPage() {
       key: "name" as keyof Contractor,
       label: "Name",
       render: (_: unknown, contractor: Contractor) => (
-        <PersonAvatar person={contractor} />
+        <DirectoryUserAvatar user={contractor} />
       ),
     },
     {
@@ -235,7 +239,7 @@ export default function DirectoryPage() {
     {
       key: "name" as keyof Team,
       label: "Name",
-      render: (_: unknown, team: Team) => <TeamAvatar team={team} />,
+      render: (_: unknown, team: Team) => <DirectoryUserAvatar user={team} />,
     },
     {
       key: "memberCount" as keyof Team,
@@ -268,7 +272,9 @@ export default function DirectoryPage() {
     {
       key: "name" as keyof Vendor,
       label: "Name",
-      render: (_: unknown, vendor: Vendor) => <VendorAvatar vendor={vendor} />,
+      render: (_: unknown, vendor: Vendor) => (
+        <DirectoryUserAvatar user={vendor} />
+      ),
     },
     {
       key: "productType" as keyof Vendor,
@@ -350,205 +356,213 @@ export default function DirectoryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-white flex-1 py-4">
       <div className="p-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-            MeshCommand Directory
-          </h1>
-          <p className="text-gray-600">
-            Manage and view all people, equipment and locations.
-          </p>
-        </div>
+        <header className="flex justify-between items-start">
+          <hgroup className="mb-8">
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+              Directory Management
+            </h1>
+            <p className="text-gray-600">
+              Manage all people, equipment and locations in your directory.
+            </p>
+          </hgroup>
+          <SearchInput />
+        </header>
 
-        {/* Search */}
-        <div className="mb-6 max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+        {/* Main Tabs */}
+        <Tabs
+          value={activeMainTab}
+          onValueChange={setActiveMainTab}
+          className="w-full"
+        >
+          <TabsList className="grid w-full grid-cols-3 mb-8 w">
+            <CustomTabTrigger
+              value="People Management"
+              title="People Management"
             />
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-8">
-            <TabsTrigger
-              value="Employees"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Employees
-            </TabsTrigger>
-            <TabsTrigger
-              value="Contractors"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Contractors
-            </TabsTrigger>
-            <TabsTrigger
-              value="Teams"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Teams
-            </TabsTrigger>
-            <TabsTrigger
-              value="Vendors"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Vendors
-            </TabsTrigger>
-            <TabsTrigger
-              value="Equipments"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Equipments
-            </TabsTrigger>
-            <TabsTrigger
-              value="Locations"
-              className={cn(
-                "data-[state=active]:bg-red-100 data-[state=active]:text-red-600"
-              )}
-            >
-              Locations
-            </TabsTrigger>
+            <CustomTabTrigger
+              title="Asset Management"
+              value="Asset Management"
+            />
+            <CustomTabTrigger
+              value="Location Management"
+              title="Location Management"
+            />
           </TabsList>
 
-          {/* Employees Tab */}
-          <TabsContent value="Employees" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Employees
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Employees are the workers of teams.
-                <br />
-                Manager
+          {/* People Management Tab */}
+          <TabsContent value="People Management" className="space-y-6">
+            {/* People Sub-tabs */}
+            <Tabs
+              value={activePeopleTab}
+              onValueChange={setActivePeopleTab}
+              className="w-full"
+            >
+              <TabsList className="flex w-full max-w-[780px] rounded-xl">
+                <TabsTrigger
+                  value="Employees"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-l-lg"
+                  )}
+                >
+                  Employees
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Contractors"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
+                  )}
+                >
+                  Contractors
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Teams"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
+                  )}
+                >
+                  Teams
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Vendors"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
+                  )}
+                >
+                  Vendors
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Equipments"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700"
+                  )}
+                >
+                  Equipments
+                </TabsTrigger>
+                <TabsTrigger
+                  value="Locations"
+                  className={cn(
+                    "data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-r-lg"
+                  )}
+                >
+                  Locations
+                </TabsTrigger>
+              </TabsList>
+              {/* Employees Tab */}
+              <TabsContent value="Employees" className="space-y-6">
+                <DirectoryTable
+                  data={employees}
+                  columns={employeeColumns}
+                  onAdd={() => {
+                    /* Add Employee functionality */
+                  }}
+                  addButtonText="Add New Employee"
+                  title="Employees"
+                  description="Employees are the workers of teams."
+                />
+              </TabsContent>
+
+              {/* Contractors Tab */}
+              <TabsContent value="Contractors" className="space-y-6">
+                <DirectoryTable
+                  data={contractors}
+                  columns={contractorColumns}
+                  onAdd={() => {
+                    /* Add Contractor functionality */
+                  }}
+                  addButtonText="Add New Contractor"
+                  title="Contractors"
+                  description="Here are listings of contractors."
+                />
+              </TabsContent>
+
+              {/* Teams Tab */}
+              <TabsContent value="Teams" className="space-y-6">
+                <DirectoryTable
+                  data={teams}
+                  columns={teamColumns}
+                  onAdd={() => {
+                    /* Add Team functionality */
+                  }}
+                  addButtonText="Add New Team"
+                  title="Teams"
+                  description="Here are listings of teams."
+                />
+              </TabsContent>
+
+              {/* Vendors Tab */}
+              <TabsContent value="Vendors" className="space-y-6">
+                <DirectoryTable
+                  data={vendors}
+                  columns={vendorColumns}
+                  onAdd={() => {
+                    /* Add Vendor functionality */
+                  }}
+                  addButtonText="Add New Vendor"
+                  title="Vendors"
+                  description="Here are listings of vendors."
+                />
+              </TabsContent>
+
+              {/* Equipments Tab */}
+              <TabsContent value="Equipments" className="space-y-6">
+                <DirectoryTable
+                  data={equipments}
+                  columns={equipmentColumns}
+                  onAdd={() => {
+                    /* Add Equipment functionality */
+                  }}
+                  addButtonText="Add New Equipment"
+                  title="Equipments"
+                  description="Here are listings of equipments and tools."
+                />
+              </TabsContent>
+
+              {/* Locations Tab */}
+              <TabsContent value="Locations" className="space-y-6">
+                <DirectoryTable
+                  data={locations}
+                  columns={locationColumns}
+                  onAdd={() => {
+                    /* Add Location functionality */
+                  }}
+                  addButtonText="Add New Location"
+                  title="Locations"
+                  description="Here are listings of locations and addresses."
+                />
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
+
+          {/* Asset Management Tab */}
+          <TabsContent value="Asset Management" className="space-y-6">
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Asset Management
+              </h3>
+              <p className="text-gray-600">
+                Advanced asset tracking and management features coming soon.
               </p>
-              <DirectoryTable
-                data={employees}
-                columns={employeeColumns}
-                onAdd={() => {
-                  /* Add Employee functionality */
-                }}
-                addButtonText="Add New Employee"
-              />
             </div>
           </TabsContent>
 
-          {/* Contractors Tab */}
-          <TabsContent value="Contractors" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Contractors
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Here are listings of contractors.
+          {/* Location Management Tab */}
+          <TabsContent value="Location Management" className="space-y-6">
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Location Management
+              </h3>
+              <p className="text-gray-600">
+                Advanced location management features coming soon.
               </p>
-              <DirectoryTable
-                data={contractors}
-                columns={contractorColumns}
-                onAdd={() => {
-                  /* Add Contractor functionality */
-                }}
-                addButtonText="Add New Contractor"
-              />
-            </div>
-          </TabsContent>
-
-          {/* Teams Tab */}
-          <TabsContent value="Teams" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">Teams</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Here are listings of teams.
-              </p>
-              <DirectoryTable
-                data={teams}
-                columns={teamColumns}
-                onAdd={() => {
-                  /* Add Team functionality */
-                }}
-                addButtonText="Add New Team"
-              />
-            </div>
-          </TabsContent>
-
-          {/* Vendors Tab */}
-          <TabsContent value="Vendors" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Vendors
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Here are listings of teams.
-              </p>
-              <DirectoryTable
-                data={vendors}
-                columns={vendorColumns}
-                onAdd={() => {
-                  /* Add Vendor functionality */
-                }}
-                addButtonText="Add New Vendors"
-              />
-            </div>
-          </TabsContent>
-
-          {/* Equipments Tab */}
-          <TabsContent value="Equipments" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Equipments
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Here are listings of equipments.
-              </p>
-              <DirectoryTable
-                data={equipments}
-                columns={equipmentColumns}
-                onAdd={() => {
-                  /* Add Equipment functionality */
-                }}
-                addButtonText="Add New Equipments"
-              />
-            </div>
-          </TabsContent>
-
-          {/* Locations Tab */}
-          <TabsContent value="Locations" className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Locations
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Here are listings of locations.
-              </p>
-              <DirectoryTable
-                data={locations}
-                columns={locationColumns}
-                onAdd={() => {
-                  /* Add Location functionality */
-                }}
-                addButtonText="Add New Locations"
-              />
             </div>
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </main>
   );
 }

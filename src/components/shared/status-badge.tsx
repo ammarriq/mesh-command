@@ -9,60 +9,24 @@ interface StatusBadgeProps {
 }
 
 const statusConfig = {
-  // Project/Task statuses
+  // Manager/User statuses
   Active: {
     variant: "default" as const,
-    color: "bg-green-500",
-    textColor: "text-green-700",
+    color: "bg-[#ECFDF3]",
+    textColor: "text-[#067647]",
+    borderColor: "border-[#ABEFC6]",
   },
-  "In-Progress": {
-    variant: "secondary" as const,
-    color: "bg-blue-500",
-    textColor: "text-blue-700",
+  "In-Active": {
+    variant: "destructive" as const,
+    color: "bg-[#FEF3F2]",
+    textColor: "text-[#B42318]",
+    borderColor: "border-[#FECDCA]",
   },
   "On-hold": {
     variant: "outline" as const,
-    color: "bg-orange-500",
-    textColor: "text-orange-700",
-  },
-  Completed: {
-    variant: "default" as const,
-    color: "bg-green-500",
-    textColor: "text-green-700",
-  },
-  "To Do": {
-    variant: "outline" as const,
-    color: "bg-gray-500",
-    textColor: "text-gray-700",
-  },
-
-  // Priority statuses
-  High: {
-    variant: "destructive" as const,
-    color: "bg-red-500",
-    textColor: "text-red-700",
-  },
-  Medium: {
-    variant: "secondary" as const,
-    color: "bg-yellow-500",
-    textColor: "text-yellow-700",
-  },
-  Low: {
-    variant: "outline" as const,
-    color: "bg-gray-500",
-    textColor: "text-gray-700",
-  },
-
-  // Payment statuses
-  Paid: {
-    variant: "default" as const,
-    color: "bg-green-500",
-    textColor: "text-green-700",
-  },
-  Unpaid: {
-    variant: "destructive" as const,
-    color: "bg-red-500",
-    textColor: "text-red-700",
+    color: "bg-[#FFFAEB]",
+    textColor: "text-[#B54708]",
+    borderColor: "border-[#FEDF89]",
   },
 };
 
@@ -87,7 +51,9 @@ export function StatusBadge({
       className={cn(
         sizeClasses[size],
         config?.textColor,
-        "inline-flex items-center gap-1.5 font-medium"
+        config?.color,
+        config?.borderColor,
+        " inline-flex items-center gap-1.5 font-medium border"
       )}
     >
       {withDot && (

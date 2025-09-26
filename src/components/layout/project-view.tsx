@@ -9,7 +9,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { useSelectedProject } from "@/stores/app-store";
+import { useSelectedProject } from "@/stores";
 import Pill from "../shared/pill";
 import { Separator } from "../ui/separator";
 
@@ -58,7 +58,7 @@ export default function ProjectView() {
             {getStatusIcon(selectedProject.status)}
             <div>
               <h1 className="text-lg font-semibold text-text-primary">
-                {selectedProject.name}
+                {selectedProject.title}
               </h1>
               <div className="flex items-center gap-2 mt-1">
                 <Pill title={selectedProject.status} />
@@ -108,7 +108,7 @@ export default function ProjectView() {
                 </span>
               </div>
               <p className="text-text-primary font-semibold">
-                {selectedProject.assignedTo}
+                {selectedProject.contractor}
               </p>
             </div>
 
@@ -133,7 +133,8 @@ export default function ProjectView() {
               Description
             </h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              {selectedProject.description}
+              Project status: {selectedProject.status} | Budget:{" "}
+              {selectedProject.budget} | Deadline: {selectedProject.deadline}
             </p>
           </div>
 

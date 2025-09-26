@@ -1,14 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Search, Calendar, TrendingUp, Users } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Calendar, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CircularProgress } from "@/components/shared/circular-progress";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { useAppStore } from "@/stores/app-store";
-import { cn } from "@/lib/utils";
+import { useProjectStore } from "@/stores";
+import ReportTab from "@/components/layout/report-tab";
 
 // Chart component (we'll create a simple one for now)
 function LineChart() {
@@ -162,135 +159,18 @@ function DonutChart() {
 }
 
 export default function ReportsPage() {
-  const { projects, selectedProjectId, setSelectedProject } = useAppStore();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState("Active");
+  const { categories, selectedProjectId } = useProjectStore();
+
+  // Get all projects from all categories
+  const allProjects = categories.flatMap((category) => category.projects);
 
   const selectedProject =
-    projects.find((p) => p.id === selectedProjectId) || projects[0];
-
-  const filteredProjects = projects.filter((project) => {
-    const matchesSearch = project.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesTab =
-      activeTab === "Active"
-        ? project.status === "In-Progress"
-        : project.status === activeTab;
-    return matchesSearch && matchesTab;
-  });
+    allProjects.find((p) => p.id === selectedProjectId) || allProjects[0];
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Left Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 text-white" />
-            </div>
-            <h1 className="text-lg font-semibold text-gray-900">Reports</h1>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="flex-1 flex flex-col"
-        >
-          <TabsList className="grid w-full grid-cols-3 mx-6 mt-4">
-            <TabsTrigger value="Active">Active</TabsTrigger>
-            <TabsTrigger value="On-Hold">On-Hold</TabsTrigger>
-            <TabsTrigger value="Completed">Completed</TabsTrigger>
-          </TabsList>
-
-          {/* Project List */}
-          <TabsContent
-            value={activeTab}
-            className="flex-1 overflow-y-auto px-6 pb-6"
-          >
-            <div className="space-y-2 mt-4">
-              {filteredProjects.map((project) => (
-                <div
-                  key={project.id}
-                  onClick={() => setSelectedProject(project.id)}
-                  className={cn(
-                    "p-4 rounded-lg border cursor-pointer transition-colors",
-                    selectedProject?.id === project.id
-                      ? "bg-red-50 border-red-200"
-                      : "bg-white border-gray-200 hover:bg-gray-50"
-                  )}
-                >
-                  {/* Project Icon */}
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-red-600 rounded flex items-center justify-center mt-1">
-                      <div className="w-4 h-4 bg-white rounded" />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 text-sm leading-tight">
-                        {project.name}
-                      </h3>
-                      <div className="mt-2 space-y-1">
-                        <StatusBadge status={project.status} />
-                        {project.status === "In-Progress" && (
-                          <div className="text-xs text-gray-500">
-                            ops-maintenance{" "}
-                            <span className="text-orange-500">In-Progress</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Additional project items if this is the selected one */}
-                  {selectedProject?.id === project.id && (
-                    <div className="mt-4 space-y-2 text-xs">
-                      <div className="text-gray-600">
-                        ops-maintenance In-Progress
-                      </div>
-                      <div className="text-gray-600">
-                        ops-maintenance In-Progress
-                      </div>
-                      <div className="text-gray-600">
-                        finance-payables In-Progress
-                      </div>
-                      <div className="text-gray-600">
-                        cross-functional-compliance In-Progress
-                      </div>
-                      <div className="text-gray-600">
-                        task-onboarding-automation On-hold
-                      </div>
-                      <div className="text-gray-600">
-                        proj-hq-renovation-general In-Progress
-                      </div>
-                      <div className="text-gray-600">
-                        finance-contract-renegotiations On-hold
-                      </div>
-                      <div className="text-gray-600">
-                        task-hvac-cost-reduction In-Progress
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+      <ReportTab />
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
@@ -300,7 +180,7 @@ export default function ReportsPage() {
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h1 className="text-xl font-semibold text-gray-900 mb-2">
-                  {selectedProject?.name}
+                  {selectedProject?.title}
                 </h1>
                 <StatusBadge
                   status={selectedProject?.status || "In-Progress"}
