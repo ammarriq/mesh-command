@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 import Logo from "@/components/shared/logo";
 import AuthInput from "@/components/forms/input";
 import AuthButton from "@/components/forms/button";
 import FormHeading from "@/components/forms/heading";
+import Image from "next/image";
 
 export default function NewPasswordPage() {
   const [showPasswordOne, setShowPasswordOne] = useState(false);
@@ -30,7 +31,7 @@ export default function NewPasswordPage() {
 
           <form className="space-y-2">
             <AuthInput
-              Icon={Lock}
+              icon={"/icons/lock.svg"}
               label="Enter your password"
               id="password"
               name="password"
@@ -58,7 +59,7 @@ export default function NewPasswordPage() {
             />
 
             <AuthInput
-              Icon={Lock}
+              icon={"/icons/lock.svg"}
               label="Retype your password"
               id="confirm"
               name="confirm"
@@ -77,9 +78,15 @@ export default function NewPasswordPage() {
                   onClick={() => setShowPasswordTwo((v) => !v)}
                 >
                   {showPasswordTwo ? (
-                    <EyeOff className="size-4" />
+                    <Image
+                      src="/icons/eye-slash.svg"
+                      alt="Eye Slash Icon"
+                      width={24}
+                      height={24}
+                      className="size-6"
+                    />
                   ) : (
-                    <Eye className="size-4" />
+                    <Eye className="size-6" />
                   )}
                 </button>
               }
