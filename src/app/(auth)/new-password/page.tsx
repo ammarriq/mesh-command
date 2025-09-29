@@ -15,13 +15,11 @@ export default function NewPasswordPage() {
   const [showPasswordTwo, setShowPasswordTwo] = useState(false);
 
   return (
-    <main className="min-h-svh w-full bg-light-bg/60 flex items-start md:items-center justify-center px-4 py-8">
-      <section className="w-full max-w-md space-y-8">
-        <div className="mb-6 flex justify-center">
-          <Logo />
-        </div>
+    <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
+      <section className="flex flex-col gap-8 items-center ">
+        <Logo />
 
-        <section className="rounded-2xl max-w-md py-8 px-12 border bg-card shadow-lg ring-0 space-y-6">
+        <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] max-w-md bg-white">
           <FormHeading title="Create new password">
             <p className="text-text-secondary text-sm">
               Your new password must consist of 8 characters, one upper case,
@@ -29,7 +27,7 @@ export default function NewPasswordPage() {
             </p>
           </FormHeading>
 
-          <form className="space-y-2">
+          <div className="flex flex-col gap-2 ">
             <AuthInput
               icon={"lock"}
               label="Enter your password"
@@ -85,11 +83,9 @@ export default function NewPasswordPage() {
                 </button>
               }
             />
-            <div className="mt-6">
-              <AuthButton name="Create Password" />
-            </div>
-          </form>
-        </section>
+            <AuthButton name="Create Password" />
+          </div>
+        </form>
       </section>
     </main>
   );

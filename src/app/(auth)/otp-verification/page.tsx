@@ -72,16 +72,14 @@ function OtpForm() {
   }
 
   return (
-    <main className="min-h-svh w-full bg-light-bg/60 dark:bg-background flex items-start md:items-center justify-center px-4 py-8">
-      <section className="w-full max-w-2xl">
-        <div className="mb-6 flex justify-center">
-          <Logo />
-        </div>
+    <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
+      <section className="flex flex-col gap-8 items-center ">
+        <Logo />
 
-        <section className="rounded-2xl py-8 px-12 border bg-card shadow-lg ring-0">
+        <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] bg-white">
           <div className="space-y-6">
-            <FormHeading title=" OTP verification">
-              <p className="text-muted-foreground mt-1">
+            <FormHeading title="OTP verification">
+              <p className="text-text-secondary text-sm">
                 A 6-digit code has been sent on your given email{" "}
                 <span className="font-medium text-foreground">
                   hello@boss.com
@@ -92,7 +90,7 @@ function OtpForm() {
               </p>
             </FormHeading>
 
-            <form className="space-y-6 flex flex-col justify-center items-center">
+            <div className="space-y-6 flex flex-col justify-center items-center">
               <div className="flex items-center gap-3">
                 {inputValues.map((val, i) => (
                   <Input
@@ -110,7 +108,7 @@ function OtpForm() {
                     onPaste={(e) => onPaste(i, e)}
                     aria-label={`Digit ${i + 1}`}
                     className={cn(
-                      "h-14 w-12 text-center text-lg tracking-widest font-medium rounded-md ",
+                      "h-10 sm:h-14 w-10 sm:w-12 text-center text-lg tracking-widest font-medium rounded-md ",
                       val
                         ? "border-[#B3E2A7]"
                         : "focus:border focus:border-text-primary"
@@ -127,9 +125,9 @@ function OtpForm() {
               </p>
 
               <AuthButton name="Verify" />
-            </form>
+            </div>
           </div>
-        </section>
+        </form>
       </section>
     </main>
   );

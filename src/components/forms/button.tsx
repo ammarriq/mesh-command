@@ -10,9 +10,7 @@ function AuthButton({ name, className, type = "submit", ...props }: Props) {
     <button
       type={type}
       className={cn(
-        "w-full text-white bg-primary rounded-2xl inline-block disabled:opacity-50 disabled:cursor-not-allowed max-w-96",
-        // Responsive sizing to match auth cards
-        "py-3 sm:py-3.5 2xl:py-4 text-sm sm:text-base",
+        "h-12 rounded-2xl bg-primary text-white flex items-center justify-center w-full",
         className
       )}
       {...props}
