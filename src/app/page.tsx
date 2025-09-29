@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Eye } from "lucide-react";
 import { GoogleIcon } from "@/icons/google";
 import { AppleIcon } from "@/icons/apple";
 import { MicrosoftIcon } from "@/icons/microsoft";
@@ -21,22 +22,20 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <main className="min-h-svh w-full bg-light-bg/60 flex items-start md:items-center justify-center px-4 py-8">
-      <section className="w-full max-w-md space-y-8">
-        <div className="mb-6 flex justify-center">
-          <Logo />
-        </div>
+    <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
+      <section className="flex flex-col gap-8 items-center ">
+        <Logo />
 
-        <div className="rounded-2xl max-w-md py-8 px-12 border bg-card shadow-lg ring-0 space-y-6">
+        <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] max-w-md bg-white">
           <FormHeading title="Login">
             <p className="text-text-secondary text-sm">
               Enter your login details below to continue.
             </p>
           </FormHeading>
 
-          <form className="space-y-2">
+          <div className="flex flex-col gap-2 ">
             <AuthInput
-              Icon={Mail}
+              icon={"/email.svg"}
               label="Email"
               name="email"
               id="email"
@@ -48,7 +47,7 @@ export default function LoginPage() {
             />
 
             <AuthInput
-              Icon={Lock}
+              icon="/lock.svg"
               label="Password"
               name="password"
               id="password"
@@ -65,37 +64,41 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((s) => !s)}
                 >
                   {showPassword ? (
-                    <EyeOff className="size-4" />
+                    <Eye className="size-6" />
                   ) : (
-                    <Eye className="size-4" />
+                    <Image
+                      width={24}
+                      height={24}
+                      src="/eye-slash.svg"
+                      alt="Show password"
+                    />
                   )}
                 </button>
               }
             />
-            <div className="mt-2 text-right">
-              <Link
-                href="/otp-verification"
-                className="text-text-primary font-medium "
-              >
-                Forgot your password?
-              </Link>
-            </div>
 
-            <AuthButton name="Login" />
-          </form>
+            <Link
+              href="/otp-verification"
+              className="text-text-primary font-medium text-right"
+            >
+              Forgot your password?
+            </Link>
+          </div>
 
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs text-text-secondary">
+          <AuthButton name="Login" />
+
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-text-secondary">
             <Separator />
-            <span className="px-2">or</span>
+            <span className="text-xs ">or</span>
             <Separator />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-4">
             {providers.map((provider) => (
               <OAuthButton key={provider} provider={provider} />
             ))}
           </div>
-        </div>
+        </form>
       </section>
     </main>
   );
@@ -115,7 +118,7 @@ function OAuthButton({ provider }: { provider: Provider }) {
     return (
       <Button
         type="button"
-        className="w-full py-6 text-base gap-4 font-medium rounded-[10px] justify-center items-center bg-black text-white hover:bg-black/90 shadow-md"
+        className="w-full py-6 text-base gap-4 font-medium rounded-[10px] justify-center items-center bg-black text-white hover:bg-black/90 shadow-[0_0_3px_0_rgba(0,0,0,0.08),_0_2px_3px_0_rgba(0,0,0,0.17)]"
       >
         <AppleIcon className="size-6" aria-hidden />
         {label}

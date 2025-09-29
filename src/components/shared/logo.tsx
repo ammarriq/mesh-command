@@ -13,10 +13,10 @@ function Logo() {
 export function LogoText() {
   return (
     <hgroup className="flex flex-col items-start ">
-      <h3 className="text-xl sm:text-2xl md:text-[26px] 2xl:text-[28px] text-primary font-extrabold leading-6 sm:leading-7">
+      <h3 className="text-[28px] text-primary font-extrabold leading-6 sm:leading-7">
         Mesh Command
       </h3>
-      <p className="text-text-secondary leading-tight">
+      <p className="text-text-secondary text-base leading-tight">
         Redwood Real Estate Service
       </p>
     </hgroup>
