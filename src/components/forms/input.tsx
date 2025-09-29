@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import React from "react"
-import { type LucideIcon } from "lucide-react"
-import { Input } from "../ui/input"
+import React from "react";
+import { Input } from "../ui/input";
+import Image from "next/image";
 
 interface Props extends Omit<React.ComponentProps<typeof Input>, "children"> {
-  label: string
-  Icon: LucideIcon
-  name: string
-  placeHolder?: string
-  required?: boolean
-  endAdornment?: React.ReactNode
+  label: string;
+  icon: string;
+  name: string;
+  placeHolder?: string;
+  required?: boolean;
+  endAdornment?: React.ReactNode;
 }
 
 function AuthInput({
   label,
   name,
   placeHolder,
-  Icon,
+  icon,
   required = false,
   className,
   id,
@@ -26,21 +26,24 @@ function AuthInput({
   ...inputProps
 }: Props) {
   return (
-    <label className="py-1.5 px-3 bg-light-bg rounded-[12px] text-sm sm:text-base flex items-center gap-2 dark:bg-input/30">
+    <label className="p-3 flex items-center gap-2 rounded-[12px] bg-Bg-Dark shadow-xs">
       <span className="sr-only">{label}</span>
-      <Icon className="size-4 sm:size-5 text-text-secondary" aria-hidden />
+      <Image width={24} height={24} src={icon} alt="" />
       <Input
         id={id || name}
         name={name}
         type={type}
         placeholder={placeHolder}
-        className={"shadow-none border-none outline-none ring-0 p-0 text-base placeholder:text-base flex-1 bg-transparent " + (className ?? "")}
+        className={
+          "shadow-none border-none outline-none ring-0 p-0 text-base placeholder:text-base flex-1 bg-transparent " +
+          (className ?? "")
+        }
         required={required}
         {...inputProps}
       />
       {endAdornment}
     </label>
-  )
+  );
 }
 
-export default AuthInput
+export default AuthInput;

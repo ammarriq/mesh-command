@@ -6,7 +6,7 @@ interface Props {
 
 function FormHeading({ title, children }: Props & PropsWithChildren) {
   return (
-    <header className="space-y-1.5 sm:space-y-2">
+    <header className="flex flex-col items-start gap-2">
       <h1 className="text-2xl sm:text-3xl text-text-primary">{title}</h1>
       {children}
     </header>
