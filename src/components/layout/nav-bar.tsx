@@ -1,36 +1,30 @@
 "use client";
 
 import React from "react";
+import { Bell } from "lucide-react";
 import Logo from "../shared/logo";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Bell } from "lucide-react";
 import { FullScreenIcon } from "@/icons/full-screen";
 import { SplitscreenIcon } from "@/icons/split-screen";
 import { useChatStore, useSplitScreen } from "@/stores";
 
 import { SearchInput } from "../shared/search-input";
+import { ActionButton } from "../shared/action-button";
 
 function NavBar() {
   const isSplitScreen = useSplitScreen();
   const { toggleSplitScreen } = useChatStore();
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="w-full bg-white rounded-xs">
       <div className="mx-auto flex h-14 sm:h-16 2xl:h-16 items-center gap-2 sm:gap-3 2xl:gap-4 px-2 sm:px-4 2xl:px-4">
         {/* Left: Brand + controls */}
         <div className="flex min-w-0 items-center gap-3">
-          {/* <SidebarTrigger className="md:hidden" aria-label="Toggle sidebar" /> */}
           <Logo />
 
           {/* Small control group with functional split screen toggle */}
@@ -76,19 +70,7 @@ function NavBar() {
         <div className="flex items-center gap-2 sm:gap-3">
           <SearchInput />
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                aria-label="Notifications"
-                className="size-9 sm:size-10 2xl:size-12 border border-Bg-Dark bg-light-bg text-primary "
-              >
-                <Bell className="size-4 sm:size-5 2xl:size-6 text-primary fill-primary/10" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Notifications</TooltipContent>
-          </Tooltip>
+          <ActionButton icon={Bell} tooltipText="Notifications" />
 
           <Avatar name="Alex Doe" />
         </div>

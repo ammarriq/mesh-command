@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { Copy, Edit, Users } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { SearchInput } from "@/components/shared/search-input";
+import { CustomTabTrigger } from "@/components/shared/custom-tab-trigger";
 import {
   Table,
   TableHeader,
@@ -22,170 +25,170 @@ import {
   type Contractor,
   type Auditor,
 } from "@/stores";
+
 import { cn } from "@/lib/utils";
-import { SearchInput } from "@/components/shared/search-input";
-import { CustomTabTrigger } from "@/components/shared/custom-tab-trigger";
+
+// Manager columns configuration
+const managerColumns = [
+  {
+    key: "name" as keyof Manager,
+    label: "Name",
+    render: (_: unknown, manager: Manager) => (
+      <AdminUserAvatar user={manager} />
+    ),
+  },
+  {
+    key: "phone" as keyof Manager,
+    label: "Phone Number",
+  },
+  {
+    key: "status" as keyof Manager,
+    label: "Status",
+    render: (status: unknown) => (
+      <StatusBadge status={status as Manager["status"]} />
+    ),
+  },
+  {
+    key: "dateAdded" as keyof Manager,
+    label: "Date added",
+  },
+  {
+    key: "id" as keyof Manager,
+    label: "",
+    render: () => <ActionButtons />,
+  },
+];
+
+// Sub-Manager columns (same structure as Manager)
+const subManagerColumns = [
+  {
+    key: "name" as keyof SubManager,
+    label: "Name",
+    render: (_: unknown, subManager: SubManager) => (
+      <AdminUserAvatar user={subManager} />
+    ),
+  },
+  {
+    key: "phone" as keyof SubManager,
+    label: "Phone Number",
+  },
+  {
+    key: "status" as keyof SubManager,
+    label: "Status",
+    render: (status: unknown) => (
+      <StatusBadge status={status as SubManager["status"]} />
+    ),
+  },
+  {
+    key: "dateAdded" as keyof SubManager,
+    label: "Date added",
+  },
+  {
+    key: "id" as keyof SubManager,
+    label: "",
+    render: () => <ActionButtons />,
+  },
+];
+
+// Employee columns (reuse from directory with admin styling)
+const employeeColumns = [
+  {
+    key: "name" as keyof Employee,
+    label: "Name",
+    render: (_: unknown, employee: Employee) => (
+      <AdminUserAvatar user={employee} />
+    ),
+  },
+  {
+    key: "phone" as keyof Employee,
+    label: "Phone Number",
+  },
+  {
+    key: "status" as keyof Employee,
+    label: "Status",
+    render: (status: unknown) => (
+      <StatusBadge status={status as Employee["status"]} />
+    ),
+  },
+  {
+    key: "dateAdded" as keyof Employee,
+    label: "Date added",
+  },
+  {
+    key: "id" as keyof Employee,
+    label: "",
+    render: () => <ActionButtons />,
+  },
+];
+
+// Contractor columns (reuse from directory with admin styling)
+const contractorColumns = [
+  {
+    key: "name" as keyof Contractor,
+    label: "Name",
+    render: (_: unknown, contractor: Contractor) => (
+      <AdminUserAvatar user={contractor} />
+    ),
+  },
+  {
+    key: "phone" as keyof Contractor,
+    label: "Phone Number",
+  },
+  {
+    key: "status" as keyof Contractor,
+    label: "Status",
+    render: (status: unknown) => (
+      <StatusBadge status={status as Contractor["status"]} />
+    ),
+  },
+  {
+    key: "dateAdded" as keyof Contractor,
+    label: "Date added",
+  },
+  {
+    key: "id" as keyof Contractor,
+    label: "",
+    render: () => <ActionButtons />,
+  },
+];
+
+// Auditor columns
+const auditorColumns = [
+  {
+    key: "name" as keyof Auditor,
+    label: "Name",
+    render: (_: unknown, auditor: Auditor) => (
+      <AdminUserAvatar user={auditor} />
+    ),
+  },
+  {
+    key: "phone" as keyof Auditor,
+    label: "Phone Number",
+  },
+  {
+    key: "status" as keyof Auditor,
+    label: "Status",
+    render: (status: unknown) => (
+      <StatusBadge status={status as Auditor["status"]} />
+    ),
+  },
+  {
+    key: "dateAdded" as keyof Auditor,
+    label: "Date added",
+  },
+  {
+    key: "id" as keyof Auditor,
+    label: "",
+    render: () => <ActionButtons />,
+  },
+];
 
 export default function AdminPage() {
-  const { managers, subManagers, auditors } = useAdminStore();
-  const { employees, contractors } = useDirectoryStore();
   const [activeMainTab, setActiveMainTab] = useState("People Management");
   const [activePeopleTab, setActivePeopleTab] = useState("Managers");
 
-  // Manager columns configuration
-  const managerColumns = [
-    {
-      key: "name" as keyof Manager,
-      label: "Name",
-      render: (_: unknown, manager: Manager) => (
-        <AdminUserAvatar user={manager} />
-      ),
-    },
-    {
-      key: "phone" as keyof Manager,
-      label: "Phone Number",
-    },
-    {
-      key: "status" as keyof Manager,
-      label: "Status",
-      render: (status: unknown) => (
-        <StatusBadge status={status as Manager["status"]} />
-      ),
-    },
-    {
-      key: "dateAdded" as keyof Manager,
-      label: "Date added",
-    },
-    {
-      key: "id" as keyof Manager,
-      label: "",
-      render: () => <ActionButtons />,
-    },
-  ];
-
-  // Sub-Manager columns (same structure as Manager)
-  const subManagerColumns = [
-    {
-      key: "name" as keyof SubManager,
-      label: "Name",
-      render: (_: unknown, subManager: SubManager) => (
-        <AdminUserAvatar user={subManager} />
-      ),
-    },
-    {
-      key: "phone" as keyof SubManager,
-      label: "Phone Number",
-    },
-    {
-      key: "status" as keyof SubManager,
-      label: "Status",
-      render: (status: unknown) => (
-        <StatusBadge status={status as SubManager["status"]} />
-      ),
-    },
-    {
-      key: "dateAdded" as keyof SubManager,
-      label: "Date added",
-    },
-    {
-      key: "id" as keyof SubManager,
-      label: "",
-      render: () => <ActionButtons />,
-    },
-  ];
-
-  // Employee columns (reuse from directory with admin styling)
-  const employeeColumns = [
-    {
-      key: "name" as keyof Employee,
-      label: "Name",
-      render: (_: unknown, employee: Employee) => (
-        <AdminUserAvatar user={employee} />
-      ),
-    },
-    {
-      key: "phone" as keyof Employee,
-      label: "Phone Number",
-    },
-    {
-      key: "status" as keyof Employee,
-      label: "Status",
-      render: (status: unknown) => (
-        <StatusBadge status={status as Employee["status"]} />
-      ),
-    },
-    {
-      key: "dateAdded" as keyof Employee,
-      label: "Date added",
-    },
-    {
-      key: "id" as keyof Employee,
-      label: "",
-      render: () => <ActionButtons />,
-    },
-  ];
-
-  // Contractor columns (reuse from directory with admin styling)
-  const contractorColumns = [
-    {
-      key: "name" as keyof Contractor,
-      label: "Name",
-      render: (_: unknown, contractor: Contractor) => (
-        <AdminUserAvatar user={contractor} />
-      ),
-    },
-    {
-      key: "phone" as keyof Contractor,
-      label: "Phone Number",
-    },
-    {
-      key: "status" as keyof Contractor,
-      label: "Status",
-      render: (status: unknown) => (
-        <StatusBadge status={status as Contractor["status"]} />
-      ),
-    },
-    {
-      key: "dateAdded" as keyof Contractor,
-      label: "Date added",
-    },
-    {
-      key: "id" as keyof Contractor,
-      label: "",
-      render: () => <ActionButtons />,
-    },
-  ];
-
-  // Auditor columns
-  const auditorColumns = [
-    {
-      key: "name" as keyof Auditor,
-      label: "Name",
-      render: (_: unknown, auditor: Auditor) => (
-        <AdminUserAvatar user={auditor} />
-      ),
-    },
-    {
-      key: "phone" as keyof Auditor,
-      label: "Phone Number",
-    },
-    {
-      key: "status" as keyof Auditor,
-      label: "Status",
-      render: (status: unknown) => (
-        <StatusBadge status={status as Auditor["status"]} />
-      ),
-    },
-    {
-      key: "dateAdded" as keyof Auditor,
-      label: "Date added",
-    },
-    {
-      key: "id" as keyof Auditor,
-      label: "",
-      render: () => <ActionButtons />,
-    },
-  ];
+  const { managers, subManagers, auditors } = useAdminStore();
+  const { employees, contractors } = useDirectoryStore();
 
   return (
     <main className="min-h-screen bg-white flex-1 py-4 ">

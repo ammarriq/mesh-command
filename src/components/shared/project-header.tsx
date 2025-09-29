@@ -1,8 +1,18 @@
-import { Calendar, DollarSign, User, Plus } from "lucide-react";
+import {
+  Calendar,
+  DollarSign,
+  User,
+  MessageCircle,
+  MoreHorizontal,
+  FileText,
+  Edit,
+} from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { HalfCircleProgress } from "@/components/shared/half-circle-progress";
 import { Button } from "@/components/ui/button";
 import { InfoItem } from "@/components/shared/info-item";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ActionButton } from "@/components/shared/action-button";
+import { AvatarGroup } from "@/components/shared/avatar-group";
 import { Project } from "@/stores";
 
 interface ProjectHeaderPropsWithProject {
@@ -10,6 +20,7 @@ interface ProjectHeaderPropsWithProject {
   showTeamMembers?: boolean;
   showDownloadButton?: boolean;
   onDownloadAll?: () => void;
+  showOnlyAvatarGroup?: boolean; // If true, only show AvatarGroup (for Docket page)
 }
 
 interface ProjectHeaderPropsWithDetails {
@@ -24,6 +35,7 @@ interface ProjectHeaderPropsWithDetails {
   showTeamMembers?: boolean;
   showDownloadButton?: boolean;
   onDownloadAll?: () => void;
+  showOnlyAvatarGroup?: boolean;
 }
 
 type ProjectHeaderProps =
@@ -35,6 +47,7 @@ export function ProjectHeader(props: ProjectHeaderProps) {
     showTeamMembers = true,
     showDownloadButton = false,
     onDownloadAll,
+    showOnlyAvatarGroup = false,
   } = props;
 
   // Check if props contains a project object
@@ -62,85 +75,154 @@ export function ProjectHeader(props: ProjectHeaderProps) {
   const filingCapacity = isProjectObject ? undefined : props.filingCapacity;
 
   return (
-    <header className="p-6 bg-white flex flex-col 2xl:flex-row justify-between 2xl:items-center gap-6">
-      <section className="flex flex-col gap-2">
-        <hgroup className="flex items-center gap-4">
-          <h1 className="text-2xl font-medium text-text-primary">{title}</h1>
-          <span className="px-2 py-0.5 bg-[#FFDD98] text-[#A17800] font-semibold text-xs">
-            {status}
-          </span>
-        </hgroup>
-
-        <div className="flex items-center gap-4 text-sm">
-          {contractor && (
-            <InfoItem icon={User} label="Contractor" value={contractor} />
-          )}
-
-          {deadline && (
-            <InfoItem icon={Calendar} label="Deadline" value={deadline} />
-          )}
-
-          {budget && (
-            <InfoItem icon={DollarSign} label="Budget" value={budget} />
-          )}
+    <header className="px-1 bg-white">
+      {/* First row: title, info, avatar group */}
+      <div className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center gap-4">
+        <div className="flex flex-col w-full">
+          <div className="flex flex-row items-center justify-between gap-4 w-full">
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-4">
+                <h1 className="text-2xl font-medium text-text-primary">
+                  {title}
+                </h1>
+                <span className="px-2 py-0.5 rounded-xs bg-[#FFDD98] text-[#A17800] font-semibold text-xs">
+                  {status}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-sm mt-1">
+                {contractor && (
+                  <InfoItem icon={User} label="Contractor" value={contractor} />
+                )}
+                {deadline && (
+                  <InfoItem icon={Calendar} label="Deadline" value={deadline} />
+                )}
+                {budget && (
+                  <InfoItem icon={DollarSign} label="Budget" value={budget} />
+                )}
+              </div>
+            </div>
+            {/* Team members and actions */}
+            {showTeamMembers && (
+              <div className="flex items-center gap-1">
+                <AvatarGroup
+                  members={
+                    isProjectObject && props.project.users
+                      ? props.project.users.map((user, idx) => ({
+                          id: idx,
+                          name: user.name,
+                          image: user.image,
+                          initials: user.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join(""),
+                        }))
+                      : [
+                          { id: 1, name: "Team Member 1", initials: "1" },
+                          { id: 2, name: "Team Member 2", initials: "2" },
+                          { id: 3, name: "Team Member 3", initials: "3" },
+                          { id: 4, name: "Team Member 4", initials: "4" },
+                          { id: 5, name: "Team Member 5", initials: "5" },
+                        ]
+                  }
+                  maxVisible={5}
+                  size="md"
+                  showAddButton={true}
+                  onAddClick={() => console.log("Add team member")}
+                />
+                {/* Only show other actions if not showOnlyAvatarGroup */}
+                {!showOnlyAvatarGroup && (
+                  <>
+                    <ActionButton
+                      icon={MessageCircle}
+                      hasNotifications={true}
+                      notificationCount={3}
+                      tooltipText="Project Comments"
+                    />
+                    <ActionButton
+                      icon={MoreHorizontal}
+                      tooltipText="Project Options"
+                      dropdownActions={[
+                        {
+                          label: "Linked Dockets",
+                          icon: FileText,
+                          onClick: () => console.log("Open linked dockets"),
+                          iconClassName: "size-4 text-red-600",
+                        },
+                        {
+                          label: "Edit Project",
+                          icon: Edit,
+                          onClick: () => console.log("Edit project"),
+                          iconClassName: "size-4 text-red-600",
+                        },
+                      ]}
+                    />
+                  </>
+                )}
+              </div>
+            )}
+            {/* Download all button */}
+            {showDownloadButton && (
+              <div className="ml-auto">
+                <Button variant="outline" onClick={onDownloadAll}>
+                  Download all
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section className="flex items-center justify-between gap-2">
-        {/* Progress Indicators */}
-        <div className="flex items-center gap-2">
-          {budgetConsumed !== undefined && (
-            <HalfCircleProgress
-              value={budgetConsumed}
-              label="Budget Consumed"
-              size="md"
-            />
-          )}
-
-          {progress !== undefined && (
-            <HalfCircleProgress value={progress} label="Progress" size="md" />
-          )}
-
-          {filingCapacity !== undefined && (
-            <HalfCircleProgress
-              value={filingCapacity}
-              label="Filing Capacity"
-              size="md"
-            />
-          )}
-        </div>
-
-        {/* Team members */}
-        {showTeamMembers && (
-          <div className="flex -space-x-2 ml-8">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Avatar
-                key={i}
-                className="w-10 h-10 rounded-none border-2 border-white"
-              >
-                <AvatarImage src="" alt={`Team member ${i}`} />
-                <AvatarFallback className="bg-gray-50 rounded-none">
-                  {i}
-                </AvatarFallback>
-              </Avatar>
-            ))}
-            <Avatar className="w-10 h-10 bg-primary rounded-none border-2 border-white">
-              <AvatarFallback className="bg-primary rounded-none">
-                <Plus className="size-5 text-white" />
-              </AvatarFallback>
-            </Avatar>
+      {/* Second row: shadcn progress bars, only visible below 2xl, hidden above */}
+      <div className="flex flex-col gap-3 mt-4 2xl:hidden w-full">
+        {budgetConsumed !== undefined && (
+          <div>
+            <div className="flex items-center gap-2 mb-1 text-xs text-text-secondary">
+              <Progress value={budgetConsumed} className="max-w-80" />
+              <span>{budgetConsumed}% Budget Consumed</span>
+            </div>
           </div>
         )}
-
-        {/* Download all button */}
-        {showDownloadButton && (
-          <div className="ml-auto">
-            <Button variant="outline" onClick={onDownloadAll}>
-              Download all
-            </Button>
+        {progress !== undefined && (
+          <div>
+            <div className="flex items-center gap-2 mb-1 text-xs text-text-secondary">
+              <Progress value={progress} className="max-w-80" />
+              <span>{progress}% Progress</span>
+            </div>
           </div>
         )}
-      </section>
+        {filingCapacity !== undefined && (
+          <div>
+            <div className="flex items-center gap-2 mb-1 text-xs text-text-secondary">
+              <span>Filing Capacity</span>
+              <Progress value={filingCapacity} className="max-w-80" />
+              <span>{filingCapacity}%</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Progress indicators for 2xl and above, placed at end */}
+      <div className="hidden 2xl:flex items-center gap-2 ml-4">
+        {budgetConsumed !== undefined && (
+          <HalfCircleProgress
+            value={budgetConsumed}
+            label="Budget Consumed"
+            size="md"
+          />
+        )}
+
+        {progress !== undefined && (
+          <HalfCircleProgress value={progress} label="Progress" size="md" />
+        )}
+
+        {filingCapacity !== undefined && (
+          <HalfCircleProgress
+            value={filingCapacity}
+            label="Filing Capacity"
+            size="md"
+          />
+        )}
+      </div>
     </header>
   );
 }

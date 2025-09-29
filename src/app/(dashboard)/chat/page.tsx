@@ -1,16 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+
 import ChatView from "@/components/layout/chat-view";
 import ChatTab from "@/components/layout/chat-tab";
 import SelectRobot from "@/components/layout/select-robot";
-import ProjectView from "@/components/layout/project-view";
+
 import {
   useSelectedChat,
   useSplitScreen,
   useChatStore,
   useSelectedProject,
 } from "@/stores";
-import React, { useEffect } from "react";
+import ProjectMainContent from "@/components/layout/ProjectMainContent";
 
 function ChatPage() {
   const selectedChat = useSelectedChat();
@@ -20,57 +22,66 @@ function ChatPage() {
     useChatStore();
 
   useEffect(() => {
-    // If there are no chats at all, create a new one
     if (chats.length === 0) {
       createNewChat();
       return;
     }
 
-    // If there are chats but no selected chat, select the first one
     if (!selectedChatId && chats.length > 0) {
       setSelectedChat(chats[0].id);
       return;
     }
   }, [chats, selectedChatId, setSelectedChat, createNewChat]);
 
-  // Don't render anything while we're setting up the initial chat state
   if (!selectedChat) {
     return null;
   }
 
-  // Render split screen layout
-  if (isSplitScreen) {
-    // If no project is selected, show full width chat
-    if (!selectedProject) {
-      return (
-        <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
-          <ChatTab />
-          {!selectedChat.selectedModel && <SelectRobot />}
-          {selectedChat.selectedModel && <ChatView />}
-        </section>
-      );
-    }
-
-    // If project is selected, show split view
+  // If project is selected, show split view
+  if (isSplitScreen && selectedProject) {
     return (
       <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_2fr_2fr]">
         <ChatTab />
 
-        {/* Chat Section */}
         <div className="border-r border-Bg-Dark">
           {!selectedChat.selectedModel && <SelectRobot />}
           {selectedChat.selectedModel && <ChatView />}
         </div>
 
-        {/* Project Section */}
         <div className="">
-          <ProjectView />
+          <ProjectMainContent
+            selectedProject={selectedProject}
+            getTasksByStatus={(project, status) => {
+              switch (status) {
+                case "To Do":
+                  return project.todo;
+                case "In-Progress":
+                  return project.inProgress;
+                case "Completed":
+                  return project.completed;
+                default:
+                  return [];
+              }
+            }}
+            getPriorityColor={(priority) => {
+              switch (priority.toLowerCase()) {
+                case "high":
+                  return "bg-primary/10 text-primary";
+                case "medium":
+                  return "bg-yellow-100 text-[#D58D49]";
+                case "low":
+                  return "bg-green-100 text-[#68B266]";
+                default:
+                  return "bg-gray-100 text-gray-700";
+              }
+            }}
+          />
         </div>
       </section>
     );
   }
 
-  // Render normal single view layout
+  // Render normal single view layout if no project selected or not in split screen mode
   return (
     <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
       <ChatTab />

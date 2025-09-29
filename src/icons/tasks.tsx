@@ -1,0 +1,20 @@
+import React from "react";
+import type { SVGProps } from "react";
+
+export function TasksIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={288}
+      height={288}
+      viewBox="0 0 512 512"
+      {...props}
+      fill="#fff"
+    >
+      <path
+        fillRule="evenodd"
+        d="M256 85.334h170.666V128H256zm0 149.333h170.666v42.667H256zM256 384h170.666v42.667H256zM189.814 46.126l25.364 19.51l-76.032 98.843l-68.617-60.04l21.072-24.082l42.968 37.574zm0 149.333l25.364 19.511l-76.032 98.842l-68.617-60.04l21.072-24.082l42.968 37.574zm0 149.334l25.364 19.51l-76.032 98.843l-68.617-60.04l21.072-24.082l42.968 37.574z"
+      ></path>
+    </svg>
+  );
+}

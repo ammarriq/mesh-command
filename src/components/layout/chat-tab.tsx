@@ -24,9 +24,9 @@ import { ChevronDown } from "lucide-react";
 import type { Project } from "@/stores";
 
 function ChatTab() {
-  const { chats, setSelectedChat, createNewChat } = useChatStore();
   const { categories } = useProjectStore();
   const selectedChat = useSelectedChat();
+  const { chats, setSelectedChat, createNewChat } = useChatStore();
 
   return (
     <Tabs defaultValue="private" className="w-[496px]">
@@ -34,12 +34,14 @@ function ChatTab() {
         <CustomTabTrigger title="Private" value="private" />
         <CustomTabTrigger title="Projects" value="projects" />
       </TabsList>
+
       <div className="p-2 flex items-center gap-2">
         <SearchInput />
         <button onClick={createNewChat} className="bg-primary p-3">
           <AddIcon className="size-6" />
         </button>
       </div>
+
       <TabsContent
         value="private"
         className="p-2 flex flex-col border-r border-r-Bg-Dark"
@@ -95,25 +97,21 @@ function ProjectContentItem({
     setSelectedProject(projectId);
 
     if (!isSplitScreen) {
-      // Navigate to projects page when split screen is off
       router.push("/projects");
     }
-    // When split screen is on, just setting the selected project will show it in the right panel
   };
 
-  // Check if any project in this category is currently selected
+  // Check if any project in this category is currently selected because we need to know if the category should be opened or closed by default
   const hasSelectedProject = projects.some(
     (project) => project.id === selectedProjectId
   );
 
-  const [isOpen, setIsOpen] = useState(hasSelectedProject);
+  const [isCategoryOpen, setIsCateoryOpen] = useState(hasSelectedProject);
 
-  // Update isOpen state when selectedProjectId changes
   useEffect(() => {
-    setIsOpen(hasSelectedProject);
+    setIsCateoryOpen(hasSelectedProject);
   }, [hasSelectedProject]);
 
-  // Helper function to get status display information
   const getStatusDisplay = (status: "active" | "on-hold" | "completed") => {
     switch (status) {
       case "active":
@@ -129,8 +127,8 @@ function ProjectContentItem({
 
   return (
     <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={isCategoryOpen}
+      onOpenChange={setIsCateoryOpen}
       className="flex w-full flex-col gap-2"
     >
       <div className="flex items-center gap-2">
@@ -142,7 +140,7 @@ function ProjectContentItem({
           >
             <ChevronDown
               className={`transition-transform duration-200 ${
-                isOpen ? "rotate-0" : "rotate-180"
+                isCategoryOpen ? "rotate-0" : "rotate-180"
               }`}
             />
             <span className="sr-only">Toggle</span>

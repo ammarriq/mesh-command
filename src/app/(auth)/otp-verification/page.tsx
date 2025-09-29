@@ -1,37 +1,25 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  FormEvent,
-  Suspense,
-} from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, Suspense } from "react";
 
-import { Input } from "@/components/ui/input";
 import Logo from "@/components/shared/logo";
 import AuthButton from "@/components/forms/button";
 import FormHeading from "@/components/forms/heading";
+import { Input } from "@/components/ui/input";
+
 import { cn } from "@/lib/utils";
 
 const OTP_LENGTH = 6;
 
 function OtpForm() {
-  const params = useSearchParams();
-  const emailParam = params.get("email") || "abcd***@server.com";
-
-  const [values, setValues] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const [seconds, setSeconds] = useState(60);
+  const [inputValues, setInputValues] = useState<string[]>(
+    Array(OTP_LENGTH).fill("")
+  );
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
-
-  const code = useMemo(() => values.join(""), [values]);
-  const canVerify = code.length === OTP_LENGTH && values.every((v) => v !== "");
 
   useEffect(() => {
     const id = setInterval(() => setSeconds((s) => (s > 0 ? s - 1 : 0)), 1000);
-    // focus first input on mount for faster entry
     focusIndex(0);
     return () => clearInterval(id);
   }, []);
@@ -41,9 +29,9 @@ function OtpForm() {
     if (el) el.focus();
   }
 
-  function onChange(idx: number, next: string) {
-    const char = next.replace(/\D/g, "").slice(-1);
-    setValues((prev) => {
+  function onChange(idx: number, newValue: string) {
+    const char = newValue.replace(/\D/g, "").slice(-1); // should contain only one digit
+    setInputValues((prev) => {
       const copy = [...prev];
       copy[idx] = char;
       return copy;
@@ -52,10 +40,10 @@ function OtpForm() {
   }
 
   function onKeyDown(idx: number, e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Backspace" && !values[idx] && idx > 0) {
+    if (e.key === "Backspace" && !inputValues[idx] && idx > 0) {
       e.preventDefault();
       focusIndex(idx - 1);
-      setValues((prev) => {
+      setInputValues((prev) => {
         const copy = [...prev];
         copy[idx - 1] = "";
         return copy;
@@ -66,30 +54,26 @@ function OtpForm() {
   }
 
   function onPaste(idx: number, e: React.ClipboardEvent<HTMLInputElement>) {
+    e.preventDefault();
+
     const text = e.clipboardData.getData("text");
     if (!text) return;
+
     const digits = text.replace(/\D/g, "").slice(0, OTP_LENGTH);
     if (!digits) return;
-    e.preventDefault();
-    const next = values.slice();
+
+    const next = inputValues.slice();
     for (let i = 0; i < OTP_LENGTH - idx; i++) {
       next[idx + i] = digits[i] ?? next[idx + i];
     }
-    setValues(next);
+    setInputValues(next);
     const last = Math.min(idx + digits.length, OTP_LENGTH - 1);
     focusIndex(last);
   }
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!canVerify) return;
-    // Hook up to your verification endpoint here
-    // TODO: Implement OTP verification logic
-  }
-
   return (
     <main className="min-h-svh w-full bg-light-bg/60 dark:bg-background flex items-start md:items-center justify-center px-4 py-8">
-      <div className="w-full max-w-2xl">
+      <section className="w-full max-w-2xl">
         <div className="mb-6 flex justify-center">
           <Logo />
         </div>
@@ -100,7 +84,7 @@ function OtpForm() {
               <p className="text-muted-foreground mt-1">
                 A 6-digit code has been sent on your given email{" "}
                 <span className="font-medium text-foreground">
-                  {emailParam}
+                  hello@boss.com
                 </span>
                 .
                 <br className="hidden sm:block" /> Enter verification code
@@ -108,12 +92,9 @@ function OtpForm() {
               </p>
             </FormHeading>
 
-            <form
-              onSubmit={onSubmit}
-              className="space-y-6 flex flex-col justify-center items-center"
-            >
+            <form className="space-y-6 flex flex-col justify-center items-center">
               <div className="flex items-center gap-3">
-                {values.map((val, i) => (
+                {inputValues.map((val, i) => (
                   <Input
                     key={i}
                     ref={(el) => {
@@ -149,7 +130,7 @@ function OtpForm() {
             </form>
           </div>
         </section>
-      </div>
+      </section>
     </main>
   );
 }

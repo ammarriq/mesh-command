@@ -34,8 +34,9 @@ export function HalfCircleProgress({
             fill="none"
             stroke="#e5e7eb"
             strokeWidth={strokeWidth}
+            strokeLinecap="round"
           />
-          {/* Progress half circle */}
+          {/* Progress half circle - appears on top */}
           <path
             d="M2 16 a 14 14 0 0 1 32 0"
             fill="none"
@@ -52,7 +53,7 @@ export function HalfCircleProgress({
         </div>
       </div>
       {label && (
-        <div className="text-sm font-medium text-text-primary text-center">
+        <div className="text-xs font-medium text-text-primary text-center">
           {label}
         </div>
       )}
