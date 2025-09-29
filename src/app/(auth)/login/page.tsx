@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 import { Eye } from "lucide-react";
 import { GoogleIcon } from "@/icons/google";
@@ -15,6 +14,7 @@ import AuthInput from "@/components/forms/input";
 import Logo from "@/components/shared/logo";
 import AuthButton from "@/components/forms/button";
 import FormHeading from "@/components/forms/heading";
+import EyeSlashIcon from "@/icons/eye-slash";
 
 const providers = ["google", "apple", "microsoft"] as const;
 
@@ -35,7 +35,7 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-2 ">
             <AuthInput
-              icon={"/email.svg"}
+              icon={"email"}
               label="Email"
               name="email"
               id="email"
@@ -47,7 +47,7 @@ export default function LoginPage() {
             />
 
             <AuthInput
-              icon="/lock.svg"
+              icon="lock"
               label="Password"
               name="password"
               id="password"
@@ -63,16 +63,7 @@ export default function LoginPage() {
                   className="text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => setShowPassword((s) => !s)}
                 >
-                  {showPassword ? (
-                    <Eye className="size-6" />
-                  ) : (
-                    <Image
-                      width={24}
-                      height={24}
-                      src="/eye-slash.svg"
-                      alt="Show password"
-                    />
-                  )}
+                  {showPassword ? <Eye className="size-6" /> : <EyeSlashIcon />}
                 </button>
               }
             />

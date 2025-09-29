@@ -2,11 +2,13 @@
 
 import React from "react";
 import { Input } from "../ui/input";
-import Image from "next/image";
+import EmailIcon from "../../icons/email";
+import EyeSlashIcon from "../../icons/eye-slash";
+import LockIcon from "../../icons/lock";
 
 interface Props extends Omit<React.ComponentProps<typeof Input>, "children"> {
   label: string;
-  icon: string;
+  icon: "email" | "eye-slash" | "lock";
   name: string;
   placeHolder?: string;
   required?: boolean;
@@ -25,10 +27,25 @@ function AuthInput({
   endAdornment,
   ...inputProps
 }: Props) {
+  // Select the icon component based on the icon prop
+  let IconComponent: React.FC<React.SVGProps<SVGSVGElement>> | null = null;
+  if (icon === "email") {
+    IconComponent = EmailIcon;
+  } else if (icon === "eye-slash") {
+    IconComponent = EyeSlashIcon;
+  } else if (icon === "lock") {
+    IconComponent = LockIcon;
+  }
+
   return (
     <label className="p-3 flex items-center gap-2 rounded-[12px] bg-Bg-Dark shadow-xs">
       <span className="sr-only">{label}</span>
-      <Image width={24} height={24} src={icon} alt="" />
+      {IconComponent && (
+        <IconComponent
+          className="size-4 sm:size-5 text-text-secondary"
+          aria-hidden
+        />
+      )}
       <Input
         id={id || name}
         name={name}
