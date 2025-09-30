@@ -25,7 +25,7 @@ function NavBar() {
       <div className="mx-auto flex h-14 sm:h-16 2xl:h-16 items-center gap-2 sm:gap-3 2xl:gap-4 px-2 sm:px-4 2xl:px-4">
         {/* Left: Brand + controls */}
         <div className="flex min-w-0 items-center gap-3">
-          <Logo />
+          <Logo isNavBar={true} />
 
           {/* Small control group with functional split screen toggle */}
           <div className="hidden md:flex items-center border border-primary">

@@ -73,59 +73,53 @@ function OtpForm() {
 
   return (
     <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
-      <section className="flex flex-col gap-8 items-center ">
+      <section className="flex flex-col gap-6 sm:gap-8 items-center ">
         <Logo />
 
-        <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] bg-white">
-          <div className="space-y-6">
-            <FormHeading title="OTP verification">
-              <p className="text-text-secondary text-sm">
-                A 6-digit code has been sent on your given email{" "}
-                <span className="font-medium text-foreground">
-                  hello@boss.com
-                </span>
-                .
-                <br className="hidden sm:block" /> Enter verification code
-                below.
-              </p>
-            </FormHeading>
+        <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] md:min-w-[600px] w-full bg-white">
+          <FormHeading title="OTP verification">
+            <p className="text-text-secondary text-sm">
+              A 6-digit code has been sent on your given email{" "}
+              <span className="font-medium text-foreground">
+                hello@boss.com
+              </span>
+              .
+              <br className="hidden sm:block" /> Enter verification code below.
+            </p>
+          </FormHeading>
 
-            <div className="space-y-6 flex flex-col justify-center items-center">
-              <div className="flex items-center gap-3">
-                {inputValues.map((val, i) => (
-                  <Input
-                    key={i}
-                    ref={(el) => {
-                      inputs.current[i] = el;
-                    }}
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    pattern="[0-9]*"
-                    maxLength={1}
-                    value={val}
-                    onChange={(e) => onChange(i, e.target.value)}
-                    onKeyDown={(e) => onKeyDown(i, e)}
-                    onPaste={(e) => onPaste(i, e)}
-                    aria-label={`Digit ${i + 1}`}
-                    className={cn(
-                      "h-10 sm:h-14 w-10 sm:w-12 text-center text-lg tracking-widest font-medium rounded-md ",
-                      val
-                        ? "border-[#B3E2A7]"
-                        : "focus:border focus:border-text-primary"
-                    )}
-                  />
-                ))}
-              </div>
+          <div className="flex items-center justify-center gap-3">
+            {inputValues.map((val, i) => (
+              <Input
+                key={i}
+                ref={(el) => {
+                  inputs.current[i] = el;
+                }}
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]*"
+                maxLength={1}
+                value={val}
+                onChange={(e) => onChange(i, e.target.value)}
+                onKeyDown={(e) => onKeyDown(i, e)}
+                onPaste={(e) => onPaste(i, e)}
+                aria-label={`Digit ${i + 1}`}
+                className={cn(
+                  "h-10 sm:h-14 w-9 sm:w-12 text-center text-lg tracking-widest font-medium rounded-md ",
+                  val
+                    ? "border-[#B3E2A7]"
+                    : "focus:border focus:border-text-primary"
+                )}
+              />
+            ))}
+          </div>
 
-              <p className="text-center text-sm text-muted-foreground">
-                Code will resend in{" "}
-                <span className="font-semibold text-foreground">
-                  {seconds}s
-                </span>
-              </p>
-
-              <AuthButton name="Verify" />
-            </div>
+          <p className="text-center text-sm text-text-secondary">
+            Code will resend in{" "}
+            <span className="font-semibold text-foreground">{seconds}s</span>
+          </p>
+          <div className="flex justify-center">
+            <AuthButton name="Verify" />
           </div>
         </form>
       </section>

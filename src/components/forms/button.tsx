@@ -10,7 +10,7 @@ function AuthButton({ name, className, type = "submit", ...props }: Props) {
     <button
       type={type}
       className={cn(
-        "h-12 rounded-2xl bg-primary text-white flex items-center justify-center w-full",
+        "h-12 rounded-2xl bg-primary text-white flex items-center justify-center w-full max-w-[360px]",
         className
       )}
       {...props}

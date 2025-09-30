@@ -42,7 +42,7 @@ function AuthInput({
       <span className="sr-only">{label}</span>
       {IconComponent && (
         <IconComponent
-          className="size-4 sm:size-5 text-text-secondary"
+          className="size-5 sm:size-6 text-text-secondary"
           aria-hidden
         />
       )}

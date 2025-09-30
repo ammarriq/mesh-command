@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye } from "lucide-react";
 
 import Logo from "@/components/shared/logo";
 import AuthInput from "@/components/forms/input";
@@ -16,7 +16,7 @@ export default function NewPasswordPage() {
 
   return (
     <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
-      <section className="flex flex-col gap-8 items-center ">
+      <section className="flex flex-col gap-6 sm:gap-8 items-center ">
         <Logo />
 
         <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] max-w-md bg-white">
@@ -27,7 +27,7 @@ export default function NewPasswordPage() {
             </p>
           </FormHeading>
 
-          <div className="flex flex-col gap-2 ">
+          <div className="flex flex-col gap-2">
             <AuthInput
               icon={"lock"}
               label="Enter your password"
@@ -48,9 +48,9 @@ export default function NewPasswordPage() {
                   onClick={() => setShowPasswordOne((v) => !v)}
                 >
                   {showPasswordOne ? (
-                    <EyeOff className="size-4" />
+                    <Eye className="size-5 sm:size-6" />
                   ) : (
-                    <EyeSlashIcon />
+                    <EyeSlashIcon className="size-5 sm:size-6" />
                   )}
                 </button>
               }
@@ -76,15 +76,15 @@ export default function NewPasswordPage() {
                   onClick={() => setShowPasswordTwo((v) => !v)}
                 >
                   {showPasswordTwo ? (
-                    <EyeOff className="size-4" />
+                    <Eye className="size-5 sm:size-6" />
                   ) : (
-                    <Eye className="size-4" />
+                    <EyeSlashIcon className="size-5 sm:size-6" />
                   )}
                 </button>
               }
             />
-            <AuthButton name="Create Password" />
           </div>
+          <AuthButton name="Create Password" />
         </form>
       </section>
     </main>
