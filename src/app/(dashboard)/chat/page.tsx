@@ -2,17 +2,18 @@
 
 import { useEffect } from "react";
 
-import ChatView from "@/components/layout/chat-view";
-import ChatTab from "@/components/layout/chat-tab";
-import SelectRobot from "@/components/layout/select-robot";
-
 import {
   useSelectedChat,
   useSplitScreen,
   useChatStore,
   useSelectedProject,
 } from "@/stores";
+
+import ChatView from "@/components/layout/chat-view";
+import ChatTab from "@/components/layout/chat-tab";
+import SelectRobot from "@/components/layout/select-robot";
 import ProjectMainContent from "@/components/layout/ProjectMainContent";
+import RemovePill from "@/components/shared/remove-pill";
 
 function ChatPage() {
   const selectedChat = useSelectedChat();
@@ -40,15 +41,22 @@ function ChatPage() {
   // If project is selected, show split view
   if (isSplitScreen && selectedProject) {
     return (
-      <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_2fr_2fr]">
-        <ChatTab />
+      <main className="flex-1 grid grid-cols-[1fr_2fr_2fr]">
+        <section className="flex flex-col">
+          <div className="bg-light-bg border border-Bg-Dark">
+            <RemovePill title={"Chat"} isSelectedProject />
+          </div>
+          <div className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
+            <ChatTab />
+            {!selectedChat.selectedModel && <SelectRobot />}
+            {selectedChat.selectedModel && <ChatView />}
+          </div>
+        </section>
 
-        <div className="border-r border-Bg-Dark">
-          {!selectedChat.selectedModel && <SelectRobot />}
-          {selectedChat.selectedModel && <ChatView />}
-        </div>
-
-        <div className="">
+        <section className="flex flex-col">
+          <div className="bg-light-bg border border-Bg-Dark">
+            <RemovePill title={"Project"} isSelectedProject />
+          </div>
           <ProjectMainContent
             selectedProject={selectedProject}
             getTasksByStatus={(project, status) => {
@@ -76,18 +84,23 @@ function ChatPage() {
               }
             }}
           />
-        </div>
-      </section>
+        </section>
+      </main>
     );
   }
 
   // Render normal single view layout if no project selected or not in split screen mode
   return (
-    <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
-      <ChatTab />
-      {!selectedChat.selectedModel && <SelectRobot />}
-      {selectedChat.selectedModel && <ChatView />}
-    </section>
+    <main className="flex flex-col">
+      <section className="bg-light-bg border border-Bg-Dark">
+        <RemovePill title={"Chat"} />
+      </section>
+      <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
+        <ChatTab />
+        {!selectedChat.selectedModel && <SelectRobot />}
+        {selectedChat.selectedModel && <ChatView />}
+      </section>
+    </main>
   );
 }
 

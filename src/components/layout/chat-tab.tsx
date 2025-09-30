@@ -1,27 +1,29 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { CustomTabTrigger } from "../shared/custom-tab-trigger";
 import { SearchInput } from "../shared/search-input";
-import { AddIcon } from "@/icons/add";
-import {
-  useChatStore,
-  useSelectedChat,
-  useProjectStore,
-  useSplitScreen,
-} from "@/stores";
-import { useRouter } from "next/navigation";
 
-// Import the ProjectContentItem component from project-selector
-import React, { useState, useEffect } from "react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
 import { Button } from "../ui/button";
-import { ChevronDown } from "lucide-react";
+
+import {
+  useChatStore,
+  useSelectedChat,
+  useProjectStore,
+  useSplitScreen,
+} from "@/stores";
 import type { Project } from "@/stores";
+
+import { ChevronDown } from "lucide-react";
+import EditIcon from "@/icons/edit";
 
 function ChatTab() {
   const { categories } = useProjectStore();
@@ -29,22 +31,22 @@ function ChatTab() {
   const { chats, setSelectedChat, createNewChat } = useChatStore();
 
   return (
-    <Tabs defaultValue="private" className="w-[496px]">
+    <Tabs defaultValue="private" className="w-96 md:w-96 2xl:w-[496px]">
       <TabsList className="w-full border-b border-r border-r-Bg-Dark border-b-Bg-Dark">
         <CustomTabTrigger title="Private" value="private" />
         <CustomTabTrigger title="Projects" value="projects" />
       </TabsList>
 
-      <div className="p-2 flex items-center gap-2">
-        <SearchInput />
-        <button onClick={createNewChat} className="bg-primary p-3">
-          <AddIcon className="size-6" />
+      <div className="p-2 flex justify-end items-center  w-full gap-2">
+        <SearchInput isChatTab />
+        <button onClick={createNewChat} className="bg-primary px-3 py-[11px]">
+          <EditIcon className="size-6" />
         </button>
       </div>
 
       <TabsContent
         value="private"
-        className="p-2 flex flex-col border-r border-r-Bg-Dark"
+        className="p-1.5 lg:p-2 flex flex-col gap-3 border-r border-r-Bg-Dark"
       >
         {chats.length !== 0 &&
           selectedChat &&
@@ -53,8 +55,8 @@ function ChatTab() {
               onClick={() => setSelectedChat(chat.id)}
               key={chat.id}
               className={`${
-                selectedChat.id === chat.id && "bg-Bg-Dark"
-              } p-2 text-text-primary text-start`}
+                selectedChat.id === chat.id && "bg-Bg-Dark py-2"
+              } px-2 text-text-primary text-start`}
             >
               {chat.name}
             </button>
@@ -70,6 +72,7 @@ function ChatTab() {
             title={category.name}
             projects={category.projects}
             showCreateButton={false}
+            isChatTab
           />
         ))}
       </TabsContent>
@@ -81,12 +84,14 @@ interface ProjectContentItemProps {
   title: string;
   projects: Project[];
   showCreateButton?: boolean;
+  isChatTab?: boolean;
 }
 
 function ProjectContentItem({
   title,
   projects,
   showCreateButton = false,
+  isChatTab,
 }: ProjectContentItemProps) {
   const { setSelectedProject, selectedProjectId } = useProjectStore();
   const isSplitScreen = useSplitScreen();
@@ -129,7 +134,7 @@ function ProjectContentItem({
     <Collapsible
       open={isCategoryOpen}
       onOpenChange={setIsCateoryOpen}
-      className="flex w-full flex-col gap-2"
+      className="flex w-full flex-col gap-3"
     >
       <div className="flex items-center gap-2">
         <CollapsibleTrigger asChild>
@@ -148,7 +153,7 @@ function ProjectContentItem({
         </CollapsibleTrigger>
         <h4 className=" text-primary font-semibold">{title} </h4>
       </div>
-      <CollapsibleContent className="flex flex-col pl-2.5 ">
+      <CollapsibleContent className="flex flex-col gap-1 pl-2.5 ">
         {projects.length === 0 ? (
           <div className="flex flex-col gap-2 py-2">
             <p className="text-sm text-text-secondary">No project available.</p>
@@ -159,23 +164,27 @@ function ProjectContentItem({
             )}
           </div>
         ) : (
-          projects.map((project) => {
-            const statusInfo = getStatusDisplay(project.status);
-            return (
-              <button
-                key={project.id}
-                onClick={() => handleProjectClick(project.id)}
-                className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary ${
-                  selectedProjectId === project.id ? "bg-Bg-Dark p-2" : ""
-                }`}
-              >
-                <span>{project.title}</span>
-                <span className={`font-semibold ${statusInfo.color}`}>
-                  {statusInfo.text}
-                </span>
-              </button>
-            );
-          })
+          <div>
+            {projects.map((project) => {
+              const statusInfo = getStatusDisplay(project.status);
+              return (
+                <button
+                  key={project.id}
+                  onClick={() => handleProjectClick(project.id)}
+                  className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary px-2 py-1.5 w-full ${
+                    selectedProjectId === project.id ? "bg-Bg-Dark p-2" : ""
+                  }`}
+                >
+                  <span>{project.title}</span>
+                  {!isChatTab && (
+                    <span className={`font-semibold ${statusInfo.color}`}>
+                      {statusInfo.text}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         )}
       </CollapsibleContent>
     </Collapsible>

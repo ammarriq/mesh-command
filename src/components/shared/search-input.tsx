@@ -3,11 +3,21 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import SearchIcon from "@/icons/search-normal";
 
-export function SearchInput() {
+interface SearchInputProps {
+  isChatTab?: boolean;
+}
+
+export function SearchInput({ isChatTab }: SearchInputProps) {
   return (
     <>
       {/* Desktop / tablet search field */}
-      <label className="hidden px-3 py-1 md:flex items-center gap-2 rounded-xs bg-Bg-Dark shadow-xs w-72 lg:w-80 2xl:w-[360px]">
+      <label
+        className={`w-full px-3 py-1 items-center gap-2 rounded-xs bg-Bg-Dark shadow-xs ${
+          isChatTab
+            ? "w-full flex"
+            : "min-w-72 lg:w-80 2xl:w-[360px] md:flex hidden"
+        } `}
+      >
         <span className="sr-only">Search</span>
 
         <SearchIcon
@@ -30,7 +40,9 @@ export function SearchInput() {
           <Button
             variant="outline"
             size="icon"
-            className="md:hidden size-10 rounded-xs border border-Bg-Dark bg-light-bg text-primary"
+            className={`${
+              isChatTab ? "hidden" : "md:hidden"
+            } size-10 rounded-xs border border-Bg-Dark bg-light-bg text-primary`}
             aria-label="Open search"
           >
             <SearchIcon className="size-5" />

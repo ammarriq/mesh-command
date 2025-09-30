@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { LucideIcon } from "lucide-react";
 import NotificationIcon from "@/icons/notification";
+import ThreeDotsIcon from "@/icons/three-dots";
 
 interface DropdownAction {
   label: string;
@@ -18,7 +19,7 @@ interface DropdownAction {
 }
 
 interface ActionButtonProps {
-  icon: "notification";
+  icon: "notification" | "3-dots";
   tooltipText?: string;
   onClick?: () => void;
   dropdownActions?: DropdownAction[];
@@ -41,6 +42,7 @@ export function ActionButton({
       className={`size-10 md:size-12 p-3 rounded-xs border border-Bg-Dark bg-light-bg ${className}`}
     >
       {icon === "notification" && <NotificationIcon className="size-6" />}
+      {icon === "3-dots" && <ThreeDotsIcon className="size-6" />}
     </Button>
   );
 

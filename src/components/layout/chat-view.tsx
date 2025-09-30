@@ -2,12 +2,21 @@
 
 import React, { useState } from "react";
 import { Calendar, DollarSign, Paperclip, Send } from "lucide-react";
-import { RobotIcon } from "@/icons/robot";
-import { UsersIcon } from "@/icons/users";
+import { MoreHorizontal } from "lucide-react";
+
 import { Separator } from "../ui/separator";
+import LoadingRobotChat from "../shared/loading-robot-chat";
+import { AvatarGroup } from "@/components/shared/avatar-group";
+import { ActionButton } from "@/components/shared/action-button";
+
 import { ProjectIcon } from "@/icons/project";
 import { DeepseekIcon } from "@/icons/deep-seek";
 import { OpenaiIcon } from "@/icons/open-ai";
+import { TasksIcon } from "@/icons/tasks";
+import { HourglassIcon } from "@/icons/hour-glass";
+import { RobotIcon } from "@/icons/robot";
+import { UsersIcon } from "@/icons/users";
+
 import {
   useSelectedChat,
   useChatStore,
@@ -15,14 +24,7 @@ import {
   useSplitScreen,
 } from "@/stores";
 import type { MessagePair, SelectedModel } from "@/types/chat";
-import LoadingRobotChat from "../shared/loading-robot-chat";
-import { TasksIcon } from "@/icons/tasks";
-import { HourglassIcon } from "@/icons/hour-glass";
-import { AvatarGroup } from "@/components/shared/avatar-group";
-import { ActionButton } from "@/components/shared/action-button";
-import { MoreHorizontal } from "lucide-react";
 
-// Helper function to get model display info
 const getModelDisplay = (model: SelectedModel) => {
   if (model === "OpenAI 04") {
     return {
@@ -43,7 +45,7 @@ export default function ChatView() {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isRenamingChat, setIsRenamingChat] = useState(false);
   const [chatName, setChatName] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isRobotMsgLoading, setIsRobotMsgLoading] = useState(false);
 
   const selectedChat = useSelectedChat();
   const updateChat = useChatStore((state) => state.updateChat);
@@ -81,8 +83,8 @@ export default function ChatView() {
   };
 
   function showLoadingMsg() {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 2000);
+    setIsRobotMsgLoading(true);
+    setTimeout(() => setIsRobotMsgLoading(false), 2000);
   }
 
   const handleRenameChat = () => {
@@ -121,9 +123,8 @@ export default function ChatView() {
   return (
     <section className="flex w-full flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between border-b border-b-Bg-Dark px-4 py-2">
+      <header className="flex items-center justify-between border-b border-b-Bg-Dark p-4">
         <div className="flex items-center gap-2 text-text-primary">
-          <RobotIcon className="size-6" />
           {/* If split screen and project selected, show project name and users */}
           {isSplitScreen && selectedProject ? (
             <>
@@ -148,7 +149,7 @@ export default function ChatView() {
                 className="ml-4"
               />
               <ActionButton
-                icon={MoreHorizontal}
+                icon={"3-dots"}
                 tooltipText="Project Options"
                 dropdownActions={[
                   {
@@ -167,8 +168,7 @@ export default function ChatView() {
                 className="ml-2"
               />
             </>
-          ) : // Renaming Chat
-          isRenamingChat ? (
+          ) : isRenamingChat ? (
             <div className="flex items-center gap-2">
               <input
                 type="text"
@@ -191,10 +191,15 @@ export default function ChatView() {
               </button>
             </div>
           ) : (
-            <span className="text-sm">{selectedChat.name}</span>
+            <>
+              <RobotIcon className="size-6" />
+              <span className="text-sm text-text-primary">
+                {selectedChat.name}
+              </span>
+            </>
           )}
         </div>
-        {/* Only show rename button if not split screen or no project selected */}
+
         {!isRenamingChat && (!isSplitScreen || !selectedProject) && (
           <button
             onClick={handleRenameChat}
@@ -214,7 +219,7 @@ export default function ChatView() {
                 msg={messagePair[0].message}
                 time={messagePair[0].createdAt}
               />
-              {loading ? (
+              {isRobotMsgLoading ? (
                 <LoadingRobotChat />
               ) : (
                 <>
