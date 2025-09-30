@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
-import { CustomTabTrigger } from "../shared/custom-tab-trigger";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchInput } from "../shared/search-input";
 
 import {
@@ -32,9 +31,9 @@ function ChatTab() {
 
   return (
     <Tabs defaultValue="private" className="w-96 md:w-96 2xl:w-[496px]">
-      <TabsList className="w-full border-b border-r border-r-Bg-Dark border-b-Bg-Dark">
-        <CustomTabTrigger title="Private" value="private" />
-        <CustomTabTrigger title="Projects" value="projects" />
+      <TabsList className="w-full  border-r border-r-Bg-Dark  h-fit">
+        <TabsTrigger value="private">Private</TabsTrigger>
+        <TabsTrigger value="projects">Projects</TabsTrigger>
       </TabsList>
 
       <div className="p-2 flex justify-end items-center  w-full gap-2">

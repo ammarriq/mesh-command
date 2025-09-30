@@ -95,7 +95,7 @@ function ChatPage() {
       <section className="bg-light-bg border border-Bg-Dark">
         <RemovePill title={"Chat"} />
       </section>
-      <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
+      <section className="bg-white flex-1 py-4 pr-4 grid grid-cols-[1fr_4fr]">
         <ChatTab />
         {!selectedChat.selectedModel && <SelectRobot />}
         {selectedChat.selectedModel && <ChatView />}

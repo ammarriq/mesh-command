@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useChatStore, useSelectedChat } from "@/stores";
-import { DeepseekIcon } from "@/icons/deep-seek";
+import DeepseekIcon from "@/icons/deep-seek";
 import { OpenaiIcon } from "@/icons/open-ai";
 
 export default function SelectRobot() {

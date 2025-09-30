@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import FolderOpenIcon from "@/icons/folder-open";
-import HierarchySquare2Icon from "@/icons/hierarchy-square-2";
+import ProjectsIcon from "@/icons/hierarchy-square-2";
 import TrendUpIcon from "@/icons/trend-up";
 import Profile2UserIcon from "@/icons/profile-2user";
 import ShieldIcon from "@/icons/shield";
@@ -19,7 +19,7 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { title: "Chat", href: "/chat", icon: ChatIcon },
-  { title: "Projects", href: "/projects", icon: HierarchySquare2Icon },
+  { title: "Projects", href: "/projects", icon: ProjectsIcon },
   { title: "Dockets", href: "/dockets", icon: FolderOpenIcon },
   { title: "Reports", href: "/reports", icon: TrendUpIcon },
   { title: "Directory", href: "/directory", icon: Profile2UserIcon },

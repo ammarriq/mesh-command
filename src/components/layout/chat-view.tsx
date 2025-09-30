@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { Calendar, DollarSign, Paperclip, Send } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 
 import { Separator } from "../ui/separator";
@@ -9,11 +8,7 @@ import LoadingRobotChat from "../shared/loading-robot-chat";
 import { AvatarGroup } from "@/components/shared/avatar-group";
 import { ActionButton } from "@/components/shared/action-button";
 
-import { ProjectIcon } from "@/icons/project";
-import { DeepseekIcon } from "@/icons/deep-seek";
 import { OpenaiIcon } from "@/icons/open-ai";
-import { TasksIcon } from "@/icons/tasks";
-import { HourglassIcon } from "@/icons/hour-glass";
 import { RobotIcon } from "@/icons/robot";
 import { UsersIcon } from "@/icons/users";
 
@@ -24,13 +19,22 @@ import {
   useSplitScreen,
 } from "@/stores";
 import type { MessagePair, SelectedModel } from "@/types/chat";
+import Image from "next/image";
+import DeepseekIcon from "@/icons/deep-seek";
+import Profile2UserIcon from "@/icons/profile-2user";
+import TimerIcon from "@/icons/timer";
+import DollarSquareIcon from "@/icons/dollar-square";
+import ProjectsIcon from "@/icons/hierarchy-square-2";
+import TaskSquareIcon from "@/icons/task-square";
+import LinkSquareIcon from "@/icons/link-square";
+import Send2Icon from "@/icons/send-2";
 
 const getModelDisplay = (model: SelectedModel) => {
   if (model === "OpenAI 04") {
     return {
       icon: OpenaiIcon,
-      color: "text-primary",
-      strokeColor: "fill-primary",
+      color: "text-text-primary",
+      strokeColor: "fill-text-primary",
     };
   } else {
     return {
@@ -212,7 +216,7 @@ export default function ChatView() {
 
       <section className="flex flex-col h-full">
         {/* Conversation */}
-        <div className="px-4 py-4 space-y-6 flex-1 overflow-y-auto">
+        <div className="pl-4 py-4 space-y-1 flex-1">
           {selectedChat.messages?.map((messagePair, i) => (
             <React.Fragment key={i}>
               <UserMsg
@@ -271,9 +275,9 @@ export default function ChatView() {
             </div>
           )}
 
-          <form onSubmit={handleSendMessage}>
+          <form onSubmit={handleSendMessage} className="pl-4">
             <textarea
-              className="w-full resize-none p-3 bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
+              className="w-full resize-none py-3 px-[11px] rounded-xs border border-Bg-Dark shadow-[0_0_0_1px_rgba(29,201,160,0.05)] bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
               rows={4}
               placeholder="Write message here....."
               name="userMessage"
@@ -281,7 +285,7 @@ export default function ChatView() {
 
             <div className="bg-white flex items-center justify-between">
               <label className="px-3 py-2 text-sm font-medium text-primary inline-flex items-center gap-2 cursor-pointer hover:text-primary/90">
-                <Paperclip className="size-5 text-primary" /> Attach files
+                <LinkSquareIcon className="size-6 text-primary" /> Attach files
                 <input
                   type="file"
                   multiple
@@ -311,10 +315,10 @@ export default function ChatView() {
                   );
                 })()}
                 <button
-                  className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white p-3 disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white px-3 py-[11px] disabled:opacity-50"
                   type="submit"
                 >
-                  <Send className="size-4" />
+                  <Send2Icon className="size-6" />
                   Send
                 </button>
               </div>
@@ -352,33 +356,45 @@ function UserMsg({
         <div className="flex justify-between items-center">
           <p className="space-x-2">
             <span className="font-medium text-primary">{user}</span>
-            <span className="text-xs font-medium text-text-secondary p-1 bg-primary/10">
+            <Image
+              src={"/users/2.jpg"}
+              alt="user"
+              width={20}
+              height={20}
+              className="bg-primary/10"
+            >
               AD
-            </span>
+            </Image>
           </p>
           <span className="text-xs text-text-secondary">
             {formatTime(time)}
           </span>
         </div>
       ) : (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center ">
           <span className="text-xs text-text-secondary">
             {formatTime(time)}
           </span>
-          <p className="space-x-2">
-            <span className="font-medium text-primary">{user}</span>
-            <span className="text-xs font-medium text-text-secondary p-1 bg-primary/10">
-              AD
-            </span>
-          </p>
+          <hgroup className="flex items-center gap-2">
+            <h5 className="font-medium text-primary">{user}</h5>
+            <div className="relative size-5 ">
+              <Image
+                src={"/users/2.jpg"}
+                alt="user"
+                width={20}
+                height={20}
+                className="bg-primary/10 size-5 object-cover object-top"
+              />
+            </div>
+          </hgroup>
         </div>
       )}
       <p
-        className={
+        className={`${
           splitScreenStyle
-            ? "bg-light-bg text-text-primary p-2"
-            : "bg-primary text-white p-2"
-        }
+            ? "bg-light-bg text-text-primary px-[11px] py-3"
+            : "bg-primary text-white px-[11px] py-3"
+        } rounded-xs shadow-[0_0_0_2px_rgba(29,201,160,0.2)]"`}
       >
         {msg}
       </p>
@@ -406,21 +422,20 @@ function RobotMsg({ time, model }: RobotMsgProps) {
   return (
     <section className="flex flex-col max-w-2xl">
       <div className="flex items-center justify-between text-text-secondary">
-        <p
-          className={`h-12 flex items-center justify-center gap-2 ${modelInfo.color}`}
-        >
+        <p className={`h-12 flex items-center gap-2 ${modelInfo.color}`}>
           <IconComponent className={`${modelInfo.strokeColor} w-6 h-auto`} />
           <span className="font-medium">{model}</span>
         </p>
         <span className="text-xs">{formatTime(time)}</span>
       </div>
 
-      <div className="rounded-xs border border-Bg-Dark bg-light-bg p-3 space-y-2">
+      <div className="rounded-xs border border-Bg-Dark bg-light-bg py-3 px-[11px] space-y-2">
         <p className="">Understood, I will create the pack</p>
         <RobotMsgSummary />
         <RobotMsgDocket />
         <RobotMsgProject />
         <RobotMsgTasks />
+        <RobotMsgAssignedTo />
         <RobotMsgBroadcast />
       </div>
     </section>
@@ -436,7 +451,7 @@ function RobotMsgBadge({
 }) {
   return (
     <span
-      className={`inline-block rounded-xs py-1 px-2 text-xs font-semibold bg-primary-light text-primary  ${className}`}
+      className={`inline-block rounded-sm py-[5px] px-2 text-xs font-semibold bg-primary-light text-primary  ${className}`}
     >
       {title}
     </span>
@@ -451,14 +466,19 @@ function RobotMsgSummary() {
         HVAC service agreement for HQ
       </h3>
       <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-text-secondary">
-        <span className="inline-flex items-center gap-1 text-primary font-semibold">
-          <UsersIcon className="size-5 fill-primary" /> John Smith
+        <span className="flex items-center gap-1 text-primary font-semibold">
+          <Profile2UserIcon
+            fill="var(--primary)"
+            stroke="var(--primary)"
+            className="size-5"
+          />{" "}
+          John Smith
         </span>
-        <span className="inline-flex items-center gap-1">
-          <Calendar className="size-5 stroke-primary" /> December 20,2026
+        <span className="flex items-center gap-1 text-primary font-semibold">
+          <TimerIcon className="size-5 " /> December 20,2026
         </span>
-        <span className="inline-flex items-center gap-1">
-          <DollarSign className="size-5 stroke-primary" /> $250k
+        <span className="flex items-center gap-1 text-primary font-semibold">
+          <DollarSquareIcon className="size-5" /> $250k
         </span>
       </div>
       <Separator className="bg-dark-bg mt-2" />
@@ -478,11 +498,11 @@ function RobotMsgDocket() {
 
 function RobotMsgProject() {
   return (
-    <div className="">
+    <div className="space-y-1">
       <RobotMsgBadge title="Projects" />
       <div className="flex items-center gap-2">
         <span className="inline-flex items-center gap-2 rounded-md border text-text-primary">
-          <ProjectIcon className="size-5 fill-primary" />
+          <ProjectsIcon className="size-5 " />
         </span>
         <span className="text-text-primary text-sm font-semibold">
           Facilities Project
@@ -497,7 +517,7 @@ function RobotMsgProject() {
         </span>
         <span
           className={
-            "inline-block rounded-xs bg-[#FFDD98]  text-primary/80 py-1 px-2 text-xs font-semibold "
+            "inline-block rounded-xs bg-[#FFDD98]  text-[#A17800] py-1 px-2 text-xs font-semibold "
           }
         >
           In-Progress
@@ -513,6 +533,18 @@ function RobotMsgProject() {
   );
 }
 
+function RobotMsgAssignedTo() {
+  return (
+    <div className="">
+      <RobotMsgBadge title="Assigned To" />
+      <p className="mt-2 text-text-primary">
+        Facilities Manager, Procurement Team
+      </p>
+      <Separator className="bg-dark-bg mt-2" />
+    </div>
+  );
+}
+
 function RobotMsgBroadcast({ showBtns = true }: { showBtns?: boolean }) {
   return (
     <div className="">
@@ -520,10 +552,10 @@ function RobotMsgBroadcast({ showBtns = true }: { showBtns?: boolean }) {
       channel, or keep refining privately?
       {showBtns && (
         <div className="mt-3 flex items-center gap-2">
-          <button className="w-40 rounded-md bg-primary text-white text-xs font-medium py-2.5 px-6">
+          <button className="w-40 rounded-md text-white text-sm font-medium py-2.5 px-6 shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] flex items-center justify-center border border-primary bg-primary">
             Broadcast
           </button>
-          <button className="w-40 rounded-md border border-primary text-primary text-xs font-medium py-2.5 px-6">
+          <button className="w-40 rounded-md text-primary text-sm font-medium py-2.5 px-6 shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] flex items-center justify-center border border-primary">
             Keep Refining
           </button>
         </div>
@@ -548,24 +580,24 @@ const tasks = [
 
 function RobotMsgTasks() {
   return (
-    <div className="">
+    <div className="space-y-2">
       <RobotMsgBadge title="Tasks" />
       <div className="space-y-2">
         {tasks.map((task, index) => (
           <div key={index} className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
-              <TasksIcon className="size-6 fill-primary" />
+              <TaskSquareIcon className="size-6" />
               <p className="text-sm font-semibold text-text-primary">
                 {task.title}
               </p>
             </div>
             <div className="flex gap-2 items-center">
               <p className="text-sm text-text-primary">
-                Assigned to:{" "}
+                Assign to:{" "}
                 <span className="text-text-secondary">{task.assignedTo}</span>
               </p>
               <span className="text-sm font-medium text-primary flex items-center gap-1">
-                <HourglassIcon className="size-4 fill-primary" />
+                <TimerIcon className="size-4 " />
                 Due: {task.due}
               </span>
             </div>

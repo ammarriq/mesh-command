@@ -1,6 +1,6 @@
 import React from "react";
 
-const HierarchySquare2Icon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+const ProjectsIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   className,
   fill = "#5F0101",
   stroke = "#5F0101",
@@ -29,4 +29,4 @@ const HierarchySquare2Icon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   </svg>
 );
 
-export default HierarchySquare2Icon;
+export default ProjectsIcon;

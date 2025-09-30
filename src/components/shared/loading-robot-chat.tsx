@@ -4,8 +4,10 @@ import React from "react";
 function LoadingRobotChat() {
   return (
     <div className="flex items-center gap-1">
-      <RobotIcon className="stroke-primary size-5" />
-      <p className="text-xs font-semibold">Working on your request....</p>
+      <RobotIcon className="size-5 fill-primary" fill="#5f0101" />
+      <p className="text-xs text-primary font-semibold">
+        Working on your request....
+      </p>
     </div>
   );
 }
