@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Bell } from "lucide-react";
 import Logo from "../shared/logo";
 import {
   DropdownMenu,
@@ -22,13 +21,12 @@ function NavBar() {
 
   return (
     <nav className="w-full bg-white rounded-xs">
-      <div className="mx-auto flex h-14 sm:h-16 2xl:h-16 items-center gap-2 sm:gap-3 2xl:gap-4 px-2 sm:px-4 2xl:px-4">
+      <div className="mx-auto flex justify-between items-center py-3 px-2 max-w-[1920px]">
         {/* Left: Brand + controls */}
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex items-center gap-4">
           <Logo isNavBar={true} />
 
-          {/* Small control group with functional split screen toggle */}
-          <div className="hidden md:flex items-center border border-primary">
+          <div className="hidden xl:flex items-center border border-primary">
             <button
               type="button"
               aria-label="Full screen"
@@ -64,15 +62,11 @@ function NavBar() {
           </div>
         </div>
 
-        <div className="flex-1" />
-
         {/* Right: Search, bell, avatar */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2">
           <SearchInput />
-
-          <ActionButton icon={Bell} tooltipText="Notifications" />
-
-          <Avatar name="Alex Doe" />
+          <ActionButton icon={"notification"} tooltipText="Notifications" />
+          <Avatar name="Alex Doe" src="/users/1.jpg" />
         </div>
       </div>
     </nav>
@@ -94,7 +88,7 @@ function Avatar({ src, name }: { src?: string; name?: string }) {
         <button
           type="button"
           aria-label={name ? `${name} profile` : "Profile"}
-          className="size-9 sm:size-10 2xl:size-12 border border-Bg-Dark bg-light-bg text-primary "
+          className={`size-10 md:size-12 rounded-xs border border-Bg-Dark bg-light-bg object-top`}
         >
           {src ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -104,7 +98,7 @@ function Avatar({ src, name }: { src?: string; name?: string }) {
               className="size-full object-cover"
             />
           ) : (
-            <span className="grid size-full place-items-center text-sm font-medium text-foreground/80">
+            <span className="grid size-full place-items-center text-base font-medium text-foreground/80">
               {initials}
             </span>
           )}

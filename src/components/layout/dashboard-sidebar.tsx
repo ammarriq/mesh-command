@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ChatIcon } from "@/icons/chat";
-import { FolderIcon } from "@/icons/folder";
-import { ProjectIcon } from "@/icons/project";
-import { ReportIcon } from "@/icons/report";
-import { UsersIcon } from "@/icons/users";
-import { AdminIcon } from "@/icons/admin";
-import { LogoutIcon } from "@/icons/logout";
+import FolderOpenIcon from "@/icons/folder-open";
+import HierarchySquare2Icon from "@/icons/hierarchy-square-2";
+import TrendUpIcon from "@/icons/trend-up";
+import Profile2UserIcon from "@/icons/profile-2user";
+import ShieldIcon from "@/icons/shield";
+import ChatIcon from "@/icons/chat";
+import LogoutIcon from "@/icons/logout";
 
 type NavItem = {
   title: string;
@@ -19,11 +19,11 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { title: "Chat", href: "/chat", icon: ChatIcon },
-  { title: "Projects", href: "/projects", icon: ProjectIcon },
-  { title: "Dockets", href: "/dockets", icon: FolderIcon },
-  { title: "Reports", href: "/reports", icon: ReportIcon },
-  { title: "Directory", href: "/directory", icon: UsersIcon },
-  { title: "Admin", href: "/admin", icon: AdminIcon },
+  { title: "Projects", href: "/projects", icon: HierarchySquare2Icon },
+  { title: "Dockets", href: "/dockets", icon: FolderOpenIcon },
+  { title: "Reports", href: "/reports", icon: TrendUpIcon },
+  { title: "Directory", href: "/directory", icon: Profile2UserIcon },
+  { title: "Admin", href: "/admin", icon: ShieldIcon },
 ];
 
 export default function DashboardSidebar() {
@@ -68,17 +68,15 @@ function SideBarItem({ isActive, item }: Props) {
         )}
       >
         <item.icon
-          className={cn(
-            "size-6",
-            isActive
-              ? "stroke-primary fill-primary"
-              : "fill-text-secondary stroke-text-secondary"
-          )}
+          className="size-6"
+          fill={isActive ? "#5F0101" : "#78829D"}
+          stroke={isActive ? "#5F0101" : "#78829D"}
         />
         <span
-          className={`${
-            isActive ? "text-primary" : "text-text-secondary"
-          } font-medium text-base`}
+          className={cn(
+            isActive ? "text-primary" : "text-text-secondary",
+            "font-medium text-base"
+          )}
         >
           {item.title}
         </span>

@@ -1,25 +1,32 @@
 import React from "react";
-import type { SVGProps } from "react";
 
-export function ChatIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={288}
-      height={288}
-      viewBox="0 0 32 32"
-      {...props}
-      stroke="#fff"
-    >
-      <g
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-      >
-        <path d="M25 5H7a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4h11l6 4v-4h1a4 4 0 0 0 4-4V9a4 4 0 0 0-4-4"></path>
-        <path d="M10 15a1 1 0 1 1-2 0a1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0m6 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0"></path>
-      </g>
-    </svg>
-  );
-}
+const ChatIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+  className,
+  fill = "#78829D",
+  stroke = "#78829D",
+  ...props
+}) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    {...props}
+  >
+    <path
+      opacity="0.4"
+      d="M7 18.43H11L15.45 21.39C16.11 21.83 17 21.36 17 20.56V18.43C20 18.43 22 16.43 22 13.43V7.42999C22 4.42999 20 2.42999 17 2.42999H7C4 2.42999 2 4.42999 2 7.42999V13.43C2 16.43 4 18.43 7 18.43Z"
+      fill={fill}
+      stroke={stroke}
+    />
+    <path
+      d="M15.5 11.25H8.5C8.09 11.25 7.75 10.91 7.75 10.5C7.75 10.09 8.09 9.75 8.5 9.75H15.5C15.91 9.75 16.25 10.09 16.25 10.5C16.25 10.91 15.91 11.25 15.5 11.25Z"
+      fill={fill}
+      stroke={stroke}
+    />
+  </svg>
+);
+
+export default ChatIcon;

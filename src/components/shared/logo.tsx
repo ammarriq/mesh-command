@@ -7,7 +7,7 @@ interface LogoProps {
 
 function Logo({ isNavBar }: LogoProps) {
   return (
-    <div className="flex items-center gap-3.5 logoFont">
+    <div className="flex items-center gap-3 2xl:gap-3.5 logoFont">
       <LogoIcon className="size-14 2xl:size-16" />
       <LogoText isNavBar={isNavBar} />
     </div>
