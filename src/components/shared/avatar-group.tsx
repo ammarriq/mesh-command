@@ -1,5 +1,5 @@
-import { Plus } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AddIcon from "@/icons/add";
 
 interface TeamMember {
   id: string | number;
@@ -38,12 +38,6 @@ export function AvatarGroup({
     lg: "-space-x-6",
   };
 
-  const iconSizes = {
-    sm: "size-3",
-    md: "size-4",
-    lg: "size-5",
-  };
-
   // Limit the number of visible members
   const visibleMembers = members.slice(0, maxVisible);
   const remainingCount = members.length - maxVisible;
@@ -54,10 +48,14 @@ export function AvatarGroup({
       {visibleMembers.map((member) => (
         <Avatar
           key={member.id}
-          className={`${sizeClasses[size]} rounded-none border-2 border-white`}
+          className={`size-12 rounded-none border-l-2 border-l-white`}
         >
-          <AvatarImage src={member.image} alt={member.name} />
-          <AvatarFallback className="bg-gray-50 rounded-none">
+          <AvatarImage
+            src={member.image}
+            alt={member.name}
+            className={`object-cover size-full`}
+          />
+          <AvatarFallback className="bg-gray-50 size-6 p-3 rounded-none">
             {member.initials || member.name.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
@@ -77,11 +75,11 @@ export function AvatarGroup({
       {/* Add button */}
       {showAddButton && (
         <Avatar
-          className={`${sizeClasses[size]} bg-primary rounded-none border-2 border-white cursor-pointer hover:bg-primary/90 transition-colors`}
+          className={`${sizeClasses[size]} bg-primary rounded-none border-l-2 border-l-white cursor-pointer hover:bg-primary/90 size-fit transition-colors`}
           onClick={onAddClick}
         >
-          <AvatarFallback className="bg-primary rounded-none">
-            <Plus className={`${iconSizes[size]} text-white`} />
+          <AvatarFallback className="bg-primary p-3 rounded-none">
+            <AddIcon className={`size-6 text-white`} />
           </AvatarFallback>
         </Avatar>
       )}

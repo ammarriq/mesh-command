@@ -14,6 +14,7 @@ import { useChatStore, useSplitScreen } from "@/stores";
 
 import { SearchInput } from "../shared/search-input";
 import { ActionButton } from "../shared/action-button";
+import Image from "next/image";
 
 function NavBar() {
   const isSplitScreen = useSplitScreen();
@@ -91,10 +92,11 @@ function Avatar({ src, name }: { src?: string; name?: string }) {
           className={`size-10 md:size-12 rounded-xs border border-Bg-Dark bg-light-bg object-top`}
         >
           {src ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={src}
               alt={name || "Profile"}
+              width={48}
+              height={48}
               className="size-full object-cover"
             />
           ) : (

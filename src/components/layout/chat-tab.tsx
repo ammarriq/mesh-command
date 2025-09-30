@@ -30,7 +30,7 @@ function ChatTab() {
   const { chats, setSelectedChat, createNewChat } = useChatStore();
 
   return (
-    <Tabs defaultValue="private" className="w-96 md:w-96 2xl:w-[496px]">
+    <Tabs defaultValue="private" className="w-96 2xl:w-[496px]">
       <TabsList className="w-full  border-r border-r-Bg-Dark  h-fit">
         <TabsTrigger value="private">Private</TabsTrigger>
         <TabsTrigger value="projects">Projects</TabsTrigger>

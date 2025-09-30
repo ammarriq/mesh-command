@@ -1,4 +1,4 @@
-import { Plus, MoreHorizontal, FileText, Calendar, Users } from "lucide-react";
+import { Plus, MoreHorizontal } from "lucide-react";
 import { Project, Task } from "@/stores";
 import { InfoItem } from "@/components/shared/info-item";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -181,11 +181,11 @@ function TaskCard({
         </p>
 
         <div className="space-y-2">
-          <InfoItem icon={Users} label="Assigned to" value={task.assignedTo} />
-          <InfoItem icon={Calendar} label="Deadline" value={task.deadline} />
+          <InfoItem type="user" label="Assigned to" value={task.assignedTo} />
+          <InfoItem type="timer" label="Deadline" value={task.deadline} />
           {task.linkedDocs && task.linkedDocs.length > 0 && (
             <InfoItem
-              icon={FileText}
+              type="dollar"
               label="Linked Docs"
               value={task.linkedDocs.join(", ")}
               valueClassName="text-text-primary tex-sm underline"

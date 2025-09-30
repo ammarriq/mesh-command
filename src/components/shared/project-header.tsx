@@ -1,8 +1,9 @@
-import { Calendar, DollarSign, User, FileText, Edit } from "lucide-react";
+import { InfoItem } from "@/components/shared/info-item";
+import { FileText, Edit } from "lucide-react";
+import { RobotMsgBadge } from "@/components/shared/robot-msg-badge";
 import { Progress } from "@/components/ui/progress";
 import { HalfCircleProgress } from "@/components/shared/half-circle-progress";
 import { Button } from "@/components/ui/button";
-import { InfoItem } from "@/components/shared/info-item";
 import { ActionButton } from "@/components/shared/action-button";
 import { AvatarGroup } from "@/components/shared/avatar-group";
 import { Project } from "@/stores";
@@ -73,23 +74,41 @@ export function ProjectHeader(props: ProjectHeaderProps) {
         <div className="flex flex-col w-full">
           <div className="flex flex-row items-center justify-between gap-4 w-full">
             <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-4">
-                <h1 className="text-2xl font-medium text-text-primary">
+              <hgroup className="flex items-center gap-4">
+                <h1 className="text-2xl font-medium text-text-primary text-ellipsis overflow-hidden whitespace-nowrap max-w-80 2xl:max-w-none">
                   {title}
                 </h1>
-                <span className="px-2 py-0.5 rounded-xs bg-[#FFDD98] text-[#A17800] font-semibold text-xs">
-                  {status}
-                </span>
-              </div>
-              <div className="flex items-center gap-4 text-sm mt-1">
+                <RobotMsgBadge
+                  title={
+                    status === "active"
+                      ? "In-Progress"
+                      : status === "completed"
+                      ? "Completed"
+                      : status === "on-hold"
+                      ? "On-hold"
+                      : status
+                  }
+                  status={
+                    status === "active"
+                      ? "in-progress"
+                      : status === "completed"
+                      ? "completed"
+                      : status === "on-hold"
+                      ? "on-hold"
+                      : "default"
+                  }
+                  className="ml-2"
+                />
+              </hgroup>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mt-1">
                 {contractor && (
-                  <InfoItem icon={User} label="Contractor" value={contractor} />
+                  <InfoItem type="user" label="Contractor" value={contractor} />
                 )}
                 {deadline && (
-                  <InfoItem icon={Calendar} label="Deadline" value={deadline} />
+                  <InfoItem type="timer" label="Deadline" value={deadline} />
                 )}
                 {budget && (
-                  <InfoItem icon={DollarSign} label="Budget" value={budget} />
+                  <InfoItem type="dollar" label="Budget" value={budget} />
                 )}
               </div>
             </div>

@@ -37,7 +37,7 @@ function ProjectsPage() {
 
   if (!selectedProject) {
     return (
-      <section className="bg-white flex-1 py-4 grid grid-cols-[1fr_4fr]">
+      <section className="bg-white flex-1 py-4 pr-4 grid grid-cols-[1fr_auto]">
         {/* Left Sidebar - Project List */}
         <ProjectSelectorTab
           showCreateButton={true}
@@ -53,7 +53,7 @@ function ProjectsPage() {
   }
 
   return (
-    <section className="bg-white flex-1 grid grid-cols-[1fr_4fr] w-full">
+    <section className="bg-white flex-1 py-4 pr-4 grid grid-cols-[1fr_auto]">
       <ProjectSelectorTab
         showCreateButton={true}
         onCreateProject={createNewProject}

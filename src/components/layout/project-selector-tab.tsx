@@ -2,8 +2,7 @@
 
 import * as React from "react";
 
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
-import { CustomTabTrigger } from "../shared/custom-tab-trigger";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SearchInput } from "../shared/search-input";
 import { useProjectStore, type Project } from "@/stores";
 import {
@@ -24,7 +23,7 @@ interface ProjectSelectorProps {
 function ProjectSelectorTab({
   showCreateButton = false,
   onCreateProject,
-  className = "w-[496px]",
+  className = "w-96 2xl:w-[496px]",
 }: ProjectSelectorProps) {
   const { categories, selectedProjectId, setSelectedProject } =
     useProjectStore();
@@ -62,17 +61,19 @@ function ProjectSelectorTab({
 
   return (
     <Tabs defaultValue="active" className={className}>
-      <TabsList className="w-full border-b border-r border-r-Bg-Dark border-b-Bg-Dark">
-        <CustomTabTrigger title="Active" value="active" />
-        <CustomTabTrigger title="On-hold" value="onhold" />
-        <CustomTabTrigger title="Completed" value="completed" />
+      <TabsList className="w-full border-r border-r-Bg-Dark">
+        <TabsTrigger value="active">Active</TabsTrigger>
+        <TabsTrigger value="onhold">On-hold</TabsTrigger>
+        <TabsTrigger value="completed">Completed</TabsTrigger>
       </TabsList>
-      <div className="p-2 flex items-center gap-2">
+
+      <div className="p-2 flex flex-wrap  items-center gap-2 min-w-0">
         <SearchInput />
         {showCreateButton && (
           <button
             onClick={onCreateProject}
-            className="bg-primary py-2.5 px-6 text-sm font-medium leading-5 shadow-sm rounded-xs text-white"
+            className="bg-primary w-fit py-2.5 px-6 text-sm font-medium leading-5 shadow-sm rounded-xs text-white whitespace-nowrap max-w-full overflow-hidden text-ellipsis justify-self-end"
+            style={{ minWidth: 0 }}
           >
             New Project
           </button>

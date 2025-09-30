@@ -14,7 +14,7 @@ export function SearchInput({ isChatTab }: SearchInputProps) {
       <label
         className={`w-full px-3 py-1 items-center gap-2 rounded-xs bg-Bg-Dark shadow-xs ${
           isChatTab
-            ? "w-full flex"
+            ? "w-full flex min-w-0"
             : "min-w-72 lg:w-80 2xl:w-[360px] md:flex hidden"
         } `}
       >

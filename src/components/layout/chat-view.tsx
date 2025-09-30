@@ -21,13 +21,12 @@ import {
 import type { MessagePair, SelectedModel } from "@/types/chat";
 import Image from "next/image";
 import DeepseekIcon from "@/icons/deep-seek";
-import Profile2UserIcon from "@/icons/profile-2user";
-import TimerIcon from "@/icons/timer";
-import DollarSquareIcon from "@/icons/dollar-square";
+import { RobotMsgInfoBadge } from "@/components/shared/robot-msg-info-badge";
 import ProjectsIcon from "@/icons/hierarchy-square-2";
 import TaskSquareIcon from "@/icons/task-square";
 import LinkSquareIcon from "@/icons/link-square";
 import Send2Icon from "@/icons/send-2";
+import TimerIcon from "@/icons/timer";
 
 const getModelDisplay = (model: SelectedModel) => {
   if (model === "OpenAI 04") {
@@ -362,9 +361,7 @@ function UserMsg({
               width={20}
               height={20}
               className="bg-primary/10"
-            >
-              AD
-            </Image>
+            />
           </p>
           <span className="text-xs text-text-secondary">
             {formatTime(time)}
@@ -466,20 +463,9 @@ function RobotMsgSummary() {
         HVAC service agreement for HQ
       </h3>
       <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-text-secondary">
-        <span className="flex items-center gap-1 text-primary font-semibold">
-          <Profile2UserIcon
-            fill="var(--primary)"
-            stroke="var(--primary)"
-            className="size-5"
-          />{" "}
-          John Smith
-        </span>
-        <span className="flex items-center gap-1 text-primary font-semibold">
-          <TimerIcon className="size-5 " /> December 20,2026
-        </span>
-        <span className="flex items-center gap-1 text-primary font-semibold">
-          <DollarSquareIcon className="size-5" /> $250k
-        </span>
+        <RobotMsgInfoBadge type="user" value="John Smith" />
+        <RobotMsgInfoBadge type="time" value="December 20,2026" />
+        <RobotMsgInfoBadge type="budget" value="$250k" />
       </div>
       <Separator className="bg-dark-bg mt-2" />
     </div>
