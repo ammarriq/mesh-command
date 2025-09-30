@@ -1,12 +1,4 @@
-import {
-  Calendar,
-  DollarSign,
-  User,
-  MessageCircle,
-  MoreHorizontal,
-  FileText,
-  Edit,
-} from "lucide-react";
+import { Calendar, DollarSign, User, FileText, Edit } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { HalfCircleProgress } from "@/components/shared/half-circle-progress";
 import { Button } from "@/components/ui/button";
@@ -133,13 +125,11 @@ export function ProjectHeader(props: ProjectHeaderProps) {
                 {!showOnlyAvatarGroup && (
                   <>
                     <ActionButton
-                      icon={MessageCircle}
-                      hasNotifications={true}
-                      notificationCount={3}
+                      icon={"notification"}
                       tooltipText="Project Comments"
                     />
                     <ActionButton
-                      icon={MoreHorizontal}
+                      icon={"3-dots"}
                       tooltipText="Project Options"
                       dropdownActions={[
                         {
