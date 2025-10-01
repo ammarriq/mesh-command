@@ -3,11 +3,8 @@ import { AvatarGroup } from '@/components/shared/avatar-group';
 import { HalfCircleProgress } from '@/components/shared/half-circle-progress';
 import { InfoItem } from '@/components/shared/info-item';
 import { RobotMsgBadge } from '@/components/shared/robot-msg-badge';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Project } from '@/store';
-
-import { Edit, FileText } from 'lucide-react';
 
 interface ProjectHeaderProps {
   project: Project;
@@ -20,8 +17,6 @@ interface ProjectHeaderProps {
 export function ProjectHeader({
   project,
   showTeamMembers = true,
-  showDownloadButton = false,
-  onDownloadAll,
   showOnlyAvatarGroup = false,
 }: ProjectHeaderProps) {
   const budgetConsumed = 40;
@@ -90,35 +85,27 @@ export function ProjectHeader({
             <AvatarGroup users={project.users && project.users.length > 0 ? project.users : []} />
             {!showOnlyAvatarGroup && (
               <>
-                <ActionButton icon={'notification'} tooltipText="Project Comments" size={8} />
+                <ActionButton type={'notification'} size={8} />
                 <ActionButton
-                  icon={'3-dots'}
-                  tooltipText="Project Options"
+                  type={'3-dots'}
                   size={8}
-                  dropdownActions={[
-                    {
-                      label: 'Linked Dockets',
-                      icon: FileText,
-                      onClick: () => console.log('Open linked dockets'),
-                      iconClassName: 'size-4 text-red-600',
-                    },
-                    {
-                      label: 'Edit Project',
-                      icon: Edit,
-                      onClick: () => console.log('Edit project'),
-                      iconClassName: 'size-4 text-red-600',
-                    },
-                  ]}
+                  // dropdownActions={[
+                  //   {
+                  //     label: 'Linked Dockets',
+                  //     icon: FileText,
+                  //     onClick: () => console.log('Open linked dockets'),
+                  //     iconClassName: 'size-4 text-red-600',
+                  //   },
+                  //   {
+                  //     label: 'Edit Project',
+                  //     icon: Edit,
+                  //     onClick: () => console.log('Edit project'),
+                  //     iconClassName: 'size-4 text-red-600',
+                  //   },
+                  // ]}
                 />
               </>
             )}
-          </div>
-        )}
-        {showDownloadButton && (
-          <div className="ml-auto">
-            <Button variant="outline" onClick={onDownloadAll}>
-              Download all
-            </Button>
           </div>
         )}
       </section>

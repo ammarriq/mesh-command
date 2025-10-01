@@ -1,17 +1,25 @@
-import React from "react";
-import type { SVGProps } from "react";
+import React from 'react';
+import type { SVGProps } from 'react';
 
-export function SplitscreenIcon(props: SVGProps<SVGSVGElement>) {
+export function SplitScreenIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={288}
-      height={288}
+      width="24"
+      height="24"
       viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
-      fill="#fff"
     >
-      <path d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4q.825 0 1.413.588T11 5v14q0 .825-.587 1.413T9 21zm10 0q-.825 0-1.412-.587T13 19V5q0-.825.588-1.412T15 3h4q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm4-16h-4v14h4z"></path>
+      <path
+        opacity="0.4"
+        d="M22 7.81V16.19C22 19.83 19.83 22 16.19 22H12V2H16.19C19.83 2 22 4.17 22 7.81Z"
+        fill="#5F0101"
+      />
+      <path
+        d="M12 2V22H7.81C4.17 22 2 19.83 2 16.19V7.81C2 4.17 4.17 2 7.81 2H12Z"
+        fill="#5F0101"
+      />
     </svg>
   );
 }

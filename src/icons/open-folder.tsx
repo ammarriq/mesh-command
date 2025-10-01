@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-const FolderOpenIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+const OpenFolderIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   className,
-  fill = "#78829D",
-  stroke = "#78829D",
+  fill = '#78829D',
+  stroke = '#78829D',
   ...props
 }) => (
   <svg
@@ -29,4 +29,4 @@ const FolderOpenIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   </svg>
 );
 
-export default FolderOpenIcon;
+export default OpenFolderIcon;

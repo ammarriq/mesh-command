@@ -1,9 +1,10 @@
-import React from "react";
-import Profile2UserIcon from "@/icons/profile-2user";
-import TimerIcon from "@/icons/timer";
-import DollarSquareIcon from "@/icons/dollar-square";
+import DollarSquareIcon from '@/icons/dollar-square';
+import TimerIcon from '@/icons/timer';
+import TwoUsersIcon from '@/icons/two-users';
 
-type InfoType = "user" | "time" | "budget";
+import React from 'react';
+
+type InfoType = 'user' | 'time' | 'budget';
 
 interface RobotMsgInfoBadgeProps {
   type: InfoType;
@@ -11,35 +12,23 @@ interface RobotMsgInfoBadgeProps {
   className?: string;
 }
 
-export function RobotMsgInfoBadge({
-  type,
-  value,
-  className = "",
-}: RobotMsgInfoBadgeProps) {
+export function RobotMsgInfoBadge({ type, value, className = '' }: RobotMsgInfoBadgeProps) {
   let icon: React.ReactNode;
   switch (type) {
-    case "user":
-      icon = (
-        <Profile2UserIcon
-          fill="var(--primary)"
-          stroke="var(--primary)"
-          className="size-5"
-        />
-      );
+    case 'user':
+      icon = <TwoUsersIcon fill="var(--primary)" stroke="var(--primary)" className="size-5" />;
       break;
-    case "time":
+    case 'time':
       icon = <TimerIcon className="size-5" />;
       break;
-    case "budget":
+    case 'budget':
       icon = <DollarSquareIcon className="size-5" />;
       break;
     default:
       icon = null;
   }
   return (
-    <span
-      className={`flex items-center gap-1 text-primary font-semibold ${className}`}
-    >
+    <span className={`flex items-center gap-1 text-primary font-semibold ${className}`}>
       {icon} {value}
     </span>
   );

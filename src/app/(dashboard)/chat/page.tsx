@@ -1,26 +1,24 @@
 'use client';
 
-import ProjectMainContent from '@/components/layout/ProjectMainContent';
 import ChatTab from '@/components/layout/chat-tab';
 import ChatView from '@/components/layout/chat-view';
+import ProjectMainContent from '@/components/layout/project-main-content';
 import SelectRobot from '@/components/layout/select-robot';
 import RemovePill from '@/components/shared/remove-pill';
-import { useAppStore } from '@/store';
-import type { Chat, Project } from '@/store';
+import { useAppStore, useSelectedChat, useSelectedProject, useSplitScreen } from '@/store';
 
 import { useEffect } from 'react';
 
 function ChatPage() {
   const {
-    chat: { chats, selectedChatId, isSplitScreen },
-    project: { selectedProjectId },
+    chat: { chats, selectedChatId },
     setSelectedChat,
     createNewChat,
   } = useAppStore();
 
-  const selectedChat = chats.find((chat: Chat) => chat.id === selectedChatId);
-  // TODO: Replace with actual project object lookup when projects are added to store
-  const selectedProject = selectedProjectId ? ({ id: selectedProjectId } as Project) : null;
+  const selectedChat = useSelectedChat();
+  const selectedProject = useSelectedProject();
+  const isSplitScreen = useSplitScreen();
 
   useEffect(() => {
     if (chats.length === 0) {
@@ -56,6 +54,7 @@ function ChatPage() {
     return (
       <main className="flex-1 grid grid-cols-[1fr_2fr_2fr] gap-2">
         {ChatLayoutContent}
+
         <section className="flex flex-col">
           <div className="bg-light-bg border border-Bg-Dark">
             <RemovePill

@@ -1,5 +1,5 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
 interface TabItem {
   value: string;
@@ -13,7 +13,7 @@ interface CustomTabsProps {
   value?: string;
   onValueChange?: (value: string) => void;
   className?: string;
-  variant?: "default" | "underline";
+  variant?: 'default' | 'underline';
 }
 
 export function CustomTabs({
@@ -22,7 +22,6 @@ export function CustomTabs({
   value,
   onValueChange,
   className,
-  variant = "default",
 }: CustomTabsProps) {
   return (
     <Tabs
@@ -36,7 +35,7 @@ export function CustomTabs({
           <TabsTrigger
             key={item.value}
             value={item.value}
-            className="bg-transparent rounded-xl text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary  px-3 py-2 data-[state=active]:shadow-xs data-[state=active]:border-b-none"
+            className="bg-transparent rounded-lg w-fit whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-text-primary text-text-secondary  px-3 py-2 data-[state=active]:shadow-xs "
           >
             {item.label}
           </TabsTrigger>

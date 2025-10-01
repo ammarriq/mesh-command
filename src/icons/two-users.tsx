@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-const Profile2UserIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
+const TwoUsersIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   className,
-  fill = "#78829D",
-  stroke = "#78829D",
+  fill = '#78829D',
+  stroke = '#78829D',
   ...props
 }) => (
   <svg
@@ -40,4 +40,4 @@ const Profile2UserIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   </svg>
 );
 
-export default Profile2UserIcon;
+export default TwoUsersIcon;

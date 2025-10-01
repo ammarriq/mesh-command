@@ -28,140 +28,7 @@ import { useState } from 'react';
 
 import { Copy, Edit, Users } from 'lucide-react';
 
-// Manager columns configuration
-const managerColumns = [
-  {
-    key: 'name' as keyof Manager,
-    label: 'Name',
-    render: (_: unknown, manager: Manager) => <AdminUserAvatar user={manager} />,
-  },
-  {
-    key: 'phone' as keyof Manager,
-    label: 'Phone Number',
-  },
-  {
-    key: 'status' as keyof Manager,
-    label: 'Status',
-    render: (status: unknown) => <StatusBadge status={status as Manager['status']} />,
-  },
-  {
-    key: 'dateAdded' as keyof Manager,
-    label: 'Date added',
-  },
-  {
-    key: 'id' as keyof Manager,
-    label: '',
-    render: () => <ActionButtons />,
-  },
-];
-
-// Sub-Manager columns (same structure as Manager)
-const subManagerColumns = [
-  {
-    key: 'name' as keyof SubManager,
-    label: 'Name',
-    render: (_: unknown, subManager: SubManager) => <AdminUserAvatar user={subManager} />,
-  },
-  {
-    key: 'phone' as keyof SubManager,
-    label: 'Phone Number',
-  },
-  {
-    key: 'status' as keyof SubManager,
-    label: 'Status',
-    render: (status: unknown) => <StatusBadge status={status as SubManager['status']} />,
-  },
-  {
-    key: 'dateAdded' as keyof SubManager,
-    label: 'Date added',
-  },
-  {
-    key: 'id' as keyof SubManager,
-    label: '',
-    render: () => <ActionButtons />,
-  },
-];
-
-// Employee columns (reuse from directory with admin styling)
-const employeeColumns = [
-  {
-    key: 'name' as keyof Employee,
-    label: 'Name',
-    render: (_: unknown, employee: Employee) => <AdminUserAvatar user={employee} />,
-  },
-  {
-    key: 'phone' as keyof Employee,
-    label: 'Phone Number',
-  },
-  {
-    key: 'status' as keyof Employee,
-    label: 'Status',
-    render: (status: unknown) => <StatusBadge status={status as Employee['status']} />,
-  },
-  {
-    key: 'dateAdded' as keyof Employee,
-    label: 'Date added',
-  },
-  {
-    key: 'id' as keyof Employee,
-    label: '',
-    render: () => <ActionButtons />,
-  },
-];
-
-// Contractor columns (reuse from directory with admin styling)
-const contractorColumns = [
-  {
-    key: 'name' as keyof Contractor,
-    label: 'Name',
-    render: (_: unknown, contractor: Contractor) => <AdminUserAvatar user={contractor} />,
-  },
-  {
-    key: 'phone' as keyof Contractor,
-    label: 'Phone Number',
-  },
-  {
-    key: 'status' as keyof Contractor,
-    label: 'Status',
-    render: (status: unknown) => <StatusBadge status={status as Contractor['status']} />,
-  },
-  {
-    key: 'dateAdded' as keyof Contractor,
-    label: 'Date added',
-  },
-  {
-    key: 'id' as keyof Contractor,
-    label: '',
-    render: () => <ActionButtons />,
-  },
-];
-
-// Auditor columns
-const auditorColumns = [
-  {
-    key: 'name' as keyof Auditor,
-    label: 'Name',
-    render: (_: unknown, auditor: Auditor) => <AdminUserAvatar user={auditor} />,
-  },
-  {
-    key: 'phone' as keyof Auditor,
-    label: 'Phone Number',
-  },
-  {
-    key: 'status' as keyof Auditor,
-    label: 'Status',
-    render: (status: unknown) => <StatusBadge status={status as Auditor['status']} />,
-  },
-  {
-    key: 'dateAdded' as keyof Auditor,
-    label: 'Date added',
-  },
-  {
-    key: 'id' as keyof Auditor,
-    label: '',
-    render: () => <ActionButtons />,
-  },
-];
+type UserType = Manager | SubManager | Employee | Contractor | Auditor;
 
 export default function AdminPage() {
   const [activeMainTab, setActiveMainTab] = useState('People Management');
@@ -170,176 +37,193 @@ export default function AdminPage() {
   const { managers, subManagers, auditors } = useAdminStore();
   const { employees, contractors } = useDirectoryStore();
 
+  const peopleTabsConfig = [
+    {
+      value: 'Managers',
+      data: managers,
+      title: 'Managers',
+      description: 'Here are list of managers who are also admins.',
+    },
+    {
+      value: 'Sub-Manager',
+      data: subManagers,
+      title: 'Sub-Managers',
+      description: 'Here are list of sub-managers with limited permissions.',
+    },
+    {
+      value: 'Employee',
+      data: employees,
+      title: 'Employees',
+      description: 'Here are list of employees in the system.',
+    },
+    {
+      value: 'Contractor',
+      data: contractors,
+      title: 'Contractors',
+      description: 'Here are list of contractors with project access.',
+    },
+    {
+      value: 'Auditor',
+      data: auditors,
+      title: 'Auditors',
+      description: 'Here are list of auditors with read-only permissions.',
+    },
+  ];
+
   return (
-    <main className="min-h-screen bg-white flex-1 py-4 ">
+    <main className="min-h-screen bg-white flex-1 py-4">
       <div className="p-8">
-        {/* Header */}
-        <header className="flex justify-between items-start">
-          <hgroup className="mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Admin Management</h1>
-            <p className="text-gray-600">
-              Manage your team members and their account permissions here.
-            </p>
-          </hgroup>
-          <SearchInput />
-        </header>
+        <AdminHeader />
 
-        {/* Main Tabs */}
         <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 w">
-            <CustomTabTrigger value="People Management" title="People Management" />
-            <CustomTabTrigger title="Dockets Management" value="Dockets Management" />
-            <CustomTabTrigger value="Integrations" title="Integrations" />
-          </TabsList>
+          <MainTabsList />
 
-          {/* People Management Tab */}
           <TabsContent value="People Management" className="space-y-6">
-            {/* People Sub-tabs */}
-            <Tabs value={activePeopleTab} onValueChange={setActivePeopleTab} className="w-full">
-              <TabsList className="flex w-full max-w-[520px] rounded-xl">
-                <TabsTrigger
-                  value="Managers"
-                  className={cn(
-                    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-l-lg',
-                  )}
-                >
-                  Managers
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Sub-Manager"
-                  className={cn(
-                    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700',
-                  )}
-                >
-                  Sub-Manager
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Employee"
-                  className={cn(
-                    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700',
-                  )}
-                >
-                  Employee
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Contractor"
-                  className={cn(
-                    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700',
-                  )}
-                >
-                  Contractor
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Auditor"
-                  className={cn(
-                    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700 rounded-r-lg',
-                  )}
-                >
-                  Auditor
-                </TabsTrigger>
-              </TabsList>
-
-              {/* Managers Tab */}
-              <TabsContent value="Managers" className="space-y-6">
-                <AdminTable
-                  data={managers}
-                  columns={managerColumns}
-                  onAdd={() => {
-                    /* Add Manager functionality */
-                  }}
-                  addButtonText="Add New Manager"
-                  title="Managers"
-                  description="Here are list of managers who are also admins."
-                />
-              </TabsContent>
-
-              {/* Sub-Manager Tab */}
-              <TabsContent value="Sub-Manager" className="space-y-6">
-                <AdminTable
-                  data={subManagers}
-                  columns={subManagerColumns}
-                  onAdd={() => {
-                    /* Add Sub-Manager functionality */
-                  }}
-                  addButtonText="Add New Sub-Manager"
-                  title="Sub-Managers"
-                  description="Here are list of sub-managers with limited permissions."
-                />
-              </TabsContent>
-
-              {/* Employee Tab */}
-              <TabsContent value="Employee" className="space-y-6">
-                <AdminTable
-                  data={employees}
-                  columns={employeeColumns}
-                  onAdd={() => {
-                    /* Add Employee functionality */
-                  }}
-                  addButtonText="Add New Employee"
-                  title="Employees"
-                  description="Here are list of employees in the system."
-                />
-              </TabsContent>
-
-              {/* Contractor Tab */}
-              <TabsContent value="Contractor" className="space-y-6">
-                <AdminTable
-                  data={contractors}
-                  columns={contractorColumns}
-                  onAdd={() => {
-                    /* Add Contractor functionality */
-                  }}
-                  addButtonText="Add New Contractor"
-                  title="Contractors"
-                  description="Here are list of contractors with project access."
-                />
-              </TabsContent>
-
-              {/* Auditor Tab */}
-              <TabsContent value="Auditor" className="space-y-6">
-                <AdminTable
-                  data={auditors}
-                  columns={auditorColumns}
-                  onAdd={() => {
-                    /* Add Auditor functionality */
-                  }}
-                  addButtonText="Add New Auditor"
-                  title="Auditors"
-                  description="Here are list of auditors with read-only permissions."
-                />
-              </TabsContent>
-            </Tabs>
+            <PeopleManagement
+              activePeopleTab={activePeopleTab}
+              setActivePeopleTab={setActivePeopleTab}
+              peopleTabsConfig={peopleTabsConfig}
+            />
           </TabsContent>
 
-          {/* Dockets Management Tab */}
-          <TabsContent value="Dockets Management" className="space-y-6">
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Dockets Management</h3>
-              <p className="text-gray-600">Manage dockets and their permissions here.</p>
-            </div>
-          </TabsContent>
-
-          {/* Integrations Tab */}
-          <TabsContent value="Integrations" className="space-y-6">
-            <div className="text-center py-12">
-              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Integrations</h3>
-              <p className="text-gray-600">Manage system integrations and API connections here.</p>
-            </div>
-          </TabsContent>
+          <PlaceholderTabContent
+            value="Dockets Management"
+            title="Dockets Management"
+            description="Manage dockets and their permissions here."
+          />
+          <PlaceholderTabContent
+            value="Integrations"
+            title="Integrations"
+            description="Manage system integrations and API connections here."
+          />
         </Tabs>
       </div>
     </main>
   );
 }
 
-// Admin User Avatar Component
-function AdminUserAvatar({
-  user,
-}: {
-  user: Manager | SubManager | Employee | Contractor | Auditor;
-}) {
+const createUserColumns = <T extends UserType>() => [
+  {
+    key: 'name' as keyof T,
+    label: 'Name',
+    render: (_: unknown, user: T) => <AdminUserAvatar user={user} />,
+  },
+  {
+    key: 'phone' as keyof T,
+    label: 'Phone Number',
+  },
+  {
+    key: 'status' as keyof T,
+    label: 'Status',
+    render: (status: unknown) => <StatusBadge status={status as T['status']} />,
+  },
+  {
+    key: 'dateAdded' as keyof T,
+    label: 'Date added',
+  },
+  {
+    key: 'id' as keyof T,
+    label: '',
+    render: () => <ActionButtons />,
+  },
+];
+
+function AdminHeader() {
+  return (
+    <header className="flex justify-between items-start">
+      <hgroup className="mb-8">
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Admin Management</h1>
+        <p className="text-gray-600">
+          Manage your team members and their account permissions here.
+        </p>
+      </hgroup>
+      <SearchInput />
+    </header>
+  );
+}
+
+function MainTabsList() {
+  return (
+    <TabsList className="grid w-full grid-cols-3 mb-8">
+      <CustomTabTrigger value="People Management" title="People Management" />
+      <CustomTabTrigger title="Dockets Management" value="Dockets Management" />
+      <CustomTabTrigger value="Integrations" title="Integrations" />
+    </TabsList>
+  );
+}
+
+interface PeopleManagementProps {
+  activePeopleTab: string;
+  setActivePeopleTab: (tab: string) => void;
+  peopleTabsConfig: Array<{
+    value: string;
+    data: UserType[];
+    title: string;
+    description: string;
+  }>;
+}
+
+function PeopleManagement({
+  activePeopleTab,
+  setActivePeopleTab,
+  peopleTabsConfig,
+}: PeopleManagementProps) {
+  const peopleTabStyle =
+    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700';
+
+  return (
+    <Tabs value={activePeopleTab} onValueChange={setActivePeopleTab} className="w-full">
+      <TabsList className="flex w-full max-w-[520px] rounded-xl">
+        {peopleTabsConfig.map((tab, index) => (
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            className={cn(
+              peopleTabStyle,
+              index === 0 && 'rounded-l-lg',
+              index === peopleTabsConfig.length - 1 && 'rounded-r-lg',
+            )}
+          >
+            {tab.value}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      {peopleTabsConfig.map((tab) => (
+        <TabsContent key={tab.value} value={tab.value} className="space-y-6">
+          <AdminTable
+            data={tab.data}
+            columns={createUserColumns()}
+            onAdd={() => {}}
+            addButtonText={`Add New ${tab.value === 'Sub-Manager' ? 'Sub-Manager' : tab.value}`}
+            title={tab.title}
+            description={tab.description}
+          />
+        </TabsContent>
+      ))}
+    </Tabs>
+  );
+}
+
+interface PlaceholderTabContentProps {
+  value: string;
+  title: string;
+  description: string;
+}
+
+function PlaceholderTabContent({ value, title, description }: PlaceholderTabContentProps) {
+  return (
+    <TabsContent value={value} className="space-y-6">
+      <div className="text-center py-12">
+        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+        <p className="text-gray-600">{description}</p>
+      </div>
+    </TabsContent>
+  );
+}
+
+function AdminUserAvatar({ user }: { user: UserType }) {
   const initials = user.name
     .split(' ')
     .map((n) => n[0])
@@ -347,7 +231,7 @@ function AdminUserAvatar({
     .toUpperCase();
 
   return (
-    <main className="flex items-center gap-3">
+    <div className="flex items-center gap-3">
       <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-xs font-medium">
         {initials}
       </div>
@@ -355,26 +239,26 @@ function AdminUserAvatar({
         <div className="font-medium text-gray-900">{user.name}</div>
         <div className="text-sm text-gray-500">{user.email}</div>
       </div>
-    </main>
+    </div>
   );
 }
 
-// Action Buttons Component
 function ActionButtons() {
+  const buttonClass = 'p-1 text-gray-400 hover:text-gray-600';
+
   return (
     <div className="flex items-center gap-2">
-      <button className="p-1 text-gray-400 hover:text-gray-600">
+      <button className={buttonClass}>
         <Copy className="w-4 h-4" />
       </button>
-      <button className="p-1 text-gray-400 hover:text-gray-600">
+      <button className={buttonClass}>
         <Edit className="w-4 h-4" />
       </button>
     </div>
   );
 }
 
-// Admin Table Component
-interface AdminTableProps<T> {
+interface AdminTableProps<T extends UserType> {
   data: T[];
   columns: {
     key: keyof T;
@@ -387,7 +271,7 @@ interface AdminTableProps<T> {
   description?: string;
 }
 
-function AdminTable<T extends { id: number; name: string; email?: string }>({
+function AdminTable<T extends UserType>({
   data,
   columns,
   onAdd,
@@ -397,7 +281,6 @@ function AdminTable<T extends { id: number; name: string; email?: string }>({
 }: AdminTableProps<T>) {
   return (
     <section className="flex gap-8">
-      {/* Section Header */}
       <hgroup>
         <h3 className="text-lg font-medium text-gray-900">{title}</h3>
         {description && <p className="text-sm text-gray-600">{description}</p>}
@@ -409,7 +292,6 @@ function AdminTable<T extends { id: number; name: string; email?: string }>({
         </Button>
       </hgroup>
 
-      {/* Table */}
       <div className="bg-white rounded-xl border flex-1">
         <Table className="rounded-2xl">
           <TableHeader>
@@ -430,9 +312,7 @@ function AdminTable<T extends { id: number; name: string; email?: string }>({
             {data.map((item, index) => (
               <TableRow
                 key={item.id}
-                className={
-                  (cn((index + 1) % 2 === 0 ? 'bg-light-bg ' : ''), 'border border-Bg-Dark')
-                }
+                className={cn((index + 1) % 2 === 0 ? 'bg-light-bg' : '', 'border border-Bg-Dark')}
               >
                 {columns.map((column) => (
                   <TableCell

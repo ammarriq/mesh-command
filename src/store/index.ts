@@ -1,7 +1,22 @@
-import { useAppStore } from './stores';
+import {
+  useAllProjects,
+  useAppStore,
+  useCategories,
+  useSelectedChat,
+  useSelectedProject,
+  useSplitScreen,
+} from './stores';
 import type { ProjectCategory } from './types';
 
-export * from './stores';
+// Export the main store and all hooks
+export {
+  useAppStore,
+  useSelectedChat,
+  useSplitScreen,
+  useSelectedProject,
+  useCategories,
+  useAllProjects,
+};
 
 export type {
   User,

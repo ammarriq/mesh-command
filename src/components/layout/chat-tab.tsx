@@ -1,188 +1,115 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EditIcon from '@/icons/edit';
-import { useAppStore } from '@/store';
-import type { Project } from '@/store';
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
+import { useAppStore, useProjectStore, useSelectedChat } from '@/store';
+import type { Chat, ProjectCategory } from '@/store';
 
-import React, { useEffect, useState } from 'react';
+import { CustomTabTrigger } from '../shared/chat-tab-trigger';
+import ProjectContentItem from '../shared/project-content-item';
+import SharedTabActions from '../shared/tab-actions';
 
-import { useRouter } from 'next/navigation';
-
-import { ChevronDown } from 'lucide-react';
-
-import { SearchInput } from '../shared/search-input';
-import { Button } from '../ui/button';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
-
-function ChatTab() {
+export default function ChatTab() {
+  const categories = useProjectStore((state) => state.categories);
   const {
-    project: { categories },
-    chat: { chats, selectedChatId },
+    chat: { chats },
     setSelectedChat,
     createNewChat,
   } = useAppStore();
+  const selectedChat = useSelectedChat();
 
-  const selectedChat = chats.find((chat) => chat.id === selectedChatId);
-
+  const tabConfig = getTabConfig();
   return (
     <Tabs defaultValue="private" className="w-96 2xl:w-[496px]">
       <TabsList className="w-full border-r border-r-Bg-Dark h-fit">
-        <TabsTrigger value="private">Private</TabsTrigger>
-        <TabsTrigger value="projects">Projects</TabsTrigger>
+        {tabConfig.map((tab) => (
+          <CustomTabTrigger key={tab.value} value={tab.value}>
+            {tab.label}
+          </CustomTabTrigger>
+        ))}
       </TabsList>
 
-      <div className="p-2 flex justify-end items-center  w-full gap-2">
-        <SearchInput isChatTab />
-        <button onClick={createNewChat} className="bg-primary px-3 py-[11px]">
-          <EditIcon className="size-6" />
-        </button>
-      </div>
-
+      <SharedTabActions onCreateNewItem={createNewChat} type="chat" />
       <TabsContent
         value="private"
         className="p-1.5 lg:p-2 flex flex-col gap-3 border-r border-r-Bg-Dark"
       >
-        {chats.length !== 0 &&
-          selectedChat &&
-          chats.map((chat) => (
-            <button
-              onClick={() => setSelectedChat(chat.id)}
-              key={chat.id}
-              className={`${
-                selectedChat.id === chat.id && 'bg-Bg-Dark py-2'
-              } px-2 text-text-primary text-start`}
-            >
-              {chat.name}
-            </button>
-          ))}
+        <PrivateChatsList
+          chats={chats}
+          selectedChat={selectedChat}
+          onChatSelect={setSelectedChat}
+        />
       </TabsContent>
 
       <TabsContent value="projects" className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3">
-        {categories.map((category) => (
-          <ProjectContentItem
-            key={category.id}
-            title={category.name}
-            projects={category.projects}
-            showCreateButton={false}
-            isChatTab
-          />
-        ))}
+        <ProjectsList categories={categories} />
       </TabsContent>
     </Tabs>
   );
 }
 
-interface ProjectContentItemProps {
-  title: string;
-  projects: Project[];
-  showCreateButton?: boolean;
-  isChatTab?: boolean;
+const getTabConfig = () => [
+  { value: 'private', label: 'Private' },
+  { value: 'projects', label: 'Projects' },
+];
+
+interface PrivateChatsListProps {
+  chats: Chat[];
+  selectedChat: Chat | null;
+  onChatSelect: (id: string) => void;
 }
 
-function ProjectContentItem({
-  title,
-  projects,
-  showCreateButton = false,
-  isChatTab,
-}: ProjectContentItemProps) {
-  const {
-    project: { selectedProjectId },
-    chat: { isSplitScreen },
-    setSelectedProject,
-  } = useAppStore();
-  const router = useRouter();
-
-  // Handle project selection based on split screen state
-  const handleProjectClick = (projectId: number) => {
-    setSelectedProject(projectId);
-
-    if (!isSplitScreen) {
-      router.push('/projects');
-    }
-  };
-
-  // Check if any project in this category is currently selected because we need to know if the category should be opened or closed by default
-  const hasSelectedProject = projects.some((project) => project.id === selectedProjectId);
-
-  const [isCategoryOpen, setIsCateoryOpen] = useState(hasSelectedProject);
-
-  useEffect(() => {
-    setIsCateoryOpen(hasSelectedProject);
-  }, [hasSelectedProject]);
-
-  const getStatusDisplay = (status: string) => {
-    // Normalize status to lowercase for logic
-    const normalized = status.toLowerCase();
-    switch (normalized) {
-      case 'active':
-        return { text: 'In-progress', color: 'text-yellow-600' };
-      case 'on-hold':
-        return { text: 'On-hold', color: 'text-primary' };
-      case 'completed':
-        return { text: 'Completed', color: 'text-green-600' };
-      default:
-        return { text: status, color: 'text-text-secondary' };
-    }
-  };
+function PrivateChatsList({ chats, selectedChat, onChatSelect }: PrivateChatsListProps) {
+  if (!chats.length || !selectedChat) {
+    return null;
+  }
 
   return (
-    <Collapsible
-      open={isCategoryOpen}
-      onOpenChange={setIsCateoryOpen}
-      className="flex w-full flex-col gap-3"
-    >
-      <div className="flex items-center gap-2">
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6 rounded-sm bg-primary text-white hover:bg-primary/90"
-          >
-            <ChevronDown
-              className={`transition-transform duration-200 ${
-                isCategoryOpen ? 'rotate-0' : 'rotate-180'
-              }`}
-            />
-            <span className="sr-only">Toggle</span>
-          </Button>
-        </CollapsibleTrigger>
-        <h4 className=" text-primary font-semibold">{title} </h4>
-      </div>
-      <CollapsibleContent className="flex flex-col gap-1 pl-2.5 ">
-        {projects.length === 0 ? (
-          <div className="flex flex-col gap-2 py-2">
-            <p className="text-sm text-text-secondary">No project available.</p>
-            {showCreateButton && (
-              <button className="bg-primary py-2 px-4 text-sm font-medium leading-5 shadow-sm rounded-xs text-white w-fit">
-                Create new project
-              </button>
-            )}
-          </div>
-        ) : (
-          <div>
-            {projects.map((project) => {
-              const statusInfo = getStatusDisplay(project.status);
-              return (
-                <button
-                  key={project.id}
-                  onClick={() => handleProjectClick(project.id)}
-                  className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary px-2 py-1.5 w-full ${
-                    selectedProjectId === project.id ? 'bg-Bg-Dark p-2' : ''
-                  }`}
-                >
-                  <span>{project.title}</span>
-                  {!isChatTab && (
-                    <span className={`font-semibold ${statusInfo.color}`}>{statusInfo.text}</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </CollapsibleContent>
-    </Collapsible>
+    <>
+      {chats.map((chat) => (
+        <ChatItem
+          key={chat.id}
+          chat={chat}
+          isSelected={selectedChat.id === chat.id}
+          onClick={onChatSelect}
+        />
+      ))}
+    </>
   );
 }
 
-export default ChatTab;
+interface ProjectsListProps {
+  categories: ProjectCategory[];
+}
+
+function ProjectsList({ categories }: ProjectsListProps) {
+  return (
+    <>
+      {categories.map((category) => (
+        <ProjectContentItem
+          key={category.id}
+          title={category.name}
+          projects={category.projects}
+          showCreateButton={false}
+          isChatTab
+        />
+      ))}
+    </>
+  );
+}
+
+interface ChatItemProps {
+  chat: Chat;
+  isSelected: boolean;
+  onClick: (id: string) => void;
+}
+
+function ChatItem({ chat, isSelected, onClick }: ChatItemProps) {
+  return (
+    <button
+      onClick={() => onClick(chat.id)}
+      className={`px-2 text-text-primary text-start ${isSelected ? 'bg-Bg-Dark py-2' : ''}`}
+    >
+      {chat.name}
+    </button>
+  );
+}
