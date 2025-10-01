@@ -23,7 +23,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-svh w-full bg-Bg-Dark flex items-center justify-center px-4 py-6">
-      <section className="flex flex-col gap-8 items-center ">
+      <section className="flex flex-col gap-6 sm:gap-8 items-center ">
         <Logo />
 
         <form className="flex flex-col px-6 sm:px-12 py-8 gap-6 rounded-2xl border border-[#F5F5F5] shadow-[0_4px_44px_0_rgba(0,0,0,0.11)] max-w-md bg-white">
@@ -47,7 +47,7 @@ export default function LoginPage() {
             />
 
             <AuthInput
-              icon={"lock"}
+              icon="lock"
               label="Password"
               name="password"
               id="password"
@@ -63,7 +63,11 @@ export default function LoginPage() {
                   className="text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => setShowPassword((s) => !s)}
                 >
-                  {showPassword ? <Eye className="size-6" /> : <EyeSlashIcon />}
+                  {showPassword ? (
+                    <Eye className="size-5 sm:size-6" />
+                  ) : (
+                    <EyeSlashIcon className="size-5 sm:size-6" />
+                  )}
                 </button>
               }
             />
@@ -102,8 +106,8 @@ function OAuthButton({ provider }: { provider: Provider }) {
     provider === "google"
       ? "Continue with Google"
       : provider === "apple"
-      ? "Continue with Apple"
-      : "Continue with Microsoft";
+        ? "Continue with Apple"
+        : "Continue with Microsoft";
 
   if (provider === "apple") {
     return (

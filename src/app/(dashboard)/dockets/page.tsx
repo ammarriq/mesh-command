@@ -1,62 +1,33 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useDocketStore } from "@/stores";
-import type { Project } from "@/stores";
-import { CustomTabs } from "@/components/shared/custom-tabs";
-import { ProjectHeader } from "@/components/shared/project-header";
-import { InvoiceTable } from "@/components/shared/data-table";
-import ProjectSelectorTab from "@/components/layout/project-selector-tab";
+import ProjectSelectorTab from '@/components/layout/project-selector-tab';
+import { CustomTabs } from '@/components/shared/custom-tabs';
+import { InvoiceTable } from '@/components/shared/data-table';
+import { ProjectHeader } from '@/components/shared/project-header';
+import { useSelectedProject } from '@/store';
+
+import React, { useState } from 'react';
 
 function DocketsPage() {
-  const { dockets, selectedDocketId } = useDocketStore();
-  const [selectedProjectId] = useState<number>(1);
-  const [activeInvoiceTab, setActiveInvoiceTab] = useState<string>("Invoices");
+  const selectedProject = useSelectedProject();
+  const [activeInvoiceTab, setActiveInvoiceTab] = useState<string>('Invoices');
 
-  // Handle empty dockets array
-  if (!dockets || dockets.length === 0) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        No dockets available.
-      </div>
-    );
+  if (!selectedProject) {
+    return <div className="flex h-screen items-center justify-center">No project selected.</div>;
   }
 
-  // Set initial docket selection if none selected
-  const currentSelectedDocketId = selectedDocketId || dockets[0]?.id;
-
-  const selectedDocket = dockets.find((d) => d.id === currentSelectedDocketId);
-  // Map DocketProject to Project type for ProjectHeader
-  const rawProject = selectedDocket?.projects?.find(
-    (p) => p.id === selectedProjectId
-  );
-  // Convert DocketProject to Project type
-  const selectedProject = rawProject
-    ? ({
-        id: rawProject.id,
-        title: rawProject.name || "Untitled Project",
-        status:
-          rawProject.status === "In-Progress"
-            ? "active"
-            : rawProject.status === "On-hold"
-            ? "on-hold"
-            : "completed",
-        contractor: rawProject.contractor,
-        deadline: rawProject.deadline,
-        budget: rawProject.budget,
-        warning: null,
-        todo: [],
-        inProgress: [],
-        completed: [],
-        // Add invoices for InvoiceTable usage (not part of Project type)
-        invoices: rawProject.invoices || [],
-      } as Project & { invoices: typeof rawProject.invoices }) // type assertion for extra property
-    : undefined;
-
-  if (!selectedDocket || !selectedProject) {
+  // Use dockets from the selected project
+  const projectDockets = selectedProject.dockets || [];
+  // For demonstration, use the first docket's invoices if available
+  const firstDocket = projectDockets[0];
+  const invoices =
+    firstDocket && firstDocket.projects && firstDocket.projects[0]?.invoices
+      ? firstDocket.projects[0].invoices
+      : [];
+  if (projectDockets.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Loading...
+        No dockets available for this project.
       </div>
     );
   }
@@ -69,19 +40,12 @@ function DocketsPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Project Header */}
-        <ProjectHeader
-          project={selectedProject}
-          showTeamMembers={true}
-          showDownloadButton={true}
-          onDownloadAll={() => console.log("Download all dockets")}
-        />
+        <ProjectHeader project={selectedProject} showTeamMembers={true} />
         {/* Billing Section */}
         <div className="flex-1 p-6 overflow-hidden">
           <div className="bg-white h-full flex flex-col">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Billing and invoicing
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Billing and invoicing</h2>
 
               {/* Invoice Tabs */}
               <CustomTabs
@@ -90,35 +54,33 @@ function DocketsPage() {
                 onValueChange={setActiveInvoiceTab}
                 items={[
                   {
-                    value: "Invoices",
-                    label: "Invoices",
-                    content: (
-                      <InvoiceTable invoices={selectedProject.invoices || []} />
-                    ),
+                    value: 'Invoices',
+                    label: 'Invoices',
+                    content: <InvoiceTable invoices={invoices} />,
                   },
                   {
-                    value: "Property",
-                    label: "Property",
+                    value: 'Property',
+                    label: 'Property',
                     content: <div>Property content</div>,
                   },
                   {
-                    value: "Capital Projects",
-                    label: "Capital Projects",
+                    value: 'Capital Projects',
+                    label: 'Capital Projects',
                     content: <div>Capital Projects content</div>,
                   },
                   {
-                    value: "Legal Cases",
-                    label: "Legal Cases",
+                    value: 'Legal Cases',
+                    label: 'Legal Cases',
                     content: <div>Legal Cases content</div>,
                   },
                   {
-                    value: "Plan",
-                    label: "Plan",
+                    value: 'Plan',
+                    label: 'Plan',
                     content: <div>Plan content</div>,
                   },
                   {
-                    value: "Media",
-                    label: "Media",
+                    value: 'Media',
+                    label: 'Media',
                     content: <div>Media content</div>,
                   },
                 ]}

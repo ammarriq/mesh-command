@@ -1,20 +1,33 @@
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Calendar,
-  DollarSign,
-  User,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
-import { useSelectedProject } from "@/stores";
-import Pill from "../shared/pill";
-import { Separator } from "../ui/separator";
+import { useAppStore } from '@/store';
+import type { Project } from '@/store';
+
+import React from 'react';
+
+import { AlertCircle, Calendar, CheckCircle, Clock, DollarSign, User } from 'lucide-react';
+
+import Pill from '../shared/pill';
+import { Separator } from '../ui/separator';
 
 export default function ProjectView() {
-  const selectedProject = useSelectedProject();
+  const {
+    project: { selectedProjectId },
+  } = useAppStore();
+
+  const selectedProject: Project | null = selectedProjectId
+    ? {
+        id: selectedProjectId,
+        title: 'Sample Project',
+        status: 'Active',
+        deadline: '2024-12-31',
+        budget: '$50k',
+        contractor: 'ABC Construction',
+        todo: [],
+        inProgress: [],
+        completed: [],
+      }
+    : null;
 
   if (!selectedProject) {
     return (
@@ -26,11 +39,11 @@ export default function ProjectView() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "Completed":
+      case 'Completed':
         return <CheckCircle className="size-5 text-green-600" />;
-      case "In-Progress":
+      case 'In-Progress':
         return <Clock className="size-5 text-blue-600" />;
-      case "To-Do":
+      case 'To-Do':
         return <AlertCircle className="size-5 text-orange-600" />;
       default:
         return <Clock className="size-5 text-gray-600" />;
@@ -39,7 +52,9 @@ export default function ProjectView() {
 
   const getBudgetConsumption = () => {
     // Mock calculation for demonstration
-    const budgetNum = parseInt(selectedProject.budget.replace(/[^\d]/g, ""));
+    const budgetNum = selectedProject.budget
+      ? parseInt(selectedProject.budget.replace(/[^\d]/g, ''))
+      : 50;
     const consumed = Math.floor(budgetNum * 0.4); // 40% consumed
     return {
       consumed: `$${consumed}k`,
@@ -57,14 +72,10 @@ export default function ProjectView() {
           <div className="flex items-center gap-3">
             {getStatusIcon(selectedProject.status)}
             <div>
-              <h1 className="text-lg font-semibold text-text-primary">
-                {selectedProject.title}
-              </h1>
+              <h1 className="text-lg font-semibold text-text-primary">{selectedProject.title}</h1>
               <div className="flex items-center gap-2 mt-1">
                 <Pill title={selectedProject.status} />
-                <span className="text-xs text-text-secondary">
-                  40% Budget Consumed
-                </span>
+                <span className="text-xs text-text-secondary">40% Budget Consumed</span>
               </div>
             </div>
           </div>
@@ -79,49 +90,33 @@ export default function ProjectView() {
             <div className="bg-light-bg p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="size-4 text-primary" />
-                <span className="text-sm font-medium text-text-primary">
-                  Deadline
-                </span>
+                <span className="text-sm font-medium text-text-primary">Deadline</span>
               </div>
-              <p className="text-text-primary font-semibold">
-                {selectedProject.deadline}
-              </p>
+              <p className="text-text-primary font-semibold">{selectedProject.deadline}</p>
             </div>
 
             <div className="bg-light-bg p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <DollarSign className="size-4 text-primary" />
-                <span className="text-sm font-medium text-text-primary">
-                  Budget
-                </span>
+                <span className="text-sm font-medium text-text-primary">Budget</span>
               </div>
-              <p className="text-text-primary font-semibold">
-                {selectedProject.budget}
-              </p>
+              <p className="text-text-primary font-semibold">{selectedProject.budget}</p>
             </div>
 
             <div className="bg-light-bg p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <User className="size-4 text-primary" />
-                <span className="text-sm font-medium text-text-primary">
-                  Assigned To
-                </span>
+                <span className="text-sm font-medium text-text-primary">Assigned To</span>
               </div>
-              <p className="text-text-primary font-semibold">
-                {selectedProject.contractor}
-              </p>
+              <p className="text-text-primary font-semibold">{selectedProject.contractor}</p>
             </div>
 
             <div className="bg-light-bg p-3 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <User className="size-4 text-primary" />
-                <span className="text-sm font-medium text-text-primary">
-                  Contractor
-                </span>
+                <span className="text-sm font-medium text-text-primary">Contractor</span>
               </div>
-              <p className="text-text-primary font-semibold">
-                {selectedProject.contractor}
-              </p>
+              <p className="text-text-primary font-semibold">{selectedProject.contractor}</p>
             </div>
           </div>
 
@@ -129,12 +124,10 @@ export default function ProjectView() {
 
           {/* Description */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-text-primary">
-              Description
-            </h3>
+            <h3 className="text-sm font-semibold text-text-primary">Description</h3>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Project status: {selectedProject.status} | Budget:{" "}
-              {selectedProject.budget} | Deadline: {selectedProject.deadline}
+              Project status: {selectedProject.status} | Budget: {selectedProject.budget} |
+              Deadline: {selectedProject.deadline}
             </p>
           </div>
 
@@ -142,14 +135,10 @@ export default function ProjectView() {
 
           {/* Budget Progress */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-text-primary">
-              Budget Overview
-            </h3>
+            <h3 className="text-sm font-semibold text-text-primary">Budget Overview</h3>
             <div className="bg-light-bg p-4 rounded-lg">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-text-secondary">
-                  Budget Consumed
-                </span>
+                <span className="text-sm text-text-secondary">Budget Consumed</span>
                 <span className="text-sm font-semibold text-text-primary">
                   {budgetInfo.consumed} / {selectedProject.budget}
                 </span>
@@ -186,9 +175,7 @@ export default function ProjectView() {
 
           {/* Recent Activity */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-text-primary">
-              Recent Activity
-            </h3>
+            <h3 className="text-sm font-semibold text-text-primary">Recent Activity</h3>
             <div className="space-y-2">
               <div className="flex items-center gap-3 p-2 bg-light-bg rounded">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -202,18 +189,14 @@ export default function ProjectView() {
               <div className="flex items-center gap-3 p-2 bg-light-bg rounded">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                 <div>
-                  <p className="text-sm text-text-primary">
-                    Budget review completed
-                  </p>
+                  <p className="text-sm text-text-primary">Budget review completed</p>
                   <p className="text-xs text-text-secondary">1 day ago</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-2 bg-light-bg rounded">
                 <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                 <div>
-                  <p className="text-sm text-text-primary">
-                    New contractor assigned
-                  </p>
+                  <p className="text-sm text-text-primary">New contractor assigned</p>
                   <p className="text-xs text-text-secondary">3 days ago</p>
                 </div>
               </div>

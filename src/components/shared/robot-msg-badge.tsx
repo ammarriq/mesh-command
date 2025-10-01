@@ -40,7 +40,7 @@ export function RobotMsgBadge({
   const style = statusStyles[status] || statusStyles.default;
   return (
     <span
-      className={`inline-block rounded-sm py-[5px] px-2 text-xs font-semibold whitespace-nowrap ${style.bg} ${style.text} ${className}`}
+      className={`inline-block rounded-sm py-0.5 px-2 text-xs font-semibold whitespace-nowrap ${style.bg} ${style.text} ${className}`}
     >
       {title}
     </span>

@@ -9,12 +9,20 @@ import { Input } from "@/components/ui/input";
 
 import { cn } from "@/lib/utils";
 
+export default function OtpVerificationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpForm />
+    </Suspense>
+  );
+}
+
 const OTP_LENGTH = 6;
 
 function OtpForm() {
   const [seconds, setSeconds] = useState(60);
   const [inputValues, setInputValues] = useState<string[]>(
-    Array(OTP_LENGTH).fill("")
+    Array(OTP_LENGTH).fill(""),
   );
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -108,7 +116,7 @@ function OtpForm() {
                   "h-10 sm:h-14 w-9 sm:w-12 text-center text-lg tracking-widest font-medium rounded-md ",
                   val
                     ? "border-[#B3E2A7]"
-                    : "focus:border focus:border-text-primary"
+                    : "focus:border focus:border-text-primary",
                 )}
               />
             ))}
@@ -124,13 +132,5 @@ function OtpForm() {
         </form>
       </section>
     </main>
-  );
-}
-
-export default function OtpVerificationPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <OtpForm />
-    </Suspense>
   );
 }

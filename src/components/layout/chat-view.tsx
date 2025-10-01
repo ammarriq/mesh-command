@@ -1,45 +1,42 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { ActionButton } from '@/components/shared/action-button';
+import { AvatarGroup } from '@/components/shared/avatar-group';
+import { RobotMsgInfoBadge } from '@/components/shared/robot-msg-info-badge';
+import DeepseekIcon from '@/icons/deep-seek';
+import ProjectsIcon from '@/icons/hierarchy-square-2';
+import LinkSquareIcon from '@/icons/link-square';
+import { OpenaiIcon } from '@/icons/open-ai';
+import PeopleIcon from '@/icons/people';
+import Profile2UserIcon from '@/icons/profile-2user';
+import { RobotIcon } from '@/icons/robot';
+import Send2Icon from '@/icons/send-2';
+import TaskSquareIcon from '@/icons/task-square';
+import TimerIcon from '@/icons/timer';
+import { useChatStore, useSelectedChat, useSelectedProject, useSplitScreen } from '@/store';
+import type { MessagePair, SelectedModel } from '@/types/chat';
 
-import { Separator } from "../ui/separator";
-import LoadingRobotChat from "../shared/loading-robot-chat";
-import { AvatarGroup } from "@/components/shared/avatar-group";
-import { ActionButton } from "@/components/shared/action-button";
+import React, { useState } from 'react';
 
-import { OpenaiIcon } from "@/icons/open-ai";
-import { RobotIcon } from "@/icons/robot";
-import { UsersIcon } from "@/icons/users";
+import Image from 'next/image';
 
-import {
-  useSelectedChat,
-  useChatStore,
-  useSelectedProject,
-  useSplitScreen,
-} from "@/stores";
-import type { MessagePair, SelectedModel } from "@/types/chat";
-import Image from "next/image";
-import DeepseekIcon from "@/icons/deep-seek";
-import { RobotMsgInfoBadge } from "@/components/shared/robot-msg-info-badge";
-import ProjectsIcon from "@/icons/hierarchy-square-2";
-import TaskSquareIcon from "@/icons/task-square";
-import LinkSquareIcon from "@/icons/link-square";
-import Send2Icon from "@/icons/send-2";
-import TimerIcon from "@/icons/timer";
+import { MoreHorizontal } from 'lucide-react';
+
+import LoadingRobotChat from '../shared/loading-robot-chat';
+import { Separator } from '../ui/separator';
 
 const getModelDisplay = (model: SelectedModel) => {
-  if (model === "OpenAI 04") {
+  if (model === 'OpenAI 04') {
     return {
       icon: OpenaiIcon,
-      color: "text-text-primary",
-      strokeColor: "fill-text-primary",
+      color: 'text-text-primary',
+      strokeColor: 'fill-text-primary',
     };
   } else {
     return {
       icon: DeepseekIcon,
-      color: "text-[#4D6BFE]",
-      strokeColor: "stroke-[#4D6BFE]",
+      color: 'text-[#4D6BFE]',
+      strokeColor: 'stroke-[#4D6BFE]',
     };
   }
 };
@@ -47,7 +44,7 @@ const getModelDisplay = (model: SelectedModel) => {
 export default function ChatView() {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isRenamingChat, setIsRenamingChat] = useState(false);
-  const [chatName, setChatName] = useState("");
+  const [chatName, setChatName] = useState('');
   const [isRobotMsgLoading, setIsRobotMsgLoading] = useState(false);
 
   const selectedChat = useSelectedChat();
@@ -57,119 +54,98 @@ export default function ChatView() {
 
   if (!selectedChat) return null;
 
+  // --- Handlers ---
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const userMsg = ((formData.get("userMessage") as string) || "").trim();
+    const userMsg = ((formData.get('userMessage') as string) || '').trim();
     if (!userMsg) return;
 
     const newUserMessage = {
       message: userMsg,
       createdAt: new Date().toISOString(),
     };
-
     const newRobotResponse = {
       response: `I understand your message: "${userMsg}". This is a generic robot response for now.`,
       createdAt: new Date().toISOString(),
     };
-
     const newMessagePair: MessagePair = [newUserMessage, newRobotResponse];
-
     const updatedChat = {
       ...selectedChat,
       messages: [...(selectedChat.messages || []), newMessagePair],
     };
-
     updateChat(updatedChat);
     e.currentTarget.reset();
-    showLoadingMsg();
-  };
-
-  function showLoadingMsg() {
     setIsRobotMsgLoading(true);
     setTimeout(() => setIsRobotMsgLoading(false), 2000);
-  }
+  };
 
   const handleRenameChat = () => {
     setIsRenamingChat(true);
     setChatName(selectedChat.name);
   };
-
   const handleSaveRename = () => {
     if (!chatName.trim()) return;
-
-    const updatedChat = {
-      ...selectedChat,
-      name: chatName.trim(),
-    };
-
-    updateChat(updatedChat);
+    updateChat({ ...selectedChat, name: chatName.trim() });
     setIsRenamingChat(false);
   };
-
   const handleCancelRename = () => {
     setIsRenamingChat(false);
-    setChatName("");
+    setChatName('');
   };
-
   const handleFileAttach = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      setAttachedFiles((prev) => [...prev, ...Array.from(files)]);
-    }
+    if (files) setAttachedFiles((prev) => [...prev, ...Array.from(files)]);
   };
-
   const removeAttachedFile = (index: number) => {
     setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
     <section className="flex w-full flex-col">
-      {/* Header */}
       <header className="flex items-center justify-between border-b border-b-Bg-Dark p-4">
-        <div className="flex items-center gap-2 text-text-primary">
-          {/* If split screen and project selected, show project name and users */}
+        <div className="flex items-center 2xl:items-start flex-col 2xl:flex-row gap-2 text-text-primary gap-y-3">
           {isSplitScreen && selectedProject ? (
             <>
-              <span className="text-sm font-semibold">
+              <span className="text-sm font-semibold flex items-center gap-1">
+                <PeopleIcon />
                 {selectedProject.title}
               </span>
-              <AvatarGroup
-                members={
-                  selectedProject.users?.map((user, idx) => ({
-                    id: idx,
-                    name: user.name,
-                    image: user.image,
-                    initials: user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join(""),
-                  })) || []
-                }
-                maxVisible={5}
-                size="sm"
-                showAddButton={false}
-                className="ml-4"
-              />
-              <ActionButton
-                icon={"3-dots"}
-                tooltipText="Project Options"
-                dropdownActions={[
-                  {
-                    label: "Linked Dockets",
-                    icon: MoreHorizontal,
-                    onClick: () => console.log("Open linked dockets"),
-                    iconClassName: "size-4 text-red-600",
-                  },
-                  {
-                    label: "Edit Project",
-                    icon: MoreHorizontal,
-                    onClick: () => console.log("Edit project"),
-                    iconClassName: "size-4 text-red-600",
-                  },
-                ]}
-                className="ml-2"
-              />
+              <div className="flex items-center self-end">
+                <AvatarGroup
+                  users={
+                    selectedProject.users?.map((user, idx) => ({
+                      id: idx,
+                      name: user.name,
+                      image: user.image,
+                      initials: user.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join(''),
+                    })) || []
+                  }
+                  className="ml-4"
+                />
+                <ActionButton
+                  icon="3-dots"
+                  tooltipText="Project Options"
+                  dropdownActions={[
+                    {
+                      label: 'Linked Dockets',
+                      icon: MoreHorizontal,
+                      onClick: () => console.log('Open linked dockets'),
+                      iconClassName: 'size-4 text-red-600',
+                    },
+                    {
+                      label: 'Edit Project',
+                      icon: MoreHorizontal,
+                      onClick: () => console.log('Edit project'),
+                      iconClassName: 'size-4 text-red-600',
+                    },
+                  ]}
+                  className="ml-2"
+                />
+              </div>
             </>
           ) : isRenamingChat ? (
             <div className="flex items-center gap-2">
@@ -194,15 +170,12 @@ export default function ChatView() {
               </button>
             </div>
           ) : (
-            <>
+            <p className="inline-flex items-center gap-2">
               <RobotIcon className="size-6" />
-              <span className="text-sm text-text-primary">
-                {selectedChat.name}
-              </span>
-            </>
+              <span className="text-sm text-text-primary">{selectedChat.name}</span>
+            </p>
           )}
         </div>
-
         {!isRenamingChat && (!isSplitScreen || !selectedProject) && (
           <button
             onClick={handleRenameChat}
@@ -214,14 +187,10 @@ export default function ChatView() {
       </header>
 
       <section className="flex flex-col h-full">
-        {/* Conversation */}
         <div className="pl-4 py-4 space-y-1 flex-1">
           {selectedChat.messages?.map((messagePair, i) => (
             <React.Fragment key={i}>
-              <UserMsg
-                msg={messagePair[0].message}
-                time={messagePair[0].createdAt}
-              />
+              <UserMsg msg={messagePair[0].message} time={messagePair[0].createdAt} />
               {isRobotMsgLoading ? (
                 <LoadingRobotChat />
               ) : (
@@ -229,16 +198,15 @@ export default function ChatView() {
                   <RobotMsg
                     response={messagePair[1].response}
                     time={messagePair[1].createdAt}
-                    model={selectedChat.selectedModel || "Deepseek-R1"}
+                    model={selectedChat.selectedModel || 'Deepseek-R1'}
                   />
-                  {/* Show AddedNewUserMsg and UserMsg again if split screen and project selected */}
                   {isSplitScreen && selectedProject && (
                     <>
                       <AddedNewUserMsg />
                       <UserMsg
                         msg={messagePair[0].message}
                         time={messagePair[0].createdAt}
-                        splitScreenStyle={true}
+                        splitScreenStyle
                       />
                     </>
                   )}
@@ -248,82 +216,69 @@ export default function ChatView() {
           ))}
         </div>
 
-        <div className="">
-          {/* Attached Files Display */}
-          {attachedFiles.length > 0 && (
-            <div className="p-3 bg-light-bg border-b border-gray-200">
-              <p className="text-xs text-text-secondary mb-2">
-                Attached Files:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {attachedFiles.map((file, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-2 bg-white rounded px-2 py-1 text-xs"
-                  >
-                    <span className="text-text-primary">{file.name}</span>
-                    <button
-                      onClick={() => removeAttachedFile(index)}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleSendMessage} className="pl-4">
-            <textarea
-              className="w-full resize-none py-3 px-[11px] rounded-xs border border-Bg-Dark shadow-[0_0_0_1px_rgba(29,201,160,0.05)] bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
-              rows={4}
-              placeholder="Write message here....."
-              name="userMessage"
-            />
-
-            <div className="bg-white flex items-center justify-between">
-              <label className="px-3 py-2 text-sm font-medium text-primary inline-flex items-center gap-2 cursor-pointer hover:text-primary/90">
-                <LinkSquareIcon className="size-6 text-primary" /> Attach files
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleFileAttach}
-                  className="hidden"
-                  accept="*/*"
-                />
-              </label>
-
-              <div className="flex items-center justify-end gap-4">
-                {(() => {
-                  const modelInfo = getModelDisplay(
-                    selectedChat.selectedModel || "Deepseek-R1"
-                  );
-                  const IconComponent = modelInfo.icon;
-                  return (
-                    <p
-                      className={`h-12 flex items-center justify-center gap-2 ${modelInfo.color}`}
-                    >
-                      <IconComponent
-                        className={`${modelInfo.strokeColor} w-6 h-auto`}
-                      />
-                      <span className="font-medium">
-                        {selectedChat.selectedModel || "Deepseek-R1"}
-                      </span>
-                    </p>
-                  );
-                })()}
-                <button
-                  className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white px-3 py-[11px] disabled:opacity-50"
-                  type="submit"
+        {attachedFiles.length > 0 && (
+          <div className="p-3 bg-light-bg border-b border-gray-200">
+            <p className="text-xs text-text-secondary mb-2">Attached Files:</p>
+            <div className="flex flex-wrap gap-2">
+              {attachedFiles.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-white rounded px-2 py-1 text-xs"
                 >
-                  <Send2Icon className="size-6" />
-                  Send
-                </button>
-              </div>
+                  <span className="text-text-primary">{file.name}</span>
+                  <button
+                    onClick={() => removeAttachedFile(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
             </div>
-          </form>
-        </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSendMessage} className="pl-4">
+          <textarea
+            className="w-full resize-none py-3 px-[11px] rounded-xs border border-Bg-Dark shadow-[0_0_0_1px_rgba(29,201,160,0.05)] bg-light-bg outline-none placeholder:text-text-secondary max-h-24"
+            rows={4}
+            placeholder="Write message here....."
+            name="userMessage"
+          />
+          <div className="bg-white flex items-center justify-between">
+            <label className="px-3 py-2 text-sm font-medium text-primary inline-flex items-center gap-2 cursor-pointer hover:text-primary/90">
+              <LinkSquareIcon className="size-6 text-primary" /> Attach files
+              <input
+                type="file"
+                multiple
+                onChange={handleFileAttach}
+                className="hidden"
+                accept="*/*"
+              />
+            </label>
+            <div className="flex items-center justify-end gap-4">
+              {(() => {
+                const modelInfo = getModelDisplay(selectedChat.selectedModel || 'Deepseek-R1');
+                const IconComponent = modelInfo.icon;
+                return (
+                  <p className={`h-12 flex items-center justify-center gap-2 ${modelInfo.color}`}>
+                    <IconComponent className={`${modelInfo.strokeColor} w-6 h-auto`} />
+                    <span className="font-medium">
+                      {selectedChat.selectedModel || 'Deepseek-R1'}
+                    </span>
+                  </p>
+                );
+              })()}
+              <button
+                className="inline-flex items-center gap-2 rounded-xs bg-primary text-sm font-medium text-white px-3 py-[11px] disabled:opacity-50"
+                type="submit"
+              >
+                <Send2Icon className="size-6" />
+                Send
+              </button>
+            </div>
+          </div>
+        </form>
       </section>
     </section>
   );
@@ -336,16 +291,11 @@ interface UserMsgProps {
   splitScreenStyle?: boolean;
 }
 
-function UserMsg({
-  msg,
-  time,
-  user = "Boss",
-  splitScreenStyle = false,
-}: UserMsgProps) {
+function UserMsg({ msg, time, user = 'Boss', splitScreenStyle = false }: UserMsgProps) {
   const formatTime = (isoString: string) => {
     return new Date(isoString).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -353,30 +303,26 @@ function UserMsg({
     <section className="flex flex-col max-w-2xl gap-1.5 ml-auto">
       {splitScreenStyle ? (
         <div className="flex justify-between items-center">
-          <p className="space-x-2">
+          <p className="flex items-center gap-2">
             <span className="font-medium text-primary">{user}</span>
             <Image
-              src={"/users/2.jpg"}
+              src={'/users/2.jpg'}
               alt="user"
               width={20}
               height={20}
               className="bg-primary/10"
             />
           </p>
-          <span className="text-xs text-text-secondary">
-            {formatTime(time)}
-          </span>
+          <span className="text-xs text-text-secondary">{formatTime(time)}</span>
         </div>
       ) : (
         <div className="flex justify-between items-center ">
-          <span className="text-xs text-text-secondary">
-            {formatTime(time)}
-          </span>
+          <span className="text-xs text-text-secondary">{formatTime(time)}</span>
           <hgroup className="flex items-center gap-2">
             <h5 className="font-medium text-primary">{user}</h5>
             <div className="relative size-5 ">
               <Image
-                src={"/users/2.jpg"}
+                src={'/users/2.jpg'}
                 alt="user"
                 width={20}
                 height={20}
@@ -389,8 +335,8 @@ function UserMsg({
       <p
         className={`${
           splitScreenStyle
-            ? "bg-light-bg text-text-primary px-[11px] py-3"
-            : "bg-primary text-white px-[11px] py-3"
+            ? 'bg-light-bg text-text-primary px-[11px] py-3'
+            : 'bg-primary text-white px-[11px] py-3'
         } rounded-xs shadow-[0_0_0_2px_rgba(29,201,160,0.2)]"`}
       >
         {msg}
@@ -402,14 +348,14 @@ function UserMsg({
 interface RobotMsgProps {
   response: string;
   time: string;
-  model: "Deepseek-R1" | "OpenAI 04";
+  model: 'Deepseek-R1' | 'OpenAI 04';
 }
 
 function RobotMsg({ time, model }: RobotMsgProps) {
   const formatTime = (isoString: string) => {
     return new Date(isoString).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -439,13 +385,7 @@ function RobotMsg({ time, model }: RobotMsgProps) {
   );
 }
 
-function RobotMsgBadge({
-  title,
-  className = "",
-}: {
-  title: string;
-  className?: string;
-}) {
+function RobotMsgBadge({ title, className = '' }: { title: string; className?: string }) {
   return (
     <span
       className={`inline-block rounded-sm py-[5px] px-2 text-xs font-semibold bg-primary-light text-primary  ${className}`}
@@ -459,9 +399,7 @@ function RobotMsgSummary() {
   return (
     <div className="">
       <RobotMsgBadge title="Summary" />
-      <h3 className="mt-2 text-xl font-medium text-text-primary">
-        HVAC service agreement for HQ
-      </h3>
+      <h3 className="mt-2 text-xl font-medium text-text-primary">HVAC service agreement for HQ</h3>
       <div className="mt-1 flex flex-wrap items-center gap-4 text-xs text-text-secondary">
         <RobotMsgInfoBadge type="user" value="John Smith" />
         <RobotMsgInfoBadge type="time" value="December 20,2026" />
@@ -490,29 +428,20 @@ function RobotMsgProject() {
         <span className="inline-flex items-center gap-2 rounded-md border text-text-primary">
           <ProjectsIcon className="size-5 " />
         </span>
-        <span className="text-text-primary text-sm font-semibold">
-          Facilities Project
-        </span>
-        <span className="text-text-secondary text-sm ">
-          Related Project found
-        </span>
+        <span className="text-text-primary text-sm font-semibold">Facilities Project</span>
+        <span className="text-text-secondary text-sm ">Related Project found</span>
       </div>
       <div className="mt-2 flex items-center gap-2 text-xs">
-        <span className="text-text-primary text-xs font-semibold">
-          Project Status:
-        </span>
+        <span className="text-text-primary text-xs font-semibold">Project Status:</span>
         <span
           className={
-            "inline-block rounded-xs bg-[#FFDD98]  text-[#A17800] py-1 px-2 text-xs font-semibold "
+            'inline-block rounded-xs bg-[#FFDD98]  text-[#A17800] py-1 px-2 text-xs font-semibold '
           }
         >
           In-Progress
         </span>
 
-        <span className={"inline-block text-text-secondary text-sm"}>
-          {" "}
-          Parts in bound
-        </span>
+        <span className={'inline-block text-text-secondary text-sm'}> Parts in bound</span>
       </div>
       <Separator className="bg-dark-bg mt-2" />
     </div>
@@ -523,9 +452,7 @@ function RobotMsgAssignedTo() {
   return (
     <div className="">
       <RobotMsgBadge title="Assigned To" />
-      <p className="mt-2 text-text-primary">
-        Facilities Manager, Procurement Team
-      </p>
+      <p className="mt-2 text-text-primary">Facilities Manager, Procurement Team</p>
       <Separator className="bg-dark-bg mt-2" />
     </div>
   );
@@ -534,8 +461,8 @@ function RobotMsgAssignedTo() {
 function RobotMsgBroadcast({ showBtns = true }: { showBtns?: boolean }) {
   return (
     <div className="">
-      Would you like me to broadcast this draft to the Facilities Project
-      channel, or keep refining privately?
+      Would you like me to broadcast this draft to the Facilities Project channel, or keep refining
+      privately?
       {showBtns && (
         <div className="mt-3 flex items-center gap-2">
           <button className="w-40 rounded-md text-white text-sm font-medium py-2.5 px-6 shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] flex items-center justify-center border border-primary bg-primary">
@@ -551,16 +478,16 @@ function RobotMsgBroadcast({ showBtns = true }: { showBtns?: boolean }) {
 }
 
 const tasks = [
-  { title: "Review current contract", assignedTo: "John Smith", due: "Mar 10" },
+  { title: 'Review current contract', assignedTo: 'John Smith', due: 'Mar 10' },
   {
-    title: "Collect vendor performance data",
-    assignedTo: "Facilities",
-    due: "Mar 15",
+    title: 'Collect vendor performance data',
+    assignedTo: 'Facilities',
+    due: 'Mar 15',
   },
   {
-    title: "Draft negotiation strategy",
-    assignedTo: "John Smith",
-    due: "Apr 1",
+    title: 'Draft negotiation strategy',
+    assignedTo: 'John Smith',
+    due: 'Apr 1',
   },
 ];
 
@@ -573,14 +500,11 @@ function RobotMsgTasks() {
           <div key={index} className="flex flex-col gap-2">
             <div className="flex gap-1 items-center">
               <TaskSquareIcon className="size-6" />
-              <p className="text-sm font-semibold text-text-primary">
-                {task.title}
-              </p>
+              <p className="text-sm font-semibold text-text-primary">{task.title}</p>
             </div>
             <div className="flex gap-2 items-center">
               <p className="text-sm text-text-primary">
-                Assign to:{" "}
-                <span className="text-text-secondary">{task.assignedTo}</span>
+                Assign to: <span className="text-text-secondary">{task.assignedTo}</span>
               </p>
               <span className="text-sm font-medium text-primary flex items-center gap-1">
                 <TimerIcon className="size-4 " />
@@ -597,10 +521,11 @@ function RobotMsgTasks() {
 
 function AddedNewUserMsg() {
   return (
-    <div>
-      <UsersIcon className="size-5 fill-primary" />
+    <div className="flex items-start gap-1">
+      <Profile2UserIcon fill="#5f0101" className="size-5 " />
       <p className="text-sm text-text-secondary">
-        John Smith Was added to the channel by Deepseek agent.
+        John Smith Was added to the channel by{' '}
+        <span className="text-text-primary font-semibold">Deepseek</span> agent.
       </p>
     </div>
   );

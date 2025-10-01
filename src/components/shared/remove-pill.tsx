@@ -3,14 +3,20 @@ import React from "react";
 
 interface RemovePillProps {
   title: string;
-  isSelectedProject?: boolean;
+  isSplitScreen: boolean;
+  isSelectedProject: boolean;
 }
 
-function RemovePill({ title, isSelectedProject }: RemovePillProps) {
+function RemovePill({
+  title,
+  isSplitScreen,
+  isSelectedProject,
+}: RemovePillProps) {
+  console.log("is", isSplitScreen);
   return (
     <div
       className={`${
-        isSelectedProject ? "w-full" : " max-w-56 bg-white"
+        isSplitScreen && isSelectedProject ? "w-full" : " max-w-56 bg-white"
       } flex justify-between items-center gap-6 w-full  px-2 py-1 border border-Bg-Dark`}
     >
       <h3 className="text-sm font-medium">{title}</h3>

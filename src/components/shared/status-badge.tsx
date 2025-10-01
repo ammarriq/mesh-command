@@ -53,7 +53,7 @@ export function StatusBadge({
         config?.textColor,
         config?.color,
         config?.borderColor,
-        " inline-flex items-center gap-1.5 font-medium border"
+        " inline-flex items-center gap-1.5 font-medium border",
       )}
     >
       {withDot && (

@@ -1,37 +1,33 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import EditIcon from '@/icons/edit';
+import { useAppStore } from '@/store';
+import type { Project } from '@/store';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SearchInput } from "../shared/search-input";
+import React, { useEffect, useState } from 'react';
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
-import { Button } from "../ui/button";
+import { useRouter } from 'next/navigation';
 
-import {
-  useChatStore,
-  useSelectedChat,
-  useProjectStore,
-  useSplitScreen,
-} from "@/stores";
-import type { Project } from "@/stores";
+import { ChevronDown } from 'lucide-react';
 
-import { ChevronDown } from "lucide-react";
-import EditIcon from "@/icons/edit";
+import { SearchInput } from '../shared/search-input';
+import { Button } from '../ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible';
 
 function ChatTab() {
-  const { categories } = useProjectStore();
-  const selectedChat = useSelectedChat();
-  const { chats, setSelectedChat, createNewChat } = useChatStore();
+  const {
+    project: { categories },
+    chat: { chats, selectedChatId },
+    setSelectedChat,
+    createNewChat,
+  } = useAppStore();
+
+  const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
   return (
     <Tabs defaultValue="private" className="w-96 2xl:w-[496px]">
-      <TabsList className="w-full  border-r border-r-Bg-Dark  h-fit">
+      <TabsList className="w-full border-r border-r-Bg-Dark h-fit">
         <TabsTrigger value="private">Private</TabsTrigger>
         <TabsTrigger value="projects">Projects</TabsTrigger>
       </TabsList>
@@ -54,17 +50,15 @@ function ChatTab() {
               onClick={() => setSelectedChat(chat.id)}
               key={chat.id}
               className={`${
-                selectedChat.id === chat.id && "bg-Bg-Dark py-2"
+                selectedChat.id === chat.id && 'bg-Bg-Dark py-2'
               } px-2 text-text-primary text-start`}
             >
               {chat.name}
             </button>
           ))}
       </TabsContent>
-      <TabsContent
-        value="projects"
-        className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3"
-      >
+
+      <TabsContent value="projects" className="p-2 flex flex-col border-r border-r-Bg-Dark gap-3">
         {categories.map((category) => (
           <ProjectContentItem
             key={category.id}
@@ -92,8 +86,11 @@ function ProjectContentItem({
   showCreateButton = false,
   isChatTab,
 }: ProjectContentItemProps) {
-  const { setSelectedProject, selectedProjectId } = useProjectStore();
-  const isSplitScreen = useSplitScreen();
+  const {
+    project: { selectedProjectId },
+    chat: { isSplitScreen },
+    setSelectedProject,
+  } = useAppStore();
   const router = useRouter();
 
   // Handle project selection based on split screen state
@@ -101,14 +98,12 @@ function ProjectContentItem({
     setSelectedProject(projectId);
 
     if (!isSplitScreen) {
-      router.push("/projects");
+      router.push('/projects');
     }
   };
 
   // Check if any project in this category is currently selected because we need to know if the category should be opened or closed by default
-  const hasSelectedProject = projects.some(
-    (project) => project.id === selectedProjectId
-  );
+  const hasSelectedProject = projects.some((project) => project.id === selectedProjectId);
 
   const [isCategoryOpen, setIsCateoryOpen] = useState(hasSelectedProject);
 
@@ -116,16 +111,18 @@ function ProjectContentItem({
     setIsCateoryOpen(hasSelectedProject);
   }, [hasSelectedProject]);
 
-  const getStatusDisplay = (status: "active" | "on-hold" | "completed") => {
-    switch (status) {
-      case "active":
-        return { text: "In-progress", color: "text-yellow-600" };
-      case "on-hold":
-        return { text: "On-hold", color: "text-primary" };
-      case "completed":
-        return { text: "Completed", color: "text-green-600" };
+  const getStatusDisplay = (status: string) => {
+    // Normalize status to lowercase for logic
+    const normalized = status.toLowerCase();
+    switch (normalized) {
+      case 'active':
+        return { text: 'In-progress', color: 'text-yellow-600' };
+      case 'on-hold':
+        return { text: 'On-hold', color: 'text-primary' };
+      case 'completed':
+        return { text: 'Completed', color: 'text-green-600' };
       default:
-        return { text: status, color: "text-text-secondary" };
+        return { text: status, color: 'text-text-secondary' };
     }
   };
 
@@ -144,7 +141,7 @@ function ProjectContentItem({
           >
             <ChevronDown
               className={`transition-transform duration-200 ${
-                isCategoryOpen ? "rotate-0" : "rotate-180"
+                isCategoryOpen ? 'rotate-0' : 'rotate-180'
               }`}
             />
             <span className="sr-only">Toggle</span>
@@ -171,14 +168,12 @@ function ProjectContentItem({
                   key={project.id}
                   onClick={() => handleProjectClick(project.id)}
                   className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary px-2 py-1.5 w-full ${
-                    selectedProjectId === project.id ? "bg-Bg-Dark p-2" : ""
+                    selectedProjectId === project.id ? 'bg-Bg-Dark p-2' : ''
                   }`}
                 >
                   <span>{project.title}</span>
                   {!isChatTab && (
-                    <span className={`font-semibold ${statusInfo.color}`}>
-                      {statusInfo.text}
-                    </span>
+                    <span className={`font-semibold ${statusInfo.color}`}>{statusInfo.text}</span>
                   )}
                 </button>
               );

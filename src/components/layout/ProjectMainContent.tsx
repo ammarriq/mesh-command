@@ -1,76 +1,72 @@
-import { Plus, MoreHorizontal } from "lucide-react";
-import { Project, Task } from "@/stores";
-import { InfoItem } from "@/components/shared/info-item";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AvatarGroup } from "@/components/shared/avatar-group";
-import { ProjectHeader } from "@/components/shared/project-header";
+'use client';
+
+import { AvatarGroup } from '@/components/shared/avatar-group';
+import { InfoItem } from '@/components/shared/info-item';
+import { ProjectHeader } from '@/components/shared/project-header';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Project, Task } from '@/store';
+
+import { MoreHorizontal, Plus } from 'lucide-react';
+import { Edit } from 'lucide-react';
+
 interface ProjectMainContentProps {
   selectedProject: Project;
-  getTasksByStatus: (project: Project, status: string) => Task[];
-  getPriorityColor: (priority: string) => string;
+  isSplitScreen?: boolean;
 }
+
+const getTasksByStatus = (project: Project, status: string): Task[] => {
+  switch (status) {
+    case 'To Do':
+      return project.todo;
+    case 'In-Progress':
+      return project.inProgress;
+    case 'Completed':
+      return project.completed;
+    default:
+      return [];
+  }
+};
 
 const ProjectMainContent: React.FC<ProjectMainContentProps> = ({
   selectedProject,
-  getTasksByStatus,
-  getPriorityColor,
+  isSplitScreen = false,
 }) => {
+  const todoTasks = getTasksByStatus(selectedProject, 'To Do');
+  const inProgressTasks = getTasksByStatus(selectedProject, 'In-Progress');
+  const completedTasks = getTasksByStatus(selectedProject, 'Completed');
+
   return (
     <div className="flex-1 flex flex-col bg-white">
       <ProjectHeader project={selectedProject} />
-      {/* 2xl and above: grid columns */}
+
+      {/* For screens above 2xl */}
       <section className="hidden 2xl:grid grid-cols-3 gap-2 h-full">
-        <TaskColumn
-          title="To Do"
-          count={getTasksByStatus(selectedProject, "To Do").length}
-          tasks={getTasksByStatus(selectedProject, "To Do")}
-          getPriorityColor={getPriorityColor}
-        />
-        <TaskColumn
-          title="In-Progress"
-          count={getTasksByStatus(selectedProject, "In-Progress").length}
-          tasks={getTasksByStatus(selectedProject, "In-Progress")}
-          getPriorityColor={getPriorityColor}
-        />
-        <TaskColumn
-          title="Completed"
-          count={getTasksByStatus(selectedProject, "Completed").length}
-          tasks={getTasksByStatus(selectedProject, "Completed")}
-          getPriorityColor={getPriorityColor}
-        />
+        <TaskColumn title="To Do" tasks={todoTasks} />
+        <TaskColumn title="In-Progress" tasks={inProgressTasks} />
+        <TaskColumn title="Completed" tasks={completedTasks} />
       </section>
-      {/* Below 2xl: tabs, then all columns in a row */}
-      <section className="block 2xl:hidden mt-4">
+
+      {/* Under 2xl screens */}
+      <section className={`${isSplitScreen ? 'block' : 'block 2xl:hidden'} mt-4`}>
         <div className="flex items-center gap-2 mb-2 w-full">
           <Tabs defaultValue="todo" className="w-full">
-            <TabsList className="w-full">
-              <TabsTrigger value="todo">To Do</TabsTrigger>
+            <TabsList className="w-full h-fit">
+              <TabsTrigger value="todo" className="p-4">
+                To Do
+              </TabsTrigger>
               <TabsTrigger value="inprogress">In-Progress</TabsTrigger>
               <TabsTrigger value="completed">Completed</TabsTrigger>
             </TabsList>
             <TabsContent value="todo">
-              <TaskColumn
-                title="To Do"
-                count={getTasksByStatus(selectedProject, "To Do").length}
-                tasks={getTasksByStatus(selectedProject, "To Do")}
-                getPriorityColor={getPriorityColor}
-              />
+              <TaskColumn title="To Do" tasks={todoTasks} />
             </TabsContent>
             <TabsContent value="inprogress">
-              <TaskColumn
-                title="In-Progress"
-                count={getTasksByStatus(selectedProject, "In-Progress").length}
-                tasks={getTasksByStatus(selectedProject, "In-Progress")}
-                getPriorityColor={getPriorityColor}
-              />
+              <TaskColumn title="In-Progress" tasks={inProgressTasks} />
             </TabsContent>
             <TabsContent value="completed">
-              <TaskColumn
-                title="Completed"
-                count={getTasksByStatus(selectedProject, "Completed").length}
-                tasks={getTasksByStatus(selectedProject, "Completed")}
-                getPriorityColor={getPriorityColor}
-              />
+              <TaskColumn title="Completed" tasks={completedTasks} />
             </TabsContent>
           </Tabs>
         </div>
@@ -82,27 +78,18 @@ const ProjectMainContent: React.FC<ProjectMainContentProps> = ({
 export default ProjectMainContent;
 
 // Task Column Component
-function TaskColumn({
-  title,
-  count,
-  tasks,
-  getPriorityColor,
-}: {
-  title: string;
-  count: number;
-  tasks: Task[];
-  getPriorityColor: (priority: string) => string;
-}) {
+
+function TaskColumn({ title, tasks }: { title: string; tasks: Task[] }) {
   const getBorderColor = () => {
     switch (title) {
-      case "To Do":
-        return "#5030E5";
-      case "In-Progress":
-        return "#FFA500";
-      case "Completed":
-        return "#68B266";
+      case 'To Do':
+        return '#5030E5';
+      case 'In-Progress':
+        return '#FFA500';
+      case 'Completed':
+        return '#68B266';
       default:
-        return "#E5E7EB";
+        return '#E5E7EB';
     }
   };
 
@@ -116,34 +103,28 @@ function TaskColumn({
           <hgroup className="flex items-center gap-2">
             <div
               className={`size-2 rounded-full ${
-                title === "To Do"
-                  ? "bg-blue-500"
-                  : title === "In-Progress"
-                  ? "bg-yellow-500"
-                  : "bg-green-500"
+                title === 'To Do'
+                  ? 'bg-blue-500'
+                  : title === 'In-Progress'
+                    ? 'bg-yellow-500'
+                    : 'bg-green-500'
               }`}
             ></div>
             <h3 className="font-semibold text-text-primary">{title}</h3>
-            <span className="bg-Bg-Dark text-text-secondary text-xs size-5 flex items-center justify-center rounded-full">
-              {count}
+            <span className="bg-Bg-Dark text-text-secondary text-xs size-5 font-medium flex items-center justify-center rounded-full">
+              {tasks.length}
             </span>
           </hgroup>
-
-          {title === "To Do" && (
+          {title === 'To Do' && (
             <div className="bg-blue-900/10">
               <Plus className="ml-auto text-[#5030E5] p-1" />
             </div>
           )}
         </div>
       </header>
-
       <div className="space-y-3 flex-1 overflow-y-auto px-2 py-4">
         {tasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            getPriorityColor={getPriorityColor}
-          />
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
     </section>
@@ -151,57 +132,51 @@ function TaskColumn({
 }
 
 // Task Card Component
-function TaskCard({
-  task,
-  getPriorityColor,
-}: {
-  task: Task;
-  getPriorityColor: (priority: string) => string;
-}) {
+
+function TaskCard({ task }: { task: Task }) {
+  const getPriorityColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return 'bg-red-100 text-red-600';
+      case 'low':
+        return 'bg-green-100 text-green-600';
+      default:
+        return 'bg-gray-100 text-gray-600';
+    }
+  };
+
   return (
     <div className="p-4 flex flex-col gap-2 items-stretch bg-white rounded-2xl">
-      {/* Priority Badge */}
       <div className="flex items-center justify-between">
         <span
           className={`text-xs font-medium rounded-sm px-1 py-0.5 ${getPriorityColor(
-            task.priority
+            task.priority,
           )}`}
         >
           {task.priority}
         </span>
         <MoreHorizontal className="size-4 text-text-primary" />
       </div>
-
       <section className="flex flex-col items-start gap-1.5">
-        <h4 className="text-text-primary font-semibold text-base">
-          {task.title}
-        </h4>
+        <h4 className="text-text-primary font-semibold text-base">{task.title}</h4>
         <p className="text-xs text-text-secondary line-clamp-2">
           {task.description} lrem ipsum dolor sit
         </p>
-
         <div className="space-y-2">
           <InfoItem type="user" label="Assigned to" value={task.assignedTo} />
           <InfoItem type="timer" label="Deadline" value={task.deadline} />
           {task.linkedDocs && task.linkedDocs.length > 0 && (
             <InfoItem
-              type="dollar"
+              type="link"
               label="Linked Docs"
-              value={task.linkedDocs.join(", ")}
+              value={task.linkedDocs.join(', ')}
               valueClassName="text-text-primary tex-sm underline"
             />
           )}
         </div>
-        {/* Avatars  */}
         <div className="flex items-center justify-between mt-3">
           <div className="flex -space-x-1">
-            <AvatarGroup
-              members={task.users}
-              maxVisible={5}
-              size="md"
-              showAddButton={true}
-              onAddClick={() => console.log("Add team member")}
-            />
+            <AvatarGroup users={task.users} />
           </div>
         </div>
       </section>

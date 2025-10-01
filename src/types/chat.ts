@@ -18,4 +18,3 @@ export interface PrivateChat {
   selectedModel: SelectedModel | null;
   messages: MessagePair[] | null;
 }
-

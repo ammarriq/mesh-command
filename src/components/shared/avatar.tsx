@@ -44,7 +44,7 @@ export function Avatar({
         "bg-gray-300 rounded-full flex items-center justify-center font-medium text-gray-700",
         sizeClasses,
         textSize,
-        className
+        className,
       )}
     >
       {fallback || "?"}
@@ -86,7 +86,7 @@ export function AvatarGroup({
         <div
           className={cn(
             "border-2 border-white rounded-full",
-            sizeMap[size].class
+            sizeMap[size].class,
           )}
         >
           <div className="bg-gray-400 rounded-full w-full h-full flex items-center justify-center text-white text-xs">
@@ -100,7 +100,7 @@ export function AvatarGroup({
           onClick={onAdd}
           className={cn(
             "bg-red-600 rounded-full border-2 border-white flex items-center justify-center text-white hover:bg-red-700 transition-colors",
-            sizeMap[size].class
+            sizeMap[size].class,
           )}
         >
           +

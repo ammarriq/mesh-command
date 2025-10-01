@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PaymentBadge } from "@/components/shared/payment-badge";
 import { cn } from "@/lib/utils";
+import { PdfIcon } from "@/icons/pdf";
 
 export interface Column<T> {
   key: string;
@@ -34,16 +35,16 @@ export function DataTable<T>({
     <div className={cn("bg-white rounded-xl border", className)}>
       <Table className="rounded-2xl">
         <TableHeader>
-          <TableRow className="bg-light-bg border border-Bg-Dark">
+          <TableRow className="bg-Bg-Dark border border-Bg-Dark">
             {columns.map((column, index) => (
               <TableHead
                 key={index}
                 className={cn(
-                  "font-medium text-gray-600",
+                  "font-medium text-text-secondary",
                   index === 0
                     ? "w-full min-w-[180px]"
                     : "text-right min-w-[120px]",
-                  column.className
+                  column.className,
                 )}
               >
                 {column.header}
@@ -56,9 +57,8 @@ export function DataTable<T>({
             <TableRow
               key={rowIndex}
               className={cn(
-                (rowIndex + 1) % 2 === 0 ? "bg-light-bg" : "",
-                "border border-Bg-Dark hover:bg-gray-50 transition-colors",
-                onRowClick && "cursor-pointer"
+                "bg-white border border-Bg-Dark hover:bg-gray-50 transition-colors",
+                onRowClick && "cursor-pointer",
               )}
               onClick={() => onRowClick?.(row)}
             >
@@ -68,7 +68,7 @@ export function DataTable<T>({
                   className={cn(
                     "py-4",
                     colIndex === 0 ? "w-full" : "text-right",
-                    column.className
+                    column.className,
                   )}
                 >
                   {column.cell
@@ -111,9 +111,7 @@ export function InvoiceTable({
       header: "Invoice",
       cell: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-8 h-6 bg-red-600 rounded flex items-center justify-center">
-            <span className="text-white text-xs font-medium">PDF</span>
-          </div>
+          <PdfIcon className="size-6 stroke-rose-500" />
           <span className="text-sm text-gray-900">{row.number}</span>
         </div>
       ),
@@ -145,7 +143,7 @@ export function InvoiceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+            className="text-primary hover:bg-red-50 hover:text-primary/90"
             onClick={(e) => {
               e.stopPropagation();
               onDownload?.(row);
@@ -156,7 +154,7 @@ export function InvoiceTable({
           <Button
             variant="ghost"
             size="sm"
-            className="text-red-600 hover:bg-red-50 hover:text-red-700"
+            className="text-primary hover:bg-red-50 hover:text-primary/90"
             onClick={(e) => {
               e.stopPropagation();
               onPreview?.(row);

@@ -106,8 +106,8 @@ function OAuthButton({ provider }: { provider: Provider }) {
     provider === "google"
       ? "Continue with Google"
       : provider === "apple"
-      ? "Continue with Apple"
-      : "Continue with Microsoft";
+        ? "Continue with Apple"
+        : "Continue with Microsoft";
 
   if (provider === "apple") {
     return (

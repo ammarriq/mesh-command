@@ -80,17 +80,17 @@ const chartConfig = {
 export function ChartAreaInteractive() {
   // Always show the latest 12 months
   const monthsSet = Array.from(
-    new Set(chartData.map((item) => item.date.substring(0, 7)))
+    new Set(chartData.map((item) => item.date.substring(0, 7))),
   );
   const last12Months = monthsSet.slice(-12);
   const filteredData = chartData.filter((item) =>
-    last12Months.includes(item.date.substring(0, 7))
+    last12Months.includes(item.date.substring(0, 7)),
   );
 
   const monthTicks = last12Months
     .map((month) => {
       const monthData = filteredData.filter((item) =>
-        item.date.startsWith(month)
+        item.date.startsWith(month),
       );
       if (monthData.length > 0) {
         const centerIdx = Math.floor(monthData.length / 2);

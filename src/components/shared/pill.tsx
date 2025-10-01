@@ -21,7 +21,7 @@ function Pill({
   return (
     <span
       className={`inline-block rounded-xs py-1 px-2 text-xs font-semibold ${getStatusColor(
-        title
+        title,
       )} ${className}`}
     >
       {title}

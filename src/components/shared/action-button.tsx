@@ -24,25 +24,32 @@ interface ActionButtonProps {
   onClick?: () => void;
   dropdownActions?: DropdownAction[];
   className?: string;
+  size?: 8 | 12;
 }
-
 export function ActionButton({
   icon,
   tooltipText = "Action",
   onClick,
   dropdownActions,
   className = "",
+  size = 12,
 }: ActionButtonProps) {
+  // Determine button and icon size classes
+  const buttonSizeClass = size === 8 ? "size-8 p-1.5" : "size-12 p-3";
+  const iconSizeClass = size === 8 ? "size-5" : "size-6";
+
   const buttonContent = (
     <Button
       variant="outline"
       size="icon"
       aria-label={tooltipText}
       onClick={dropdownActions ? undefined : onClick}
-      className={`size-10 md:size-12 p-3 rounded-xs border border-Bg-Dark bg-light-bg ${className}`}
+      className={`${buttonSizeClass} rounded-xs border border-Bg-Dark bg-light-bg ${className}`}
     >
-      {icon === "notification" && <NotificationIcon className="size-6" />}
-      {icon === "3-dots" && <ThreeDotsIcon className="size-6" />}
+      {icon === "notification" && (
+        <NotificationIcon className={iconSizeClass} />
+      )}
+      {icon === "3-dots" && <ThreeDotsIcon className={iconSizeClass} />}
     </Button>
   );
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 const ArrowCircleDownIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg
     width={props.width || 24}

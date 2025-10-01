@@ -24,41 +24,6 @@ export function CustomTabs({
   className,
   variant = "default",
 }: CustomTabsProps) {
-  if (variant === "underline") {
-    return (
-      <div className={cn("space-y-4", className)}>
-        <div className="flex space-x-6 border-b border-gray-200">
-          {items.map((item) => (
-            <button
-              key={item.value}
-              onClick={() => onValueChange?.(item.value)}
-              className={cn(
-                "pb-2 px-1 text-sm font-medium transition-colors",
-                value === item.value || (!value && defaultValue === item.value)
-                  ? "text-red-600 border-b-2 border-red-600"
-                  : "text-gray-500 hover:text-gray-700"
-              )}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-        {items.map((item) => (
-          <div
-            key={item.value}
-            className={cn(
-              value === item.value || (!value && defaultValue === item.value)
-                ? "block"
-                : "hidden"
-            )}
-          >
-            {item.content}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <Tabs
       defaultValue={defaultValue}
@@ -66,9 +31,13 @@ export function CustomTabs({
       onValueChange={onValueChange}
       className={className}
     >
-      <TabsList>
+      <TabsList className="bg-gray-50 border border-gray-200 p-1 rounded-sm flex gap-2 ">
         {items.map((item) => (
-          <TabsTrigger key={item.value} value={item.value}>
+          <TabsTrigger
+            key={item.value}
+            value={item.value}
+            className="bg-transparent rounded-xl text-text-primary data-[state=active]:bg-white data-[state=active]:text-text-primary  px-3 py-2 data-[state=active]:shadow-xs data-[state=active]:border-b-none"
+          >
             {item.label}
           </TabsTrigger>
         ))}

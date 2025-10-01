@@ -64,7 +64,7 @@ function SideBarItem({ isActive, item }: Props) {
         aria-current={isActive ? "page" : undefined}
         className={cn(
           "flex w-20 flex-col items-center rounded-[2px] py-4",
-          isActive ? "bg-primary/20 text-primary" : "text-text-secondary"
+          isActive ? "bg-primary/20 text-primary" : "text-text-secondary",
         )}
       >
         <item.icon
@@ -75,7 +75,7 @@ function SideBarItem({ isActive, item }: Props) {
         <span
           className={cn(
             isActive ? "text-primary" : "text-text-secondary",
-            "font-medium text-base"
+            "font-medium text-base",
           )}
         >
           {item.title}
