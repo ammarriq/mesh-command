@@ -8,24 +8,17 @@ import { Project } from '@/store';
 
 interface ProjectHeaderProps {
   project: Project;
-  showTeamMembers?: boolean;
-  showDownloadButton?: boolean;
-  onDownloadAll?: () => void;
-  showOnlyAvatarGroup?: boolean; // If true, only show AvatarGroup (for Docket page)
+  isDocketPage?: boolean;
 }
 
-export function ProjectHeader({
-  project,
-  showTeamMembers = true,
-  showOnlyAvatarGroup = false,
-}: ProjectHeaderProps) {
+export function ProjectHeader({ project, isDocketPage = false }: ProjectHeaderProps) {
   const budgetConsumed = 40;
   const progress = Math.round(
     (project.completed.length /
       (project.todo.length + project.inProgress.length + project.completed.length)) *
       100,
   );
-  const filingCapacity = undefined;
+  const filingCapacity = isDocketPage ? 30 : undefined;
 
   return (
     <header className="px-1 bg-white ">
@@ -33,7 +26,7 @@ export function ProjectHeader({
       <section className="flex flex-col 2xl:flex-row 2xl:justify-between 2xl:items-center gap-4">
         <div className="flex flex-col gap-1">
           <hgroup className="flex items-center gap-4">
-            <h1 className="text-2xl font-medium text-text-primary text-ellipsis overflow-hidden whitespace-nowrap max-w-80 2xl:max-w-none">
+            <h1 className="text-2xl font-medium text-text-primary whitespace-nowrap 2xl:max-w-none">
               {project.title}
             </h1>
             <RobotMsgBadge
@@ -80,34 +73,33 @@ export function ProjectHeader({
             <HalfCircleProgress value={filingCapacity} label="Filing Capacity" size="md" />
           )}
         </div>
-        {showTeamMembers && (
-          <div className="flex items-center gap-1">
-            <AvatarGroup users={project.users && project.users.length > 0 ? project.users : []} />
-            {!showOnlyAvatarGroup && (
-              <>
-                <ActionButton type={'notification'} size={8} />
-                <ActionButton
-                  type={'3-dots'}
-                  size={8}
-                  // dropdownActions={[
-                  //   {
-                  //     label: 'Linked Dockets',
-                  //     icon: FileText,
-                  //     onClick: () => console.log('Open linked dockets'),
-                  //     iconClassName: 'size-4 text-red-600',
-                  //   },
-                  //   {
-                  //     label: 'Edit Project',
-                  //     icon: Edit,
-                  //     onClick: () => console.log('Edit project'),
-                  //     iconClassName: 'size-4 text-red-600',
-                  //   },
-                  // ]}
-                />
-              </>
-            )}
-          </div>
-        )}
+
+        <div className="flex items-center gap-1">
+          <AvatarGroup users={project.users && project.users.length > 0 ? project.users : []} />
+          {!isDocketPage && (
+            <>
+              <ActionButton type={'notification'} size={8} />
+              <ActionButton
+                type={'3-dots'}
+                size={8}
+                // dropdownActions={[
+                //   {
+                //     label: 'Linked Dockets',
+                //     icon: FileText,
+                //     onClick: () => console.log('Open linked dockets'),
+                //     iconClassName: 'size-4 text-red-600',
+                //   },
+                //   {
+                //     label: 'Edit Project',
+                //     icon: Edit,
+                //     onClick: () => console.log('Edit project'),
+                //     iconClassName: 'size-4 text-red-600',
+                //   },
+                // ]}
+              />
+            </>
+          )}
+        </div>
       </section>
 
       {/* Second row: shadcn progress bars, only visible below 2xl, hidden above */}
@@ -131,9 +123,8 @@ export function ProjectHeader({
         {filingCapacity !== undefined && (
           <div>
             <div className="flex items-center gap-2 mb-1 text-xs text-text-secondary">
-              <span>Filing Capacity</span>
               <Progress value={filingCapacity} className="max-w-80" />
-              <span>{filingCapacity}%</span>
+              <span>{filingCapacity}% Filing Capacity</span>
             </div>
           </div>
         )}

@@ -35,16 +35,16 @@ export function ChatHeader({
     <header className="flex items-center justify-between border-b border-b-Bg-Dark p-4">
       <div className="flex items-center 2xl:items-start flex-col 2xl:flex-row gap-2 text-text-primary gap-y-3">
         {isSplitScreen && selectedProject ? (
-          <>
-            <span className="text-sm font-semibold flex items-center gap-1">
+          <div className="flex flex-col 2xl:flex-row gap-2 items-start justify-start">
+            <div className="text-sm font-semibold flex justify-start items-center 2xl:items-start gap-1">
               <PeopleIcon />
               {selectedProject.title}
-            </span>
-            <div className="flex items-center self-end">
-              <AvatarGroup users={selectedProject.users} className="ml-4" />
-              <ActionButton type="3-dots" className="ml-2" />
             </div>
-          </>
+            <div className="flex items-center 2xl:self-end gap-2">
+              <AvatarGroup users={selectedProject.users} />
+              <ActionButton type="3-dots" size={8} />
+            </div>
+          </div>
         ) : isRenamingChat ? (
           <div className="flex items-center gap-2">
             <input

@@ -83,7 +83,7 @@ function ProjectContentItem({
         </CollapsibleTrigger>
         <h4 className="text-primary font-semibold">{title}</h4>
       </div>
-      <CollapsibleContent className={`flex flex-col pl-2.5 ${isChatTab ? 'gap-1' : ''}`}>
+      <CollapsibleContent className={`flex flex-col ${isChatTab ? 'gap-1' : ''}`}>
         {projects.length === 0 ? (
           <div className="flex flex-col gap-2 py-2">
             <p className="text-sm text-text-secondary">No project available.</p>
@@ -94,15 +94,15 @@ function ProjectContentItem({
             )}
           </div>
         ) : (
-          <div>
+          <div className="space-y-2">
             {projects.map((project) => {
               const statusInfo = getStatusDisplay(project.status);
               return (
                 <button
                   key={project.id}
                   onClick={() => handleProjectClick(project.id)}
-                  className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary ${
-                    isChatTab ? 'px-2 py-1.5 w-full' : ''
+                  className={`text-sm rounded-xs text-left flex items-center gap-1 text-text-primary px-2 w-full  ${
+                    isChatTab ? 'py-1.5 w-full' : ''
                   } ${selectedProjectId === project.id ? 'bg-Bg-Dark p-2' : ''}`}
                 >
                   <span>{project.title}</span>

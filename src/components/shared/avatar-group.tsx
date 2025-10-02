@@ -48,7 +48,7 @@ export function AvatarGroup({
     };
   });
 
-  const avatarSize = large ? 'size-12' : 'size-8';
+  const avatarSize = large ? 'size-12' : 'size-8 2xl:size-12';
   const halfOverlap = large ? -24 : -16; // half the width for proper overlap
   const displayCount = maxCount || (isTaskCard ? 2 : 5);
   const visibleUsers = processedUsers.slice(0, displayCount);

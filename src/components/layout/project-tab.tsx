@@ -1,13 +1,18 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 import { useAppStore } from '@/store';
 import type { Project, ProjectCategory } from '@/store';
 
 import { CustomTabTrigger } from '../shared/chat-tab-trigger';
 import ProjectContentItem from '../shared/project-content-item';
-import { SearchInput } from '../shared/search-input';
 import TabActions from '../shared/tab-actions';
+
+const tabsConfig = [
+  { value: 'active', label: 'Active', status: 'active' as const },
+  { value: 'onhold', label: 'On-hold', status: 'on-hold' as const },
+  { value: 'completed', label: 'Completed', status: 'completed' as const },
+];
 
 interface ProjectSelectorProps {
   showCreateButton?: boolean;
@@ -17,14 +22,11 @@ interface ProjectSelectorProps {
 
 export default function ProjectSelectorTab({
   showCreateButton = false,
-  onCreateProject,
   className = 'w-96 2xl:w-[496px]',
 }: ProjectSelectorProps) {
   const {
     project: { categories },
   } = useAppStore();
-
-  const tabsConfig = getTabsConfig();
 
   return (
     <Tabs defaultValue="active" className={className}>
@@ -54,12 +56,6 @@ export default function ProjectSelectorTab({
     </Tabs>
   );
 }
-
-const getTabsConfig = () => [
-  { value: 'active', label: 'Active', status: 'active' as const },
-  { value: 'onhold', label: 'On-hold', status: 'on-hold' as const },
-  { value: 'completed', label: 'Completed', status: 'completed' as const },
-];
 
 interface ProjectCategoriesListProps {
   categories: ProjectCategory[];

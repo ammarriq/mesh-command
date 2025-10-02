@@ -16,7 +16,7 @@ function CustomTabTrigger({ className, value, ...props }: CustomTabTriggerProps)
   return (
     <TabsTrigger
       className={cn(
-        'data-[state=active]:text-primary w-full border-b-2 border-b-Bg-Dark data-[state=active]:border-b-primary text-text-secondary inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 p-4 text-sm font-semibold whitespace-nowrap',
+        'p-4 data-[state=active]:text-primary w-full border-b-2 border-b-Bg-Dark data-[state=active]:border-b-primary text-text-secondary text-sm font-semibold whitespace-nowrap',
         className,
       )}
       value={value}

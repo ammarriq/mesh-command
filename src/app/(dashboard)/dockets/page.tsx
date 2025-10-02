@@ -1,9 +1,9 @@
 'use client';
 
-import ProjectSelectorTab from '@/components/layout/project-selector-tab';
-import { CustomTabs } from '@/components/shared/custom-tabs';
+import { ProjectHeader } from '@/components/layout/project-header';
+import ProjectSelectorTab from '@/components/layout/project-tab';
 import { InvoiceTable, InvoiceTableRow } from '@/components/shared/data-table';
-import { ProjectHeader } from '@/components/shared/project-header';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DownloadCloudIcon } from '@/icons/download-cloud';
 import { useSelectedProject } from '@/store';
 import type { Project } from '@/store/types';
@@ -114,7 +114,7 @@ function MainContent({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <ProjectHeader project={selectedProject} showTeamMembers={true} />
+      <ProjectHeader project={selectedProject} isDocketPage />
       <BillingSection
         activeInvoiceTab={activeInvoiceTab}
         setActiveInvoiceTab={setActiveInvoiceTab}
@@ -140,23 +140,58 @@ function BillingSection({
   billingTabsConfig,
 }: BillingSectionProps) {
   return (
-    <div className="flex-1 p-6 overflow-hidden">
-      <div className="bg-white h-full flex flex-col">
-        <div className="mb-6">
-          <hgroup className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Billing and invoicing</h2>
-            <button className="border border-primary text-primary flex justify-center rounded-xl py-2.5 px-4 items-center gap-2">
-              <DownloadCloudIcon /> Download All
-            </button>
-          </hgroup>
-          <CustomTabs
-            variant="underline"
-            value={activeInvoiceTab}
-            onValueChange={setActiveInvoiceTab}
-            items={billingTabsConfig}
-          />
-        </div>
-      </div>
+    <div className="flex-1 p-6 overflow-hidden bg-white h-full flex flex-col mt-4 gap-4">
+      <hgroup className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Billing and invoicing</h2>
+        <button className="border border-primary text-primary flex justify-center rounded-xl py-2.5 px-4 items-center gap-2">
+          <DownloadCloudIcon /> Download All
+        </button>
+      </hgroup>
+      <CustomTabs
+        value={activeInvoiceTab}
+        onValueChange={setActiveInvoiceTab}
+        items={billingTabsConfig}
+      />
     </div>
+  );
+}
+
+interface TabItem {
+  value: string;
+  label: string;
+  content?: React.ReactNode;
+}
+
+interface CustomTabsProps {
+  items: TabItem[];
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  className?: string;
+  variant?: 'default' | 'underline';
+}
+
+export function CustomTabs({ items, defaultValue, value, onValueChange }: CustomTabsProps) {
+  return (
+    <Tabs defaultValue={defaultValue} value={value} onValueChange={onValueChange} className={''}>
+      <div className="bg-gray-50 border w-full border-gray-200 rounded-sm">
+        <TabsList className=" flex gap-2 bg-transparent p-1">
+          {items.map((item) => (
+            <TabsTrigger
+              key={item.value}
+              value={item.value}
+              className="bg-transparent rounded-lg w-fit whitespace-nowrap data-[state=active]:bg-white data-[state=active]:text-text-primary text-text-secondary  px-3 py-2 data-[state=active]:shadow-xs "
+            >
+              {item.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
+      {items.map((item) => (
+        <TabsContent key={item.value} value={item.value} className="mt-3">
+          {item.content}
+        </TabsContent>
+      ))}
+    </Tabs>
   );
 }

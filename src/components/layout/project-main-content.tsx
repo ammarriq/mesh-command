@@ -1,11 +1,13 @@
 'use client';
 
-import { ProjectHeader } from '@/components/shared/project-header';
+import { ProjectHeader } from '@/components/layout/project-header';
 import TaskCard from '@/components/shared/task-card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 import { Project, Task } from '@/store';
 
 import { Plus } from 'lucide-react';
+
+import { CustomTabTrigger } from '../shared/chat-tab-trigger';
 
 interface ProjectMainContentProps {
   selectedProject: Project;
@@ -107,13 +109,9 @@ function MobileTaskTabs({ tasksByStatus, isSplitScreen }: MobileTaskTabsProps) {
       <Tabs defaultValue="todo" className="w-full">
         <TabsList className="w-full h-fit">
           {tabConfig.map((tab) => (
-            <TabsTrigger
-              key={tab.value}
-              value={tab.value}
-              className={tab.value === 'todo' ? 'p-4' : ''}
-            >
+            <CustomTabTrigger key={tab.value} value={tab.value}>
               {tab.label}
-            </TabsTrigger>
+            </CustomTabTrigger>
           ))}
         </TabsList>
         {tabConfig.map((tab) => (

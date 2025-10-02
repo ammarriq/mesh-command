@@ -8,6 +8,11 @@ import { CustomTabTrigger } from '../shared/chat-tab-trigger';
 import ProjectContentItem from '../shared/project-content-item';
 import SharedTabActions from '../shared/tab-actions';
 
+const tabConfig = [
+  { value: 'private', label: 'Private' },
+  { value: 'projects', label: 'Projects' },
+];
+
 export default function ChatTab() {
   const categories = useProjectStore((state) => state.categories);
   const {
@@ -17,7 +22,6 @@ export default function ChatTab() {
   } = useAppStore();
   const selectedChat = useSelectedChat();
 
-  const tabConfig = getTabConfig();
   return (
     <Tabs defaultValue="private" className="w-96 2xl:w-[496px]">
       <TabsList className="w-full border-r border-r-Bg-Dark h-fit">
@@ -46,11 +50,6 @@ export default function ChatTab() {
     </Tabs>
   );
 }
-
-const getTabConfig = () => [
-  { value: 'private', label: 'Private' },
-  { value: 'projects', label: 'Projects' },
-];
 
 interface PrivateChatsListProps {
   chats: Chat[];

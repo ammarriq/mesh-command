@@ -1,7 +1,7 @@
 'use client';
 
 import ProjectMainContent from '@/components/layout/project-main-content';
-import ProjectSelectorTab from '@/components/layout/project-selector-tab';
+import ProjectSelectorTab from '@/components/layout/project-tab';
 import { useSelectedProject } from '@/store';
 
 export default function ProjectsPage() {
