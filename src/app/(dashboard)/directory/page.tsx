@@ -1,9 +1,9 @@
 'use client';
 
-import { CustomTabTrigger } from '@/components/shared/custom-tab-trigger';
 import { SearchInput } from '@/components/shared/search-input';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Table,
   TableBody,
@@ -76,8 +76,6 @@ export default function DirectoryPage() {
         <DirectoryHeader />
 
         <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="w-full">
-          <MainTabsList />
-
           <TabsContent value="People Management" className="space-y-6">
             <PeopleManagement
               activePeopleTab={activePeopleTab}
@@ -283,16 +281,6 @@ function DirectoryHeader() {
   );
 }
 
-function MainTabsList() {
-  return (
-    <TabsList className="grid w-full grid-cols-3 mb-8">
-      <CustomTabTrigger value="People Management" title="People Management" />
-      <CustomTabTrigger title="Asset Management" value="Asset Management" />
-      <CustomTabTrigger value="Location Management" title="Location Management" />
-    </TabsList>
-  );
-}
-
 interface PeopleManagementProps {
   activePeopleTab: string;
   setActivePeopleTab: (tab: string) => void;
@@ -310,11 +298,11 @@ function PeopleManagement({
   directoryTabsConfig,
 }: PeopleManagementProps) {
   const peopleTabStyle =
-    'data-[state=active]:bg-primary-light border border-gray-300 px-2.5 py-4 border-b-gray-300 data-[state=active]:border-b-gray-300 text-sm font-semibold data-[state=active]:text-primary text-gray-700';
+    'data-[state=active]:bg-primary-light border-r border-gray-300 py-2.5 px-4 h-full text-sm font-semibold data-[state=active]:text-primary text-gray-700';
 
   return (
     <Tabs value={activePeopleTab} onValueChange={setActivePeopleTab} className="w-full">
-      <TabsList className="flex w-full max-w-[780px] rounded-xl">
+      <TabsList className="flex w-full max-w-[780px] rounded-xl border border-gray-300 p-0 h-fit">
         {directoryTabsConfig.map((tab, index) => (
           <TabsTrigger
             key={tab.value}
@@ -329,7 +317,7 @@ function PeopleManagement({
           </TabsTrigger>
         ))}
       </TabsList>
-
+      <Separator className="my-4" />
       {directoryTabsConfig.map((tab) => (
         <TabsContent key={tab.value} value={tab.value} className="space-y-6">
           <DirectoryTable
