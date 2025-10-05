@@ -1,0 +1,93 @@
+"use client"
+
+import { Link, useLocation } from "@tanstack/react-router"
+
+import ChatIcon from "@/icons/chat"
+import LogoutIcon from "@/icons/logout"
+import OpenFolderIcon from "@/icons/open-folder"
+import ProjectsIcon from "@/icons/project"
+import ShieldIcon from "@/icons/shield"
+import TrendUpIcon from "@/icons/trend-up"
+import TwoUsersIcon from "@/icons/two-users"
+import { cn } from "@/lib/utils"
+
+interface NavItem {
+    title: string
+    href: string
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+}
+
+interface SideBarItemProps {
+    item: NavItem
+    isActive: boolean
+}
+
+const NAV_ITEMS: Array<NavItem> = [
+    { title: "Chat", href: "/chat", icon: ChatIcon },
+    { title: "Projects", href: "/projects", icon: ProjectsIcon },
+    { title: "Dockets", href: "/dockets", icon: OpenFolderIcon },
+    { title: "Reports", href: "/reports", icon: TrendUpIcon },
+    { title: "Directory", href: "/directory", icon: TwoUsersIcon },
+    { title: "Admin", href: "/admin", icon: ShieldIcon },
+]
+function SideBarItem({ isActive, item }: SideBarItemProps) {
+    return (
+        <li key={item.href}>
+            <Link
+                to={item.href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                    "flex size-20 flex-col items-center rounded-[4px] py-4",
+                    isActive
+                        ? "bg-primary/20 text-primary"
+                        : "text-text-secondary",
+                )}
+            >
+                <item.icon
+                    className="size-6"
+                    fill={isActive ? "#5F0101" : "#78829D"}
+                    stroke={isActive ? "#5F0101" : "#78829D"}
+                />
+                <span
+                    className={cn(
+                        isActive ? "text-primary" : "text-text-secondary",
+                        "text-base font-medium",
+                    )}
+                >
+                    {item.title}
+                </span>
+            </Link>
+        </li>
+    )
+}
+
+function Sidebar() {
+    const { pathname } = useLocation()
+
+    return (
+        <section className="flex flex-col justify-between p-4">
+            <ul className="flex flex-col gap-2">
+                {NAV_ITEMS.map((item) => (
+                    <SideBarItem
+                        key={item.href}
+                        item={item}
+                        isActive={pathname === item.href}
+                    />
+                ))}
+            </ul>
+
+            <div className="mt-auto pt-4">
+                <SideBarItem
+                    item={{
+                        href: "/logout",
+                        icon: LogoutIcon,
+                        title: "Logout",
+                    }}
+                    isActive={pathname === "/logout"}
+                />
+            </div>
+        </section>
+    )
+}
+
+export default Sidebar

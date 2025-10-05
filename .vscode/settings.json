@@ -1,0 +1,11 @@
+{
+  "files.watcherExclude": {
+    "**/routes.ts": true
+  },
+  "search.exclude": {
+    "**/routes.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routes.ts": true
+  }
+}
