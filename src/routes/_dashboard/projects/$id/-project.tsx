@@ -27,10 +27,10 @@ function Project({ projectId }: Props) {
     )
 
     return (
-        <div className="flex flex-1 flex-col bg-white p-2">
+        <div className="@container flex flex-1 flex-col overflow-hidden bg-white p-2">
             <ProjectHeader project={selectedProject} />
 
-            <section className="hidden h-full grid-cols-3 gap-2 2xl:grid">
+            <section className="flex size-full gap-2 overflow-x-auto">
                 {Object.entries(tasksByStatus).map(([status, tasks]) => (
                     <Column title={status} taskCount={tasks.length}>
                         {tasks.map((task) => (

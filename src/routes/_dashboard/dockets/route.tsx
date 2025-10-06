@@ -4,12 +4,13 @@ import type { Project } from "@/store/types"
 import { useState } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 
-import { ProjectHeader } from "@/routes/_dashboard/projects/$id/-project-header"
-import ProjectSelectorTab from "@/routes/_dashboard/projects/-project-tab"
 import { InvoiceTable } from "@/components/shared/data-table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DownloadCloudIcon } from "@/icons/download-cloud"
 import { useSelectedProject } from "@/store"
+
+import ProjectSelectorTab from "../projects/-project-tab"
+import { ProjectHeader } from "../projects/$id/-project-header"
 
 export const Route = createFileRoute("/_dashboard/dockets/")({
     component: RouteComponent,

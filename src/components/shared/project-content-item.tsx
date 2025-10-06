@@ -10,15 +10,18 @@ import {
 
 interface ProjectContentItemProps {
     title: string
+    selectedProject?: Project["id"]
+
     projects: Array<Project>
 
     showCreateButton?: boolean
     isChatTab?: boolean
-    onSelectProject: (id: string) => void
+    onSelectProject: (id: Project["id"]) => void
 }
 
 function ProjectContentItem({
     title,
+    selectedProject,
     projects,
     showCreateButton = false,
     isChatTab = false,
@@ -66,10 +69,9 @@ function ProjectContentItem({
                         {projects.map((project) => (
                             <button
                                 key={project.id}
-                                className="text-text-primary flex w-full items-center gap-1 rounded-xs p-2 text-left text-sm"
-                                onClick={() =>
-                                    onSelectProject(project.id.toString())
-                                }
+                                data-selected={selectedProject === project.id}
+                                className="text-text-primary data-[selected=true]:bg-muted flex w-full items-center gap-1 rounded-xs p-2 text-left text-sm"
+                                onClick={() => onSelectProject(project.id)}
                             >
                                 <span>{project.title}</span>
 

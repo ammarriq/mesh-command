@@ -1,23 +1,32 @@
+import type { Project } from "@/store"
+
 import ProjectContentItem from "@/components/shared/project-content-item"
 import TabActions from "@/components/shared/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAppStore, useProjectStore, useSelectedChat } from "@/store"
+import { cn } from "@/lib/utils"
+
+import { categories } from "../projects/-sample"
+
+import { chats } from "./-sample"
+
+interface Props {
+    selectedChat?: (typeof chats)[number]["id"]
+    selectedProject?: Project["id"]
+    onSelectChat: (chatId: string) => void
+    onSelectProject: (projectId: Project["id"]) => void
+}
 
 const tabConfig = [
     { value: "private", label: "Private" },
     { value: "projects", label: "Projects" },
 ]
 
-export default function ChatTab() {
-    const categories = useProjectStore((state) => state.categories)
-    const {
-        chat: { chats },
-        setSelectedChat,
-        createNewChat,
-    } = useAppStore()
-
-    const selectedChat = useSelectedChat()
-
+function ChatTab({
+    selectedChat,
+    selectedProject,
+    onSelectChat,
+    onSelectProject,
+}: Props) {
     return (
         <Tabs
             defaultValue="private"
@@ -31,7 +40,7 @@ export default function ChatTab() {
                 ))}
             </TabsList>
 
-            <TabActions onCreateNewItem={createNewChat} type="chat" />
+            <TabActions onCreateNewItem={() => {}} type="chat" />
 
             <TabsContent
                 value="private"
@@ -39,8 +48,11 @@ export default function ChatTab() {
             >
                 {chats.map((chat) => (
                     <button
-                        onClick={() => setSelectedChat(chat.id)}
-                        className={`text-text-primary px-2 py-2 text-start ${selectedChat?.id === chat.id ? "bg-Bg-Dark" : ""}`}
+                        onClick={() => onSelectChat(chat.id)}
+                        className={cn(
+                            `text-text-primary px-2 py-2 text-start`,
+                            selectedChat === chat.id ? "bg-Bg-Dark" : "",
+                        )}
                     >
                         {chat.name}
                     </button>
@@ -53,14 +65,18 @@ export default function ChatTab() {
             >
                 {categories.map((category) => (
                     <ProjectContentItem
+                        isChatTab
                         key={category.id}
                         title={category.name}
                         projects={category.projects}
                         showCreateButton={false}
-                        isChatTab
+                        selectedProject={selectedProject}
+                        onSelectProject={onSelectProject}
                     />
                 ))}
             </TabsContent>
         </Tabs>
     )
 }
+
+export default ChatTab

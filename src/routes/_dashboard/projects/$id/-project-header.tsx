@@ -26,13 +26,13 @@ export function ProjectHeader({ project }: Props) {
             <section className="flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
                 <div className="flex flex-col gap-1">
                     <hgroup className="flex items-center gap-4">
-                        <h1 className="text-text-primary text-2xl font-medium whitespace-nowrap 2xl:max-w-none">
+                        <h1 className="text-text-primary truncate text-2xl font-medium whitespace-nowrap 2xl:max-w-none">
                             {project.title}
                         </h1>
                     </hgroup>
 
-                    <div className="flex items-center gap-x-4 gap-y-2">
-                        <div className="flex items-center gap-1 text-xs font-semibold">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <div className="flex items-center gap-1 text-xs font-semibold whitespace-nowrap">
                             <TwoUsersIcon
                                 fill="var(--primary)"
                                 stroke="var(--primary)"
@@ -42,7 +42,7 @@ export function ProjectHeader({ project }: Props) {
                             <p>{project.contractor}</p>
                         </div>
 
-                        <div className="flex items-center gap-1 text-xs font-semibold">
+                        <div className="flex items-center gap-1 text-xs font-semibold whitespace-nowrap">
                             <TimerIcon
                                 fill="var(--primary)"
                                 stroke="var(--primary)"
@@ -53,7 +53,7 @@ export function ProjectHeader({ project }: Props) {
                         </div>
 
                         {project.budget ? (
-                            <div className="flex items-center gap-1 text-xs font-semibold">
+                            <div className="flex items-center gap-1 text-xs font-semibold whitespace-nowrap">
                                 <DollarSquareIcon
                                     fill="var(--primary)"
                                     stroke="var(--primary)"
@@ -111,7 +111,7 @@ export function ProjectHeader({ project }: Props) {
                         <Button
                             variant="outline"
                             size="icon"
-                            className="border-Bg-Dark bg-light-bg size-9 rounded-xs border"
+                            className="border-Bg-Dark bg-light-bg size-10 rounded-xs border"
                         >
                             <MessageIcon />
                         </Button>
@@ -119,7 +119,7 @@ export function ProjectHeader({ project }: Props) {
                         <Button
                             variant="outline"
                             size="icon"
-                            className="border-Bg-Dark bg-light-bg size-9 rounded-xs border"
+                            className="border-Bg-Dark bg-light-bg size-10 rounded-xs border"
                         >
                             <ThreeDotsIcon />
                         </Button>

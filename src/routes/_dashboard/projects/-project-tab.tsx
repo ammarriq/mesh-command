@@ -1,5 +1,6 @@
+import type { Project } from "@/store"
+
 import { useCallback } from "react"
-import { useNavigate } from "@tanstack/react-router"
 
 import ProjectContentItem from "@/components/shared/project-content-item"
 import TabActions from "@/components/shared/tab-actions"
@@ -15,14 +16,16 @@ const tabsConfig = [
 
 interface Props {
     showCreateButton?: boolean
+    selectedProject?: Project["id"]
+    onSelectProject: (projectId: Project["id"]) => void
     onCreateProject?: () => void
 }
 
 export default function ProjectSelectorTab({
+    selectedProject,
+    onSelectProject,
     showCreateButton = false,
 }: Props) {
-    const navigate = useNavigate()
-
     const getCategories = useCallback(
         (status: "active" | "on-hold" | "completed") => {
             const filtered = categories.filter(({ projects }) => {
@@ -63,15 +66,11 @@ export default function ProjectSelectorTab({
                             key={category.id}
                             title={category.name}
                             showCreateButton={showCreateButton}
+                            selectedProject={selectedProject}
                             projects={category.projects.filter(({ status }) => {
                                 return status.toLowerCase() === tab.status
                             })}
-                            onSelectProject={(id) => {
-                                navigate({
-                                    to: "/projects/$id",
-                                    params: { id },
-                                })
-                            }}
+                            onSelectProject={onSelectProject}
                         />
                     ))}
                 </TabsContent>

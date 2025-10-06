@@ -10,7 +10,7 @@ interface Props {
 
 function Column({ title, taskCount, children }: Props) {
     return (
-        <section className="bg-light-bg flex flex-col rounded-sm">
+        <section className="bg-light-bg flex w-full max-w-105 shrink-0 flex-col rounded-sm">
             <header className={cn("flex items-center justify-between px-3")}>
                 <div
                     className={cn(

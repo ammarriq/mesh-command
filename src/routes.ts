@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardLayoutRouteImport } from './routes/_dashboard/layout'
 import { Route as RouteRouteImport } from './routes/route'
+import { Route as DashboardProjectsLayoutRouteImport } from './routes/_dashboard/projects/layout'
+import { Route as DashboardChatLayoutRouteImport } from './routes/_dashboard/chat/layout'
 import { Route as DashboardReportsRouteRouteImport } from './routes/_dashboard/reports/route'
 import { Route as DashboardProjectsRouteRouteImport } from './routes/_dashboard/projects/route'
 import { Route as DashboardDocketsRouteRouteImport } from './routes/_dashboard/dockets/route'
@@ -20,6 +22,7 @@ import { Route as DashboardAdminRouteRouteImport } from './routes/_dashboard/adm
 import { Route as AuthOtpVerificationRouteRouteImport } from './routes/_auth/otp-verification/route'
 import { Route as AuthNewPasswordRouteRouteImport } from './routes/_auth/new-password/route'
 import { Route as DashboardProjectsIdRouteRouteImport } from './routes/_dashboard/projects/$id/route'
+import { Route as DashboardChatIdRouteRouteImport } from './routes/_dashboard/chat/$id/route'
 
 const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
   id: '/_dashboard',
@@ -30,15 +33,25 @@ const RouteRoute = RouteRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardProjectsLayoutRoute = DashboardProjectsLayoutRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => DashboardLayoutRoute,
+} as any)
+const DashboardChatLayoutRoute = DashboardChatLayoutRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => DashboardLayoutRoute,
+} as any)
 const DashboardReportsRouteRoute = DashboardReportsRouteRouteImport.update({
   id: '/reports/',
   path: '/reports/',
   getParentRoute: () => DashboardLayoutRoute,
 } as any)
 const DashboardProjectsRouteRoute = DashboardProjectsRouteRouteImport.update({
-  id: '/projects/',
-  path: '/projects/',
-  getParentRoute: () => DashboardLayoutRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardProjectsLayoutRoute,
 } as any)
 const DashboardDocketsRouteRoute = DashboardDocketsRouteRouteImport.update({
   id: '/dockets/',
@@ -51,9 +64,9 @@ const DashboardDirectoryRouteRoute = DashboardDirectoryRouteRouteImport.update({
   getParentRoute: () => DashboardLayoutRoute,
 } as any)
 const DashboardChatRouteRoute = DashboardChatRouteRouteImport.update({
-  id: '/chat/',
-  path: '/chat/',
-  getParentRoute: () => DashboardLayoutRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardChatLayoutRoute,
 } as any)
 const DashboardAdminRouteRoute = DashboardAdminRouteRouteImport.update({
   id: '/admin/',
@@ -73,21 +86,29 @@ const AuthNewPasswordRouteRoute = AuthNewPasswordRouteRouteImport.update({
 } as any)
 const DashboardProjectsIdRouteRoute =
   DashboardProjectsIdRouteRouteImport.update({
-    id: '/projects/$id/',
-    path: '/projects/$id/',
-    getParentRoute: () => DashboardLayoutRoute,
+    id: '/$id/',
+    path: '/$id/',
+    getParentRoute: () => DashboardProjectsLayoutRoute,
   } as any)
+const DashboardChatIdRouteRoute = DashboardChatIdRouteRouteImport.update({
+  id: '/$id/',
+  path: '/$id/',
+  getParentRoute: () => DashboardChatLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof RouteRoute
+  '/chat': typeof DashboardChatLayoutRouteWithChildren
+  '/projects': typeof DashboardProjectsLayoutRouteWithChildren
   '/new-password': typeof AuthNewPasswordRouteRoute
   '/otp-verification': typeof AuthOtpVerificationRouteRoute
   '/admin': typeof DashboardAdminRouteRoute
-  '/chat': typeof DashboardChatRouteRoute
+  '/chat/': typeof DashboardChatRouteRoute
   '/directory': typeof DashboardDirectoryRouteRoute
   '/dockets': typeof DashboardDocketsRouteRoute
-  '/projects': typeof DashboardProjectsRouteRoute
+  '/projects/': typeof DashboardProjectsRouteRoute
   '/reports': typeof DashboardReportsRouteRoute
+  '/chat/$id': typeof DashboardChatIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
 }
 export interface FileRoutesByTo {
@@ -100,12 +121,15 @@ export interface FileRoutesByTo {
   '/dockets': typeof DashboardDocketsRouteRoute
   '/projects': typeof DashboardProjectsRouteRoute
   '/reports': typeof DashboardReportsRouteRoute
+  '/chat/$id': typeof DashboardChatIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof RouteRoute
   '/_dashboard': typeof DashboardLayoutRouteWithChildren
+  '/_dashboard/chat': typeof DashboardChatLayoutRouteWithChildren
+  '/_dashboard/projects': typeof DashboardProjectsLayoutRouteWithChildren
   '/_auth/new-password/': typeof AuthNewPasswordRouteRoute
   '/_auth/otp-verification/': typeof AuthOtpVerificationRouteRoute
   '/_dashboard/admin/': typeof DashboardAdminRouteRoute
@@ -114,20 +138,24 @@ export interface FileRoutesById {
   '/_dashboard/dockets/': typeof DashboardDocketsRouteRoute
   '/_dashboard/projects/': typeof DashboardProjectsRouteRoute
   '/_dashboard/reports/': typeof DashboardReportsRouteRoute
+  '/_dashboard/chat/$id/': typeof DashboardChatIdRouteRoute
   '/_dashboard/projects/$id/': typeof DashboardProjectsIdRouteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/chat'
+    | '/projects'
     | '/new-password'
     | '/otp-verification'
     | '/admin'
-    | '/chat'
+    | '/chat/'
     | '/directory'
     | '/dockets'
-    | '/projects'
+    | '/projects/'
     | '/reports'
+    | '/chat/$id'
     | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -140,11 +168,14 @@ export interface FileRouteTypes {
     | '/dockets'
     | '/projects'
     | '/reports'
+    | '/chat/$id'
     | '/projects/$id'
   id:
     | '__root__'
     | '/'
     | '/_dashboard'
+    | '/_dashboard/chat'
+    | '/_dashboard/projects'
     | '/_auth/new-password/'
     | '/_auth/otp-verification/'
     | '/_dashboard/admin/'
@@ -153,6 +184,7 @@ export interface FileRouteTypes {
     | '/_dashboard/dockets/'
     | '/_dashboard/projects/'
     | '/_dashboard/reports/'
+    | '/_dashboard/chat/$id/'
     | '/_dashboard/projects/$id/'
   fileRoutesById: FileRoutesById
 }
@@ -179,6 +211,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_dashboard/projects': {
+      id: '/_dashboard/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof DashboardProjectsLayoutRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/chat': {
+      id: '/_dashboard/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof DashboardChatLayoutRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboard/reports/': {
       id: '/_dashboard/reports/'
       path: '/reports'
@@ -188,10 +234,10 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/projects/': {
       id: '/_dashboard/projects/'
-      path: '/projects'
-      fullPath: '/projects'
+      path: '/'
+      fullPath: '/projects/'
       preLoaderRoute: typeof DashboardProjectsRouteRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      parentRoute: typeof DashboardProjectsLayoutRoute
     }
     '/_dashboard/dockets/': {
       id: '/_dashboard/dockets/'
@@ -209,10 +255,10 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/chat/': {
       id: '/_dashboard/chat/'
-      path: '/chat'
-      fullPath: '/chat'
+      path: '/'
+      fullPath: '/chat/'
       preLoaderRoute: typeof DashboardChatRouteRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      parentRoute: typeof DashboardChatLayoutRoute
     }
     '/_dashboard/admin/': {
       id: '/_dashboard/admin/'
@@ -237,32 +283,66 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/projects/$id/': {
       id: '/_dashboard/projects/$id/'
-      path: '/projects/$id'
+      path: '/$id'
       fullPath: '/projects/$id'
       preLoaderRoute: typeof DashboardProjectsIdRouteRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      parentRoute: typeof DashboardProjectsLayoutRoute
+    }
+    '/_dashboard/chat/$id/': {
+      id: '/_dashboard/chat/$id/'
+      path: '/$id'
+      fullPath: '/chat/$id'
+      preLoaderRoute: typeof DashboardChatIdRouteRouteImport
+      parentRoute: typeof DashboardChatLayoutRoute
     }
   }
 }
 
-interface DashboardLayoutRouteChildren {
-  DashboardAdminRouteRoute: typeof DashboardAdminRouteRoute
+interface DashboardChatLayoutRouteChildren {
   DashboardChatRouteRoute: typeof DashboardChatRouteRoute
-  DashboardDirectoryRouteRoute: typeof DashboardDirectoryRouteRoute
-  DashboardDocketsRouteRoute: typeof DashboardDocketsRouteRoute
+  DashboardChatIdRouteRoute: typeof DashboardChatIdRouteRoute
+}
+
+const DashboardChatLayoutRouteChildren: DashboardChatLayoutRouteChildren = {
+  DashboardChatRouteRoute: DashboardChatRouteRoute,
+  DashboardChatIdRouteRoute: DashboardChatIdRouteRoute,
+}
+
+const DashboardChatLayoutRouteWithChildren =
+  DashboardChatLayoutRoute._addFileChildren(DashboardChatLayoutRouteChildren)
+
+interface DashboardProjectsLayoutRouteChildren {
   DashboardProjectsRouteRoute: typeof DashboardProjectsRouteRoute
-  DashboardReportsRouteRoute: typeof DashboardReportsRouteRoute
   DashboardProjectsIdRouteRoute: typeof DashboardProjectsIdRouteRoute
 }
 
+const DashboardProjectsLayoutRouteChildren: DashboardProjectsLayoutRouteChildren =
+  {
+    DashboardProjectsRouteRoute: DashboardProjectsRouteRoute,
+    DashboardProjectsIdRouteRoute: DashboardProjectsIdRouteRoute,
+  }
+
+const DashboardProjectsLayoutRouteWithChildren =
+  DashboardProjectsLayoutRoute._addFileChildren(
+    DashboardProjectsLayoutRouteChildren,
+  )
+
+interface DashboardLayoutRouteChildren {
+  DashboardChatLayoutRoute: typeof DashboardChatLayoutRouteWithChildren
+  DashboardProjectsLayoutRoute: typeof DashboardProjectsLayoutRouteWithChildren
+  DashboardAdminRouteRoute: typeof DashboardAdminRouteRoute
+  DashboardDirectoryRouteRoute: typeof DashboardDirectoryRouteRoute
+  DashboardDocketsRouteRoute: typeof DashboardDocketsRouteRoute
+  DashboardReportsRouteRoute: typeof DashboardReportsRouteRoute
+}
+
 const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
+  DashboardChatLayoutRoute: DashboardChatLayoutRouteWithChildren,
+  DashboardProjectsLayoutRoute: DashboardProjectsLayoutRouteWithChildren,
   DashboardAdminRouteRoute: DashboardAdminRouteRoute,
-  DashboardChatRouteRoute: DashboardChatRouteRoute,
   DashboardDirectoryRouteRoute: DashboardDirectoryRouteRoute,
   DashboardDocketsRouteRoute: DashboardDocketsRouteRoute,
-  DashboardProjectsRouteRoute: DashboardProjectsRouteRoute,
   DashboardReportsRouteRoute: DashboardReportsRouteRoute,
-  DashboardProjectsIdRouteRoute: DashboardProjectsIdRouteRoute,
 }
 
 const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
