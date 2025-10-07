@@ -7,15 +7,13 @@ import type {
     Vendor,
 } from "@/store"
 
-import { useState } from "react"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, redirect } from "@tanstack/react-router"
 
-import { Copy, Edit, Users } from "lucide-react"
+import { Copy, Edit } from "lucide-react"
 
 import { SearchInput } from "@/components/shared/search-input"
 import { StatusBadge } from "@/components/shared/status-badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import {
     Table,
     TableBody,
@@ -25,7 +23,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
 import { useDirectoryStore } from "@/store"
 
 type DirectoryItemType =
@@ -39,92 +36,126 @@ type UserItemType = Employee | Contractor | Team | Vendor
 
 export const Route = createFileRoute("/_dashboard/directory/")({
     component: RouteComponent,
+    beforeLoad: () => {
+        throw redirect({ to: "/directory/employees" })
+    },
 })
 
 function RouteComponent() {
     const { employees, contractors, teams, vendors, equipments, locations } =
         useDirectoryStore()
-    const [activeMainTab, setActiveMainTab] = useState("People Management")
-    const [activePeopleTab, setActivePeopleTab] = useState("Employees")
-
-    const directoryTabsConfig = [
-        {
-            value: "Employees",
-            data: employees,
-            title: "Employees",
-            description: "Employees are the workers of teams.",
-        },
-        {
-            value: "Contractors",
-            data: contractors,
-            title: "Contractors",
-            description: "Here are listings of contractors.",
-        },
-        {
-            value: "Teams",
-            data: teams,
-            title: "Teams",
-            description: "Here are listings of teams.",
-        },
-        {
-            value: "Vendors",
-            data: vendors,
-            title: "Vendors",
-            description: "Here are listings of vendors.",
-        },
-        {
-            value: "Equipments",
-            data: equipments,
-            title: "Equipments",
-            description: "Here are listings of equipments and tools.",
-        },
-        {
-            value: "Locations",
-            data: locations,
-            title: "Locations",
-            description: "Here are listings of locations and addresses.",
-        },
-    ]
 
     return (
-        <main className="min-h-screen flex-1 bg-white py-4">
-            <div className="p-8">
-                <DirectoryHeader />
+        <main className="col-span-2 min-h-screen bg-white p-6">
+            <header className="flex items-start justify-between">
+                <hgroup className="mb-8">
+                    <h1 className="mb-1 text-3xl font-semibold text-gray-900">
+                        MeshCommand Directory
+                    </h1>
+                    <p className="text-sm text-slate-400">
+                        Manage and view all people, equipment and locations.
+                    </p>
+                </hgroup>
+                <SearchInput />
+            </header>
 
-                <Tabs
-                    value={activeMainTab}
-                    onValueChange={setActiveMainTab}
-                    className="w-full"
-                >
-                    <TabsContent
-                        value="People Management"
-                        className="space-y-6"
-                    >
-                        <PeopleManagement
-                            activePeopleTab={activePeopleTab}
-                            setActivePeopleTab={setActivePeopleTab}
-                            directoryTabsConfig={directoryTabsConfig}
+            <Tabs defaultValue="employees" className="w-full">
+                <div className="border-y-Bg-Dark border-y py-8">
+                    <TabsList className="border-Bg-Dark *:data-[state=active]:bg-primary-light *:data-[state=active]:text-primary *:border-Bg-Dark *:text-foreground h-10 max-w-fit overflow-hidden rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:not-last-of-type:border-r *:data-[state=active]:border-y-0 *:data-[state=active]:font-medium">
+                        <TabsTrigger value="employees">Employees</TabsTrigger>
+                        <TabsTrigger value="contractors">
+                            Contractors
+                        </TabsTrigger>
+                        <TabsTrigger value="teams">Teams</TabsTrigger>
+                        <TabsTrigger value="vendors">Vendors</TabsTrigger>
+                        <TabsTrigger value="equipments">Equipments</TabsTrigger>
+                        <TabsTrigger value="locations">Locations</TabsTrigger>
+                    </TabsList>
+                </div>
+
+                <div className="border-y-Bg-Dark mt-8 border-y py-8">
+                    <TabsContent value="employees" className="space-y-6">
+                        <DirectoryTable
+                            data={employees}
+                            columns={createDirectoryColumns("Employees")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Employee"
+                            title="Employees"
+                            description="Employees are the workers of teams."
                         />
                     </TabsContent>
-
-                    <PlaceholderTabContent
-                        value="Asset Management"
-                        title="Asset Management"
-                        description="Advanced asset tracking and management features coming soon."
-                    />
-                    <PlaceholderTabContent
-                        value="Location Management"
-                        title="Location Management"
-                        description="Advanced location management features coming soon."
-                    />
-                </Tabs>
-            </div>
+                    <TabsContent value="contractors" className="space-y-6">
+                        <DirectoryTable
+                            data={contractors}
+                            columns={createDirectoryColumns("Contractors")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Contractor"
+                            title="Contractora"
+                            description="Here are listings of contractors."
+                        />
+                    </TabsContent>
+                    <TabsContent value="teams" className="space-y-6">
+                        <DirectoryTable
+                            data={teams}
+                            columns={createDirectoryColumns("Teams")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Team"
+                            title="Teams"
+                            description="Here are listings of teams."
+                        />
+                    </TabsContent>
+                    <TabsContent value="vendors" className="space-y-6">
+                        <DirectoryTable
+                            data={vendors}
+                            columns={createDirectoryColumns("Vendors")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Vendor"
+                            title="Vendors"
+                            description="Vendors are the workers of teams."
+                        />
+                    </TabsContent>
+                    <TabsContent value="equipments" className="space-y-6">
+                        <DirectoryTable
+                            data={equipments}
+                            columns={createDirectoryColumns("Equipments")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Equipment"
+                            title="Equipments"
+                            description="Here are listings of equipments and tools."
+                        />
+                    </TabsContent>
+                    <TabsContent value="locations" className="space-y-6">
+                        <DirectoryTable
+                            data={locations}
+                            columns={createDirectoryColumns("Locations")}
+                            onAdd={() => {}}
+                            addButtonText="Add New Location"
+                            title="Locations"
+                            description="Here are listings of locations and addresses."
+                        />
+                    </TabsContent>
+                </div>
+            </Tabs>
         </main>
     )
 }
 
-const createDirectoryColumns = (type: string) => {
-    const baseColumns = [
+type DirectoryType =
+    | "Employees"
+    | "Contractors"
+    | "Teams"
+    | "Vendors"
+    | "Equipments"
+    | "Locations"
+
+type ColumnConfig = {
+    key: string
+    label: string
+    render?: (value: unknown, item: DirectoryItemType) => React.ReactNode
+}
+
+const createDirectoryColumns = (type: DirectoryType): Array<ColumnConfig> => {
+    const baseColumns: Array<ColumnConfig> = [
         {
             key: "name",
             label: "Name",
@@ -132,28 +163,50 @@ const createDirectoryColumns = (type: string) => {
                 if (type === "Equipments" || type === "Locations") {
                     return String(item.name)
                 }
-                return <DirectoryUserAvatar user={item as UserItemType} />
+
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium">
+                            {(item as UserItemType).name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase()}
+                        </div>
+                        <div>
+                            <div className="text-foreground font-medium">
+                                {(item as UserItemType).name}
+                            </div>
+                            <div className="text-sm">
+                                {(item as UserItemType).email}
+                            </div>
+                        </div>
+                    </div>
+                )
             },
         },
     ]
 
-    const specificColumns: Record<
-        string,
-        Array<{
-            key: string
-            label: string
-            render?: (value: unknown) => React.ReactNode
-        }>
-    > = {
+    const statusColumn = (
+        statusType: "employee" | "contractor" | "team" | "vendor",
+    ): ColumnConfig => ({
+        key: "status",
+        label: "Status",
+        render: (status: unknown, _item: DirectoryItemType) => {
+            const statusMap = {
+                employee: status as Employee["status"],
+                contractor: status as Contractor["status"],
+                team: status as Team["status"],
+                vendor: status as Vendor["status"],
+            }
+            return <StatusBadge status={statusMap[statusType]} />
+        },
+    })
+
+    const specificColumns: Record<DirectoryType, Array<ColumnConfig>> = {
         Employees: [
             { key: "phone", label: "Phone Number" },
-            {
-                key: "status",
-                label: "Status",
-                render: (status: unknown) => (
-                    <StatusBadge status={status as Employee["status"]} />
-                ),
-            },
+            statusColumn("employee"),
             { key: "dateAdded", label: "Date added" },
             { key: "lastActive", label: "Last active" },
         ],
@@ -161,37 +214,19 @@ const createDirectoryColumns = (type: string) => {
             { key: "phone", label: "Phone Number" },
             { key: "projectCount", label: "# of projects" },
             { key: "type", label: "Type" },
-            {
-                key: "status",
-                label: "Status",
-                render: (status: unknown) => (
-                    <StatusBadge status={status as Contractor["status"]} />
-                ),
-            },
+            statusColumn("contractor"),
             { key: "dateAdded", label: "Date added" },
             { key: "lastActive", label: "Last active" },
         ],
         Teams: [
             { key: "memberCount", label: "# of Members" },
             { key: "department", label: "Department" },
-            {
-                key: "status",
-                label: "Status",
-                render: (status: unknown) => (
-                    <StatusBadge status={status as Team["status"]} />
-                ),
-            },
+            statusColumn("team"),
             { key: "dateAdded", label: "Date added" },
         ],
         Vendors: [
             { key: "productType", label: "Product Type" },
-            {
-                key: "status",
-                label: "Status",
-                render: (status: unknown) => (
-                    <StatusBadge status={status as Vendor["status"]} />
-                ),
-            },
+            statusColumn("vendor"),
             { key: "dateAdded", label: "Date added" },
         ],
         Equipments: [
@@ -202,7 +237,7 @@ const createDirectoryColumns = (type: string) => {
             {
                 key: "address",
                 label: "Address",
-                render: (address: unknown) => (
+                render: (address: unknown, _item: DirectoryItemType) => (
                     <button
                         type="button"
                         className="text-left text-red-600 underline hover:text-red-700"
@@ -217,11 +252,22 @@ const createDirectoryColumns = (type: string) => {
         ],
     }
 
-    return [
-        ...baseColumns,
-        ...specificColumns[type],
-        { key: "id", label: "", render: () => <ActionButtons /> },
-    ]
+    const actionColumn: ColumnConfig = {
+        key: "id",
+        label: "",
+        render: (_: unknown, _item: DirectoryItemType) => (
+            <div className="flex items-center gap-2 *:p-1 *:text-gray-400 *:hover:text-gray-600">
+                <button>
+                    <Copy className="h-4 w-4" />
+                </button>
+                <button>
+                    <Edit className="h-4 w-4" />
+                </button>
+            </div>
+        ),
+    }
+
+    return [...baseColumns, ...specificColumns[type], actionColumn]
 }
 
 interface DirectoryTableProps<T extends DirectoryItemType> {
@@ -247,73 +293,44 @@ function DirectoryTable<T extends DirectoryItemType>({
 }: DirectoryTableProps<T>) {
     return (
         <section className="flex gap-8">
-            <hgroup>
+            <hgroup className="w-full max-w-60 flex-shrink-0">
                 <h3 className="text-lg font-medium text-gray-900">{title}</h3>
                 {description && (
                     <p className="text-sm text-gray-600">{description}</p>
                 )}
                 <Button
                     onClick={onAdd}
-                    className="bg-primary-light text-primary hover:bg-primary/80 mt-4 rounded-xs"
+                    className="bg-primary-light text-primary hover:bg-primary-light/80 mt-4 rounded-xs"
                 >
                     {addButtonText}
                 </Button>
             </hgroup>
 
-            <div className="flex-1 rounded-xl border bg-white">
-                <Table className="rounded-2xl">
+            <div className="border-Bg-Dark w-full overflow-hidden rounded-lg border bg-white">
+                <Table>
                     <TableHeader>
-                        <TableRow className="bg-light-bg border-Bg-Dark border">
+                        <TableRow className="bg-Bg-Dark *:text-text-secondary *:font-medium *:last-of-type:w-24">
                             {columns.map((column) => (
-                                <TableHead
-                                    key={String(column.key)}
-                                    className={cn(
-                                        column.key === "name"
-                                            ? "w-full min-w-[180px]"
-                                            : "min-w-[120px] text-right",
-                                    )}
-                                >
+                                <TableHead key={String(column.key)}>
                                     {column.label}
                                 </TableHead>
                             ))}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {data.map((item, index) => (
-                            <TableRow
-                                key={item.id}
-                                className={cn(
-                                    (index + 1) % 2 === 0 ? "bg-light-bg" : "",
-                                    "border-Bg-Dark border",
-                                )}
-                            >
+                        {data.map((item) => (
+                            <TableRow key={item.id}>
                                 {columns.map((column) => (
                                     <TableCell
                                         key={String(column.key)}
-                                        className={cn(
-                                            column.key === "name"
-                                                ? "w-full"
-                                                : "text-right",
-                                        )}
+                                        className="text-foreground/50"
                                     >
                                         {column.render
                                             ? column.render(
-                                                  (
-                                                      item as unknown as Record<
-                                                          string,
-                                                          unknown
-                                                      >
-                                                  )[column.key as string],
+                                                  item[column.key as keyof T],
                                                   item,
                                               )
-                                            : String(
-                                                  (
-                                                      item as unknown as Record<
-                                                          string,
-                                                          unknown
-                                                      >
-                                                  )[column.key as string],
-                                              )}
+                                            : `${item[column.key as keyof T]}`}
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -322,143 +339,5 @@ function DirectoryTable<T extends DirectoryItemType>({
                 </Table>
             </div>
         </section>
-    )
-}
-
-function DirectoryHeader() {
-    return (
-        <header className="flex items-start justify-between">
-            <hgroup className="mb-8">
-                <h1 className="mb-2 text-2xl font-semibold text-gray-900">
-                    Directory Management
-                </h1>
-                <p className="text-gray-600">
-                    Manage all people, equipment and locations in your
-                    directory.
-                </p>
-            </hgroup>
-            <SearchInput />
-        </header>
-    )
-}
-
-interface PeopleManagementProps {
-    activePeopleTab: string
-    setActivePeopleTab: (tab: string) => void
-    directoryTabsConfig: Array<{
-        value: string
-        data: Array<DirectoryItemType>
-        title: string
-        description: string
-    }>
-}
-
-function PeopleManagement({
-    activePeopleTab,
-    setActivePeopleTab,
-    directoryTabsConfig,
-}: PeopleManagementProps) {
-    const peopleTabStyle =
-        "data-[state=active]:bg-primary-light border-r border-gray-300 py-2.5 px-4 h-full text-sm font-semibold data-[state=active]:text-primary text-gray-700"
-
-    return (
-        <Tabs
-            value={activePeopleTab}
-            onValueChange={setActivePeopleTab}
-            className="w-full"
-        >
-            <TabsList className="flex h-fit w-full max-w-[780px] rounded-xl border border-gray-300 p-0">
-                {directoryTabsConfig.map((tab, index) => (
-                    <TabsTrigger
-                        key={tab.value}
-                        value={tab.value}
-                        className={cn(
-                            peopleTabStyle,
-                            index === 0 && "rounded-l-lg",
-                            index === directoryTabsConfig.length - 1 &&
-                                "rounded-r-lg",
-                        )}
-                    >
-                        {tab.value}
-                    </TabsTrigger>
-                ))}
-            </TabsList>
-            <Separator className="my-4" />
-            {directoryTabsConfig.map((tab) => (
-                <TabsContent
-                    key={tab.value}
-                    value={tab.value}
-                    className="space-y-6"
-                >
-                    <DirectoryTable
-                        data={tab.data}
-                        columns={createDirectoryColumns(tab.value)}
-                        onAdd={() => {}}
-                        addButtonText={`Add New ${tab.value.slice(0, -1)}`}
-                        title={tab.title}
-                        description={tab.description}
-                    />
-                </TabsContent>
-            ))}
-        </Tabs>
-    )
-}
-
-interface PlaceholderTabContentProps {
-    value: string
-    title: string
-    description: string
-}
-
-function PlaceholderTabContent({
-    value,
-    title,
-    description,
-}: PlaceholderTabContentProps) {
-    return (
-        <TabsContent value={value} className="space-y-6">
-            <div className="py-12 text-center">
-                <Users className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                <h3 className="mb-2 text-lg font-medium text-gray-900">
-                    {title}
-                </h3>
-                <p className="text-gray-600">{description}</p>
-            </div>
-        </TabsContent>
-    )
-}
-
-function DirectoryUserAvatar({ user }: { user: UserItemType }) {
-    const initials = user.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-
-    return (
-        <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium">
-                {initials}
-            </div>
-            <div>
-                <div className="font-medium text-gray-900">{user.name}</div>
-                <div className="text-sm text-gray-500">{user.email}</div>
-            </div>
-        </div>
-    )
-}
-
-function ActionButtons() {
-    const buttonClass = "p-1 text-gray-400 hover:text-gray-600"
-
-    return (
-        <div className="flex items-center gap-2">
-            <button className={buttonClass}>
-                <Copy className="h-4 w-4" />
-            </button>
-            <button className={buttonClass}>
-                <Edit className="h-4 w-4" />
-            </button>
-        </div>
     )
 }

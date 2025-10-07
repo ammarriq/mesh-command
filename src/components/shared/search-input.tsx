@@ -9,7 +9,7 @@ interface SearchInputProps {
 export function SearchInput({ isChatTab }: SearchInputProps) {
     return (
         <label
-            className={`bg-Bg-Dark w-full items-center gap-2 rounded-xs px-3 py-1 shadow-xs ${
+            className={`bg-Bg-Dark w-full items-center gap-2 rounded-xs px-2 py-0.5 shadow-xs ${
                 isChatTab
                     ? "flex flex-1"
                     : "hidden w-72 md:flex lg:w-80 2xl:w-[360px]"

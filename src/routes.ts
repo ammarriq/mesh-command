@@ -24,6 +24,12 @@ import { Route as AuthOtpVerificationRouteRouteImport } from './routes/_auth/otp
 import { Route as AuthNewPasswordRouteRouteImport } from './routes/_auth/new-password/route'
 import { Route as DashboardProjectsIdRouteRouteImport } from './routes/_dashboard/projects/$id/route'
 import { Route as DashboardDocketsIdRouteRouteImport } from './routes/_dashboard/dockets/$id/route'
+import { Route as DashboardDirectoryVendorsRouteRouteImport } from './routes/_dashboard/directory/vendors/route'
+import { Route as DashboardDirectoryTeamsRouteRouteImport } from './routes/_dashboard/directory/teams/route'
+import { Route as DashboardDirectoryLocationsRouteRouteImport } from './routes/_dashboard/directory/locations/route'
+import { Route as DashboardDirectoryEquipmentsRouteRouteImport } from './routes/_dashboard/directory/equipments/route'
+import { Route as DashboardDirectoryEmployeesRouteRouteImport } from './routes/_dashboard/directory/employees/route'
+import { Route as DashboardDirectoryContractorsRouteRouteImport } from './routes/_dashboard/directory/contractors/route'
 import { Route as DashboardChatIdRouteRouteImport } from './routes/_dashboard/chat/$id/route'
 
 const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
@@ -102,6 +108,42 @@ const DashboardDocketsIdRouteRoute = DashboardDocketsIdRouteRouteImport.update({
   path: '/$id/',
   getParentRoute: () => DashboardDocketsLayoutRoute,
 } as any)
+const DashboardDirectoryVendorsRouteRoute =
+  DashboardDirectoryVendorsRouteRouteImport.update({
+    id: '/directory/vendors/',
+    path: '/directory/vendors/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardDirectoryTeamsRouteRoute =
+  DashboardDirectoryTeamsRouteRouteImport.update({
+    id: '/directory/teams/',
+    path: '/directory/teams/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardDirectoryLocationsRouteRoute =
+  DashboardDirectoryLocationsRouteRouteImport.update({
+    id: '/directory/locations/',
+    path: '/directory/locations/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardDirectoryEquipmentsRouteRoute =
+  DashboardDirectoryEquipmentsRouteRouteImport.update({
+    id: '/directory/equipments/',
+    path: '/directory/equipments/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardDirectoryEmployeesRouteRoute =
+  DashboardDirectoryEmployeesRouteRouteImport.update({
+    id: '/directory/employees/',
+    path: '/directory/employees/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
+const DashboardDirectoryContractorsRouteRoute =
+  DashboardDirectoryContractorsRouteRouteImport.update({
+    id: '/directory/contractors/',
+    path: '/directory/contractors/',
+    getParentRoute: () => DashboardLayoutRoute,
+  } as any)
 const DashboardChatIdRouteRoute = DashboardChatIdRouteRouteImport.update({
   id: '/$id/',
   path: '/$id/',
@@ -122,6 +164,12 @@ export interface FileRoutesByFullPath {
   '/projects/': typeof DashboardProjectsRouteRoute
   '/reports': typeof DashboardReportsRouteRoute
   '/chat/$id': typeof DashboardChatIdRouteRoute
+  '/directory/contractors': typeof DashboardDirectoryContractorsRouteRoute
+  '/directory/employees': typeof DashboardDirectoryEmployeesRouteRoute
+  '/directory/equipments': typeof DashboardDirectoryEquipmentsRouteRoute
+  '/directory/locations': typeof DashboardDirectoryLocationsRouteRoute
+  '/directory/teams': typeof DashboardDirectoryTeamsRouteRoute
+  '/directory/vendors': typeof DashboardDirectoryVendorsRouteRoute
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
 }
@@ -136,6 +184,12 @@ export interface FileRoutesByTo {
   '/projects': typeof DashboardProjectsRouteRoute
   '/reports': typeof DashboardReportsRouteRoute
   '/chat/$id': typeof DashboardChatIdRouteRoute
+  '/directory/contractors': typeof DashboardDirectoryContractorsRouteRoute
+  '/directory/employees': typeof DashboardDirectoryEmployeesRouteRoute
+  '/directory/equipments': typeof DashboardDirectoryEquipmentsRouteRoute
+  '/directory/locations': typeof DashboardDirectoryLocationsRouteRoute
+  '/directory/teams': typeof DashboardDirectoryTeamsRouteRoute
+  '/directory/vendors': typeof DashboardDirectoryVendorsRouteRoute
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
 }
@@ -155,6 +209,12 @@ export interface FileRoutesById {
   '/_dashboard/projects/': typeof DashboardProjectsRouteRoute
   '/_dashboard/reports/': typeof DashboardReportsRouteRoute
   '/_dashboard/chat/$id/': typeof DashboardChatIdRouteRoute
+  '/_dashboard/directory/contractors/': typeof DashboardDirectoryContractorsRouteRoute
+  '/_dashboard/directory/employees/': typeof DashboardDirectoryEmployeesRouteRoute
+  '/_dashboard/directory/equipments/': typeof DashboardDirectoryEquipmentsRouteRoute
+  '/_dashboard/directory/locations/': typeof DashboardDirectoryLocationsRouteRoute
+  '/_dashboard/directory/teams/': typeof DashboardDirectoryTeamsRouteRoute
+  '/_dashboard/directory/vendors/': typeof DashboardDirectoryVendorsRouteRoute
   '/_dashboard/dockets/$id/': typeof DashboardDocketsIdRouteRoute
   '/_dashboard/projects/$id/': typeof DashboardProjectsIdRouteRoute
 }
@@ -174,6 +234,12 @@ export interface FileRouteTypes {
     | '/projects/'
     | '/reports'
     | '/chat/$id'
+    | '/directory/contractors'
+    | '/directory/employees'
+    | '/directory/equipments'
+    | '/directory/locations'
+    | '/directory/teams'
+    | '/directory/vendors'
     | '/dockets/$id'
     | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -188,6 +254,12 @@ export interface FileRouteTypes {
     | '/projects'
     | '/reports'
     | '/chat/$id'
+    | '/directory/contractors'
+    | '/directory/employees'
+    | '/directory/equipments'
+    | '/directory/locations'
+    | '/directory/teams'
+    | '/directory/vendors'
     | '/dockets/$id'
     | '/projects/$id'
   id:
@@ -206,6 +278,12 @@ export interface FileRouteTypes {
     | '/_dashboard/projects/'
     | '/_dashboard/reports/'
     | '/_dashboard/chat/$id/'
+    | '/_dashboard/directory/contractors/'
+    | '/_dashboard/directory/employees/'
+    | '/_dashboard/directory/equipments/'
+    | '/_dashboard/directory/locations/'
+    | '/_dashboard/directory/teams/'
+    | '/_dashboard/directory/vendors/'
     | '/_dashboard/dockets/$id/'
     | '/_dashboard/projects/$id/'
   fileRoutesById: FileRoutesById
@@ -324,6 +402,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardDocketsIdRouteRouteImport
       parentRoute: typeof DashboardDocketsLayoutRoute
     }
+    '/_dashboard/directory/vendors/': {
+      id: '/_dashboard/directory/vendors/'
+      path: '/directory/vendors'
+      fullPath: '/directory/vendors'
+      preLoaderRoute: typeof DashboardDirectoryVendorsRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/directory/teams/': {
+      id: '/_dashboard/directory/teams/'
+      path: '/directory/teams'
+      fullPath: '/directory/teams'
+      preLoaderRoute: typeof DashboardDirectoryTeamsRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/directory/locations/': {
+      id: '/_dashboard/directory/locations/'
+      path: '/directory/locations'
+      fullPath: '/directory/locations'
+      preLoaderRoute: typeof DashboardDirectoryLocationsRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/directory/equipments/': {
+      id: '/_dashboard/directory/equipments/'
+      path: '/directory/equipments'
+      fullPath: '/directory/equipments'
+      preLoaderRoute: typeof DashboardDirectoryEquipmentsRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/directory/employees/': {
+      id: '/_dashboard/directory/employees/'
+      path: '/directory/employees'
+      fullPath: '/directory/employees'
+      preLoaderRoute: typeof DashboardDirectoryEmployeesRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
+    '/_dashboard/directory/contractors/': {
+      id: '/_dashboard/directory/contractors/'
+      path: '/directory/contractors'
+      fullPath: '/directory/contractors'
+      preLoaderRoute: typeof DashboardDirectoryContractorsRouteRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboard/chat/$id/': {
       id: '/_dashboard/chat/$id/'
       path: '/$id'
@@ -386,6 +506,12 @@ interface DashboardLayoutRouteChildren {
   DashboardAdminRouteRoute: typeof DashboardAdminRouteRoute
   DashboardDirectoryRouteRoute: typeof DashboardDirectoryRouteRoute
   DashboardReportsRouteRoute: typeof DashboardReportsRouteRoute
+  DashboardDirectoryContractorsRouteRoute: typeof DashboardDirectoryContractorsRouteRoute
+  DashboardDirectoryEmployeesRouteRoute: typeof DashboardDirectoryEmployeesRouteRoute
+  DashboardDirectoryEquipmentsRouteRoute: typeof DashboardDirectoryEquipmentsRouteRoute
+  DashboardDirectoryLocationsRouteRoute: typeof DashboardDirectoryLocationsRouteRoute
+  DashboardDirectoryTeamsRouteRoute: typeof DashboardDirectoryTeamsRouteRoute
+  DashboardDirectoryVendorsRouteRoute: typeof DashboardDirectoryVendorsRouteRoute
 }
 
 const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
@@ -395,6 +521,14 @@ const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
   DashboardAdminRouteRoute: DashboardAdminRouteRoute,
   DashboardDirectoryRouteRoute: DashboardDirectoryRouteRoute,
   DashboardReportsRouteRoute: DashboardReportsRouteRoute,
+  DashboardDirectoryContractorsRouteRoute:
+    DashboardDirectoryContractorsRouteRoute,
+  DashboardDirectoryEmployeesRouteRoute: DashboardDirectoryEmployeesRouteRoute,
+  DashboardDirectoryEquipmentsRouteRoute:
+    DashboardDirectoryEquipmentsRouteRoute,
+  DashboardDirectoryLocationsRouteRoute: DashboardDirectoryLocationsRouteRoute,
+  DashboardDirectoryTeamsRouteRoute: DashboardDirectoryTeamsRouteRoute,
+  DashboardDirectoryVendorsRouteRoute: DashboardDirectoryVendorsRouteRoute,
 }
 
 const DashboardLayoutRouteWithChildren = DashboardLayoutRoute._addFileChildren(
