@@ -8,13 +8,7 @@ import DeepseekIcon from "@/icons/deep-seek"
 import LinkSquareIcon from "@/icons/link-square"
 import { OpenaiIcon } from "@/icons/open-ai"
 import Send2Icon from "@/icons/send-2"
-import TwoUsersIcon from "@/icons/two-users"
-import {
-    useChatStore,
-    useSelectedChat,
-    useSelectedProject,
-    useSplitScreen,
-} from "@/store"
+import { useChatStore, useSelectedChat, useSelectedProject } from "@/store"
 
 import { ChatHeader } from "./-chat-header"
 
@@ -22,13 +16,9 @@ export default function ChatView() {
     const [attachedFiles, setAttachedFiles] = useState<Array<File>>([])
     const [isRenamingChat, setIsRenamingChat] = useState(false)
     const [chatName, setChatName] = useState("")
-    const [pendingMessageIndex, setPendingMessageIndex] = useState<
-        number | null
-    >(null)
 
     const selectedChat = useSelectedChat()
     const updateChat = useChatStore((state) => state.updateChat)
-    const isSplitScreen = useSplitScreen()
     const selectedProject = useSelectedProject()
 
     if (!selectedChat) return null
@@ -52,7 +42,6 @@ export default function ChatView() {
 
         const userMessage = createUserMessage(userMsg)
         const currentMessages = selectedChat.messages
-        const newMessageIndex = currentMessages.length
 
         const tempMessagePair: MessagePair = [
             userMessage,
@@ -66,7 +55,6 @@ export default function ChatView() {
 
         updateChat(updatedChat)
         e.currentTarget.reset()
-        setPendingMessageIndex(newMessageIndex)
 
         setTimeout(() => {
             const robotResponse = createRobotResponse(userMsg)
@@ -81,7 +69,6 @@ export default function ChatView() {
             }
 
             updateChat(finalUpdatedChat)
-            setPendingMessageIndex(null)
         }, 2000)
     }
 
@@ -115,7 +102,6 @@ export default function ChatView() {
     return (
         <section className="flex w-full flex-col">
             <ChatHeader
-                isSplitScreen={isSplitScreen}
                 selectedProject={selectedProject}
                 isRenamingChat={isRenamingChat}
                 chatName={chatName}
@@ -246,21 +232,6 @@ function MessageInputForm({
                 </div>
             </div>
         </form>
-    )
-}
-
-function AddedNewUserMsg() {
-    return (
-        <div className="flex items-start gap-1">
-            <TwoUsersIcon fill="#5f0101" className="size-5" />
-            <p className="text-text-secondary text-sm">
-                John Smith Was added to the channel by{" "}
-                <span className="text-text-primary font-semibold">
-                    Deepseek
-                </span>{" "}
-                agent.
-            </p>
-        </div>
     )
 }
 

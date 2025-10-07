@@ -1,0 +1,122 @@
+import { useMemo } from "react"
+import { createFileRoute } from "@tanstack/react-router"
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DownloadCloudIcon } from "@/icons/download-cloud"
+
+import { categories } from "../../projects/-sample"
+import { ProjectHeader } from "../../projects/$id/-project-header"
+
+import { InvoiceTable } from "./-invoice-table"
+
+export const Route = createFileRoute("/_dashboard/dockets/$id/")({
+    component: RouteComponent,
+})
+
+function RouteComponent() {
+    const params = Route.useParams()
+
+    const selectedProject = useMemo(() => {
+        return categories
+            .flatMap((o) => o.projects)
+            .find((project) => project.id === +params.id)
+    }, [])
+
+    if (!selectedProject) return null
+    if (selectedProject.dockets?.length === 0) {
+        return (
+            <div className="flex h-screen items-center justify-center">
+                No dockets available for this project.
+            </div>
+        )
+    }
+
+    const tabsData = [
+        {
+            value: "invoices",
+            label: "Invoices",
+            content: (
+                <InvoiceTable
+                    invoices={
+                        selectedProject.dockets?.[0].projects[0]?.invoices || []
+                    }
+                />
+            ),
+        },
+        {
+            value: "property",
+            label: "Property",
+            content: <PlaceholderContent title="Property" />,
+        },
+        {
+            value: "capital-projects",
+            label: "Capital Projects",
+            content: <PlaceholderContent title="Capital Projects" />,
+        },
+        {
+            value: "legal-cases",
+            label: "Legal Cases",
+            content: <PlaceholderContent title="Legal Cases" />,
+        },
+        {
+            value: "plan",
+            label: "Plan",
+            content: <PlaceholderContent title="Plan" />,
+        },
+        {
+            value: "media",
+            label: "Media",
+            content: <PlaceholderContent title="Media" />,
+        },
+    ]
+
+    return (
+        <div className="flex flex-1 flex-col overflow-hidden p-2">
+            <ProjectHeader project={selectedProject} />
+            <div className="flex h-full flex-1 flex-col space-y-4 overflow-hidden bg-white">
+                <hgroup className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-gray-900">
+                        Billing and invoicing
+                    </h2>
+                    <button className="border-primary text-primary flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5">
+                        <DownloadCloudIcon /> Download All
+                    </button>
+                </hgroup>
+
+                <Tabs defaultValue="invoices" className="gap-4">
+                    <div className="w-full rounded-sm">
+                        <TabsList className="bg-Bg-Dark flex h-auto w-full justify-start gap-2 rounded-md border p-1">
+                            {tabsData.map((item) => (
+                                <TabsTrigger
+                                    key={item.value}
+                                    value={item.value}
+                                    className="block h-8 max-w-fit flex-0 rounded-sm border-none p-0 px-3 whitespace-nowrap data-[state=active]:bg-white data-[state=active]:shadow"
+                                >
+                                    {item.label}
+                                </TabsTrigger>
+                            ))}
+                        </TabsList>
+                    </div>
+
+                    {tabsData.map((item) => (
+                        <TabsContent
+                            key={item.value}
+                            value={item.value}
+                            className="p-0"
+                        >
+                            {item.content}
+                        </TabsContent>
+                    ))}
+                </Tabs>
+            </div>
+        </div>
+    )
+}
+
+function PlaceholderContent({ title }: { title: string }) {
+    return (
+        <div className="bg-Bg-Dark flex h-32 items-center justify-center rounded-lg">
+            <p className="text-gray-500">{title} content coming soon...</p>
+        </div>
+    )
+}

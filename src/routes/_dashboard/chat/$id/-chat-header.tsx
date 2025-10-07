@@ -4,7 +4,6 @@ import PeopleIcon from "@/icons/people"
 import { RobotIcon } from "@/icons/robot"
 
 interface ChatHeaderProps {
-    isSplitScreen: boolean
     selectedProject: {
         title: string
         users?: Array<{ name: string; image?: string }>
@@ -21,7 +20,6 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({
-    isSplitScreen,
     selectedProject,
     isRenamingChat,
     chatName,
@@ -34,7 +32,7 @@ export function ChatHeader({
     return (
         <header className="border-b-Bg-Dark flex h-14 items-center justify-between border-b p-4">
             <div className="text-text-primary flex flex-col items-center gap-2 gap-y-3 2xl:flex-row 2xl:items-start">
-                {isSplitScreen && selectedProject ? (
+                {selectedProject ? (
                     <div className="flex flex-col items-start justify-start gap-2 2xl:flex-row">
                         <div className="flex items-center justify-start gap-1 text-sm font-semibold 2xl:items-start">
                             <PeopleIcon />
@@ -76,7 +74,8 @@ export function ChatHeader({
                     </p>
                 )}
             </div>
-            {!isRenamingChat && (!isSplitScreen || !selectedProject) && (
+
+            {!isRenamingChat && !selectedProject && (
                 <button
                     onClick={onRenameChat}
                     className="text-primary hover:text-primary/90 text-xs font-semibold"
