@@ -34,7 +34,6 @@ export const Route = createFileRoute("/_dashboard/admin/")({
 })
 
 function RouteComponent() {
-    const [activeMainTab, setActiveMainTab] = useState("People Management")
     const [activePeopleTab, setActivePeopleTab] = useState("Managers")
 
     const { managers, subManagers, auditors } = useAdminStore()
@@ -76,40 +75,175 @@ function RouteComponent() {
     ]
 
     return (
-        <main className="min-h-screen flex-1 bg-white py-4">
-            <div className="p-8">
-                <AdminHeader />
+        <main className="col-span-2 min-h-screen bg-white p-6">
+            <header className="flex items-start justify-between">
+                <hgroup className="mb-8">
+                    <h1 className="mb-1 text-3xl font-semibold text-gray-900">
+                        Admin Management
+                    </h1>
+                    <p className="text-sm text-slate-400">
+                        Manage your team members and their account permissions
+                        here.
+                    </p>
+                </hgroup>
+                <SearchInput />
+            </header>
 
-                <Tabs
-                    value={activeMainTab}
-                    onValueChange={setActiveMainTab}
-                    className="w-full"
-                >
-                    <MainTabsList />
+            <Tabs defaultValue="people" className="w-full">
+                <TabsList className="w-full py-6 *:py-6">
+                    <TabsTrigger value="people">People Management</TabsTrigger>
+                    <TabsTrigger value="dockets" disabled>
+                        Dockets Management
+                    </TabsTrigger>
+                    <TabsTrigger value="integrations" disabled>
+                        Integrations
+                    </TabsTrigger>
+                </TabsList>
 
-                    <TabsContent
-                        value="People Management"
-                        className="space-y-6"
+                <TabsContent value="people" className="space-y-6">
+                    <Tabs
+                        defaultValue="manager"
+                        className="grid w-full grid-rows-[auto_auto_minmax(0,1fr)] px-6 pt-4 pb-6"
                     >
-                        <PeopleManagement
-                            activePeopleTab={activePeopleTab}
-                            setActivePeopleTab={setActivePeopleTab}
-                            peopleTabsConfig={peopleTabsConfig}
-                        />
-                    </TabsContent>
+                        <div className="border-y-Bg-Dark border-b pb-8">
+                            <TabsList className="border-Bg-Dark *:border-Bg-Dark *:text-foreground flex h-10 max-w-fit overflow-hidden rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:py-0 *:text-sm *:whitespace-nowrap *:not-last-of-type:border-r *:data-[status=active]:border-y-0 *:data-[status=active]:font-medium">
+                                <TabsTrigger
+                                    value="manager"
+                                    className="data-[status=active]:bg-primary-light data-[status=active]:text-primary"
+                                >
+                                    Manager
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="sub-manager"
+                                    className="data-[status=active]:bg-primary-light data-[status=active]:text-primary"
+                                    disabled
+                                >
+                                    Sub-Manager
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="employee"
+                                    className="data-[status=active]:bg-primary-light data-[status=active]:text-primary"
+                                    disabled
+                                >
+                                    Employee
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="contractor"
+                                    className="data-[status=active]:bg-primary-light data-[status=active]:text-primary"
+                                    disabled
+                                >
+                                    Contractor
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="auditor"
+                                    className="data-[status=active]:bg-primary-light data-[status=active]:text-primary"
+                                    disabled
+                                >
+                                    Auditor
+                                </TabsTrigger>
+                            </TabsList>
+                        </div>
 
-                    <PlaceholderTabContent
-                        value="Dockets Management"
-                        title="Dockets Management"
-                        description="Manage dockets and their permissions here."
-                    />
-                    <PlaceholderTabContent
-                        value="Integrations"
-                        title="Integrations"
-                        description="Manage system integrations and API connections here."
-                    />
-                </Tabs>
-            </div>
+                        <TabsContent
+                            value="manager"
+                            className="border-y-Bg-Dark mt-8 flex gap-8 border-y py-8"
+                        >
+                            <hgroup className="w-full max-w-60 flex-shrink-0">
+                                <h3 className="text-lg font-medium text-gray-900">
+                                    Employees
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                    Employees are the workers of teams.
+                                </p>
+
+                                <Button
+                                    className="bg-primary-light text-primary hover:bg-primary-light/80 mt-4 rounded-xs"
+                                    // onClick={() => setAddFormOpen(true)}
+                                >
+                                    Add New Employee
+                                </Button>
+                            </hgroup>
+
+                            <div className="border-Bg-Dark w-full overflow-hidden rounded-lg border bg-white">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow className="bg-Bg-Dark *:text-text-secondary *:font-medium *:last-of-type:w-24">
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Phone number</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead>Date added</TableHead>
+                                            <TableHead>Last active</TableHead>
+                                            <TableHead className="w-32"></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {employees.map((employee) => (
+                                            <TableRow key={employee.id}>
+                                                <TableCell className="text-foreground/50">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-300 text-xs font-medium">
+                                                            {employee.name
+                                                                .split(" ")
+                                                                .map(
+                                                                    (n) => n[0],
+                                                                )
+                                                                .join("")
+                                                                .toUpperCase()}
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-foreground font-medium">
+                                                                {employee.name}
+                                                            </div>
+                                                            <div className="text-sm">
+                                                                {employee.email}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="text-foreground/50">
+                                                    {employee.phone}
+                                                </TableCell>
+                                                <TableCell className="text-foreground/50">
+                                                    <StatusBadge
+                                                        status={employee.status}
+                                                    />
+                                                </TableCell>
+                                                <TableCell className="text-foreground/50">
+                                                    {employee.dateAdded}
+                                                </TableCell>
+                                                <TableCell className="text-foreground/50">
+                                                    {employee.lastActive}
+                                                </TableCell>
+                                                <TableCell className="text-foreground/50">
+                                                    <div className="flex items-center gap-2 *:p-1 *:text-gray-400 *:hover:text-gray-600">
+                                                        <button>
+                                                            <Copy className="size-4" />
+                                                        </button>
+                                                        <button>
+                                                            <Edit className="size-4" />
+                                                        </button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </TabsContent>
+
+                <PlaceholderTabContent
+                    value="Dockets Management"
+                    title="Dockets Management"
+                    description="Manage dockets and their permissions here."
+                />
+                <PlaceholderTabContent
+                    value="Integrations"
+                    title="Integrations"
+                    description="Manage system integrations and API connections here."
+                />
+            </Tabs>
         </main>
     )
 }
@@ -141,38 +275,6 @@ const createUserColumns = <T extends UserType>() => [
         render: () => <ActionButtons />,
     },
 ]
-
-function AdminHeader() {
-    return (
-        <header className="flex items-start justify-between">
-            <hgroup className="mb-8">
-                <h1 className="mb-2 text-2xl font-semibold text-gray-900">
-                    Admin Management
-                </h1>
-                <p className="text-gray-600">
-                    Manage your team members and their account permissions here.
-                </p>
-            </hgroup>
-            <SearchInput />
-        </header>
-    )
-}
-
-function MainTabsList() {
-    return (
-        <TabsList className="mb-8 grid w-full grid-cols-3">
-            <CustomTabTrigger
-                value="People Management"
-                title="People Management"
-            />
-            <CustomTabTrigger
-                title="Dockets Management"
-                value="Dockets Management"
-            />
-            <CustomTabTrigger value="Integrations" title="Integrations" />
-        </TabsList>
-    )
-}
 
 interface PeopleManagementProps {
     activePeopleTab: string
