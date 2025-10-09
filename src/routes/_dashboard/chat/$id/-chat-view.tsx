@@ -1,25 +1,20 @@
-import type { MessagePair, SelectedModel } from "@/types/chat"
+import type { MessagePair } from "@/types/chat"
 
 import React, { useState } from "react"
 
 import { RobotMsg } from "@/components/shared/robot-msg"
 import { UserMsg } from "@/components/shared/user-msg"
-import DeepseekIcon from "@/icons/deep-seek"
-import LinkSquareIcon from "@/icons/link-square"
-import { OpenaiIcon } from "@/icons/open-ai"
-import Send2Icon from "@/icons/send-2"
-import { useChatStore, useSelectedChat, useSelectedProject } from "@/store"
+import { RobotIcon } from "@/icons/robot"
+import { useChatStore, useSelectedChat } from "@/store"
 
-import { ChatHeader } from "./-chat-header"
+import MessageForm from "./-message-form"
 
-export default function ChatView() {
-    const [attachedFiles, setAttachedFiles] = useState<Array<File>>([])
+function ChatView() {
     const [isRenamingChat, setIsRenamingChat] = useState(false)
     const [chatName, setChatName] = useState("")
 
     const selectedChat = useSelectedChat()
     const updateChat = useChatStore((state) => state.updateChat)
-    const selectedProject = useSelectedProject()
 
     if (!selectedChat) return null
 
@@ -88,32 +83,54 @@ export default function ChatView() {
         setChatName("")
     }
 
-    const handleFileAttach = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files
-        if (files) {
-            setAttachedFiles((prev) => [...prev, ...Array.from(files)])
-        }
-    }
-
-    const removeAttachedFile = (index: number) => {
-        setAttachedFiles((prev) => prev.filter((_, i) => i !== index))
-    }
-
     return (
         <section className="flex w-full flex-col">
-            <ChatHeader
-                selectedProject={selectedProject}
-                isRenamingChat={isRenamingChat}
-                chatName={chatName}
-                selectedChat={selectedChat}
-                onChatNameChange={setChatName}
-                onSaveRename={handleSaveRename}
-                onCancelRename={handleCancelRename}
-                onRenameChat={handleRenameChat}
-            />
+            <header className="border-b-Bg-Dark flex h-14 items-center justify-between border-b p-4">
+                <div className="text-text-primary flex flex-col items-center gap-2 gap-y-3 2xl:flex-row 2xl:items-start">
+                    {isRenamingChat ? (
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={chatName}
+                                onChange={(e) => setChatName(e.target.value)}
+                                className="border-primary rounded border bg-transparent px-2 py-1 text-sm outline-none"
+                                autoFocus
+                            />
+                            <button
+                                onClick={handleSaveRename}
+                                className="text-xs font-semibold text-green-600 hover:text-green-700"
+                            >
+                                Save
+                            </button>
+                            <button
+                                onClick={handleCancelRename}
+                                className="text-xs font-semibold text-red-600 hover:text-red-700"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <p className="inline-flex items-center gap-2">
+                            <RobotIcon className="size-6" />
+                            <span className="text-text-primary text-sm">
+                                {selectedChat.name}
+                            </span>
+                        </p>
+                    )}
+                </div>
+
+                {!isRenamingChat && (
+                    <button
+                        onClick={handleRenameChat}
+                        className="text-primary hover:text-primary/90 text-xs font-semibold"
+                    >
+                        Rename Chat
+                    </button>
+                )}
+            </header>
 
             <section className="flex h-full max-h-[calc(100vh-13.5rem)] flex-col overflow-y-auto">
-                <MessagesContainer>
+                <div className="flex-1 space-y-1 py-4 pl-4">
                     {selectedChat.messages.map((messagePair, index) => (
                         <React.Fragment key={index}>
                             <UserMsg
@@ -130,16 +147,10 @@ export default function ChatView() {
                             />
                         </React.Fragment>
                     ))}
-                </MessagesContainer>
+                </div>
 
-                <FileAttachment
-                    files={attachedFiles}
-                    onRemove={removeAttachedFile}
-                />
-
-                <MessageInputForm
+                <MessageForm
                     onSubmit={handleSendMessage}
-                    onFileAttach={handleFileAttach}
                     selectedModel={selectedChat.selectedModel || "Deepseek-R1"}
                 />
             </section>
@@ -147,134 +158,4 @@ export default function ChatView() {
     )
 }
 
-interface MessagesContainerProps {
-    children: React.ReactNode
-}
-
-function MessagesContainer({ children }: MessagesContainerProps) {
-    return <div className="flex-1 space-y-1 py-4 pl-4">{children}</div>
-}
-
-const getModelDisplay = (
-    model: SelectedModel,
-): {
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
-    color: string
-    strokeColor: string
-} => {
-    if (model === "OpenAI 04") {
-        return {
-            icon: OpenaiIcon,
-            color: "text-text-primary",
-            strokeColor: "fill-text-primary",
-        }
-    }
-    return {
-        icon: DeepseekIcon,
-        color: "text-[#4D6BFE]",
-        strokeColor: "stroke-[#4D6BFE]",
-    }
-}
-
-interface MessageInputFormProps {
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-    onFileAttach: (event: React.ChangeEvent<HTMLInputElement>) => void
-    selectedModel: SelectedModel
-}
-
-function MessageInputForm({
-    onSubmit,
-    onFileAttach,
-    selectedModel,
-}: MessageInputFormProps) {
-    const modelInfo = getModelDisplay(selectedModel)
-    const IconComponent = modelInfo.icon
-
-    return (
-        <form
-            onSubmit={onSubmit}
-            className="sticky bottom-0 bg-white pt-4 pl-4"
-        >
-            <textarea
-                className="border-Bg-Dark bg-light-bg placeholder:text-text-secondary max-h-24 w-full resize-none rounded-xs border px-[11px] py-3 shadow-[0_0_0_1px_rgba(29,201,160,0.05)] outline-none"
-                rows={4}
-                placeholder="Write message here....."
-                name="userMessage"
-            />
-            <div className="flex items-center justify-between bg-white">
-                <label className="text-primary hover:text-primary/90 inline-flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-medium">
-                    <LinkSquareIcon className="text-primary size-6" /> Attach
-                    files
-                    <input
-                        type="file"
-                        multiple
-                        onChange={onFileAttach}
-                        className="hidden"
-                        accept="*/*"
-                    />
-                </label>
-                <div className="flex items-center justify-end gap-4">
-                    <div
-                        className={`flex h-12 items-center justify-center gap-2 ${modelInfo.color}`}
-                    >
-                        <IconComponent
-                            className={`${modelInfo.strokeColor} h-auto w-6`}
-                        />
-                        <span className="font-medium">{selectedModel}</span>
-                    </div>
-                    <button
-                        className="bg-primary inline-flex items-center gap-2 rounded-xs px-3 py-[11px] text-sm font-medium text-white disabled:opacity-50"
-                        type="submit"
-                    >
-                        <Send2Icon className="size-6" />
-                        Send
-                    </button>
-                </div>
-            </div>
-        </form>
-    )
-}
-
-interface AttachedFileProps {
-    file: File
-    onRemove: () => void
-}
-
-interface FileAttachmentProps {
-    files: Array<File>
-    onRemove: (index: number) => void
-}
-
-function AttachedFile({ file, onRemove }: AttachedFileProps) {
-    return (
-        <div className="flex items-center gap-2 rounded bg-white px-2 py-1 text-xs">
-            <span className="text-text-primary">{file.name}</span>
-            <button
-                onClick={onRemove}
-                className="text-red-500 hover:text-red-700"
-                aria-label={`Remove ${file.name}`}
-            >
-                ×
-            </button>
-        </div>
-    )
-}
-
-function FileAttachment({ files, onRemove }: FileAttachmentProps) {
-    if (files.length === 0) return null
-
-    return (
-        <div className="bg-light-bg border-b border-gray-200 p-3">
-            <p className="text-text-secondary mb-2 text-xs">Attached Files:</p>
-            <div className="flex flex-wrap gap-2">
-                {files.map((file, index) => (
-                    <AttachedFile
-                        key={index}
-                        file={file}
-                        onRemove={() => onRemove(index)}
-                    />
-                ))}
-            </div>
-        </div>
-    )
-}
+export default ChatView

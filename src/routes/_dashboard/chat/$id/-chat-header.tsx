@@ -1,13 +1,6 @@
-import { ActionButton } from "@/components/shared/action-button"
-import { AvatarGroup } from "@/components/shared/avatar-group"
-import PeopleIcon from "@/icons/people"
 import { RobotIcon } from "@/icons/robot"
 
 interface ChatHeaderProps {
-    selectedProject: {
-        title: string
-        users?: Array<{ name: string; image?: string }>
-    } | null
     isRenamingChat: boolean
     chatName: string
     selectedChat: {
@@ -20,7 +13,6 @@ interface ChatHeaderProps {
 }
 
 export function ChatHeader({
-    selectedProject,
     isRenamingChat,
     chatName,
     selectedChat,
@@ -32,18 +24,7 @@ export function ChatHeader({
     return (
         <header className="border-b-Bg-Dark flex h-14 items-center justify-between border-b p-4">
             <div className="text-text-primary flex flex-col items-center gap-2 gap-y-3 2xl:flex-row 2xl:items-start">
-                {selectedProject ? (
-                    <div className="flex flex-col items-start justify-start gap-2 2xl:flex-row">
-                        <div className="flex items-center justify-start gap-1 text-sm font-semibold 2xl:items-start">
-                            <PeopleIcon />
-                            {selectedProject.title}
-                        </div>
-                        <div className="flex items-center gap-2 2xl:self-end">
-                            <AvatarGroup users={selectedProject.users} />
-                            <ActionButton type="3-dots" size={8} />
-                        </div>
-                    </div>
-                ) : isRenamingChat ? (
+                {isRenamingChat ? (
                     <div className="flex items-center gap-2">
                         <input
                             type="text"
@@ -75,7 +56,7 @@ export function ChatHeader({
                 )}
             </div>
 
-            {!isRenamingChat && !selectedProject && (
+            {!isRenamingChat && (
                 <button
                     onClick={onRenameChat}
                     className="text-primary hover:text-primary/90 text-xs font-semibold"
