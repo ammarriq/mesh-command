@@ -59,7 +59,7 @@ export default function ProjectSelectorTab({
                 <TabsContent
                     key={tab.value}
                     value={tab.value}
-                    className="border-r-Bg-Dark flex flex-col gap-3 border-r p-2"
+                    className="border-r-Bg-Dark flex flex-col gap-3 p-2"
                 >
                     {getCategories(tab.status).map((category) => (
                         <ProjectContentItem

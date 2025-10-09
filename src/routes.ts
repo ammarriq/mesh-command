@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardLayoutRouteImport } from './routes/_dashboard/layout'
 import { Route as RouteRouteImport } from './routes/route'
+import { Route as DashboardReportsLayoutRouteImport } from './routes/_dashboard/reports/layout'
 import { Route as DashboardProjectsLayoutRouteImport } from './routes/_dashboard/projects/layout'
 import { Route as DashboardDocketsLayoutRouteImport } from './routes/_dashboard/dockets/layout'
 import { Route as DashboardChatLayoutRouteImport } from './routes/_dashboard/chat/layout'
@@ -22,6 +23,7 @@ import { Route as DashboardChatRouteRouteImport } from './routes/_dashboard/chat
 import { Route as DashboardAdminRouteRouteImport } from './routes/_dashboard/admin/route'
 import { Route as AuthOtpVerificationRouteRouteImport } from './routes/_auth/otp-verification/route'
 import { Route as AuthNewPasswordRouteRouteImport } from './routes/_auth/new-password/route'
+import { Route as DashboardReportsIdRouteRouteImport } from './routes/_dashboard/reports/$id/route'
 import { Route as DashboardProjectsIdRouteRouteImport } from './routes/_dashboard/projects/$id/route'
 import { Route as DashboardDocketsIdRouteRouteImport } from './routes/_dashboard/dockets/$id/route'
 import { Route as DashboardDirectoryVendorsRouteRouteImport } from './routes/_dashboard/directory/vendors/route'
@@ -41,6 +43,11 @@ const RouteRoute = RouteRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardReportsLayoutRoute = DashboardReportsLayoutRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DashboardLayoutRoute,
+} as any)
 const DashboardProjectsLayoutRoute = DashboardProjectsLayoutRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -57,9 +64,9 @@ const DashboardChatLayoutRoute = DashboardChatLayoutRouteImport.update({
   getParentRoute: () => DashboardLayoutRoute,
 } as any)
 const DashboardReportsRouteRoute = DashboardReportsRouteRouteImport.update({
-  id: '/reports/',
-  path: '/reports/',
-  getParentRoute: () => DashboardLayoutRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardReportsLayoutRoute,
 } as any)
 const DashboardProjectsRouteRoute = DashboardProjectsRouteRouteImport.update({
   id: '/',
@@ -96,6 +103,11 @@ const AuthNewPasswordRouteRoute = AuthNewPasswordRouteRouteImport.update({
   id: '/_auth/new-password/',
   path: '/new-password/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardReportsIdRouteRoute = DashboardReportsIdRouteRouteImport.update({
+  id: '/$id/',
+  path: '/$id/',
+  getParentRoute: () => DashboardReportsLayoutRoute,
 } as any)
 const DashboardProjectsIdRouteRoute =
   DashboardProjectsIdRouteRouteImport.update({
@@ -155,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof DashboardChatLayoutRouteWithChildren
   '/dockets': typeof DashboardDocketsLayoutRouteWithChildren
   '/projects': typeof DashboardProjectsLayoutRouteWithChildren
+  '/reports': typeof DashboardReportsLayoutRouteWithChildren
   '/new-password': typeof AuthNewPasswordRouteRoute
   '/otp-verification': typeof AuthOtpVerificationRouteRoute
   '/admin': typeof DashboardAdminRouteRoute
@@ -162,7 +175,7 @@ export interface FileRoutesByFullPath {
   '/directory': typeof DashboardDirectoryRouteRoute
   '/dockets/': typeof DashboardDocketsRouteRoute
   '/projects/': typeof DashboardProjectsRouteRoute
-  '/reports': typeof DashboardReportsRouteRoute
+  '/reports/': typeof DashboardReportsRouteRoute
   '/chat/$id': typeof DashboardChatIdRouteRoute
   '/directory/contractors': typeof DashboardDirectoryContractorsRouteRoute
   '/directory/employees': typeof DashboardDirectoryEmployeesRouteRoute
@@ -172,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/directory/vendors': typeof DashboardDirectoryVendorsRouteRoute
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
+  '/reports/$id': typeof DashboardReportsIdRouteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof RouteRoute
@@ -192,6 +206,7 @@ export interface FileRoutesByTo {
   '/directory/vendors': typeof DashboardDirectoryVendorsRouteRoute
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
+  '/reports/$id': typeof DashboardReportsIdRouteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -200,6 +215,7 @@ export interface FileRoutesById {
   '/_dashboard/chat': typeof DashboardChatLayoutRouteWithChildren
   '/_dashboard/dockets': typeof DashboardDocketsLayoutRouteWithChildren
   '/_dashboard/projects': typeof DashboardProjectsLayoutRouteWithChildren
+  '/_dashboard/reports': typeof DashboardReportsLayoutRouteWithChildren
   '/_auth/new-password/': typeof AuthNewPasswordRouteRoute
   '/_auth/otp-verification/': typeof AuthOtpVerificationRouteRoute
   '/_dashboard/admin/': typeof DashboardAdminRouteRoute
@@ -217,6 +233,7 @@ export interface FileRoutesById {
   '/_dashboard/directory/vendors/': typeof DashboardDirectoryVendorsRouteRoute
   '/_dashboard/dockets/$id/': typeof DashboardDocketsIdRouteRoute
   '/_dashboard/projects/$id/': typeof DashboardProjectsIdRouteRoute
+  '/_dashboard/reports/$id/': typeof DashboardReportsIdRouteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -225,6 +242,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/dockets'
     | '/projects'
+    | '/reports'
     | '/new-password'
     | '/otp-verification'
     | '/admin'
@@ -232,7 +250,7 @@ export interface FileRouteTypes {
     | '/directory'
     | '/dockets/'
     | '/projects/'
-    | '/reports'
+    | '/reports/'
     | '/chat/$id'
     | '/directory/contractors'
     | '/directory/employees'
@@ -242,6 +260,7 @@ export interface FileRouteTypes {
     | '/directory/vendors'
     | '/dockets/$id'
     | '/projects/$id'
+    | '/reports/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -262,6 +281,7 @@ export interface FileRouteTypes {
     | '/directory/vendors'
     | '/dockets/$id'
     | '/projects/$id'
+    | '/reports/$id'
   id:
     | '__root__'
     | '/'
@@ -269,6 +289,7 @@ export interface FileRouteTypes {
     | '/_dashboard/chat'
     | '/_dashboard/dockets'
     | '/_dashboard/projects'
+    | '/_dashboard/reports'
     | '/_auth/new-password/'
     | '/_auth/otp-verification/'
     | '/_dashboard/admin/'
@@ -286,6 +307,7 @@ export interface FileRouteTypes {
     | '/_dashboard/directory/vendors/'
     | '/_dashboard/dockets/$id/'
     | '/_dashboard/projects/$id/'
+    | '/_dashboard/reports/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -311,6 +333,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_dashboard/reports': {
+      id: '/_dashboard/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof DashboardReportsLayoutRouteImport
+      parentRoute: typeof DashboardLayoutRoute
+    }
     '/_dashboard/projects': {
       id: '/_dashboard/projects'
       path: '/projects'
@@ -334,10 +363,10 @@ declare module '@tanstack/react-router' {
     }
     '/_dashboard/reports/': {
       id: '/_dashboard/reports/'
-      path: '/reports'
-      fullPath: '/reports'
+      path: '/'
+      fullPath: '/reports/'
       preLoaderRoute: typeof DashboardReportsRouteRouteImport
-      parentRoute: typeof DashboardLayoutRoute
+      parentRoute: typeof DashboardReportsLayoutRoute
     }
     '/_dashboard/projects/': {
       id: '/_dashboard/projects/'
@@ -387,6 +416,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/new-password'
       preLoaderRoute: typeof AuthNewPasswordRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_dashboard/reports/$id/': {
+      id: '/_dashboard/reports/$id/'
+      path: '/$id'
+      fullPath: '/reports/$id'
+      preLoaderRoute: typeof DashboardReportsIdRouteRouteImport
+      parentRoute: typeof DashboardReportsLayoutRoute
     }
     '/_dashboard/projects/$id/': {
       id: '/_dashboard/projects/$id/'
@@ -499,13 +535,29 @@ const DashboardProjectsLayoutRouteWithChildren =
     DashboardProjectsLayoutRouteChildren,
   )
 
+interface DashboardReportsLayoutRouteChildren {
+  DashboardReportsRouteRoute: typeof DashboardReportsRouteRoute
+  DashboardReportsIdRouteRoute: typeof DashboardReportsIdRouteRoute
+}
+
+const DashboardReportsLayoutRouteChildren: DashboardReportsLayoutRouteChildren =
+  {
+    DashboardReportsRouteRoute: DashboardReportsRouteRoute,
+    DashboardReportsIdRouteRoute: DashboardReportsIdRouteRoute,
+  }
+
+const DashboardReportsLayoutRouteWithChildren =
+  DashboardReportsLayoutRoute._addFileChildren(
+    DashboardReportsLayoutRouteChildren,
+  )
+
 interface DashboardLayoutRouteChildren {
   DashboardChatLayoutRoute: typeof DashboardChatLayoutRouteWithChildren
   DashboardDocketsLayoutRoute: typeof DashboardDocketsLayoutRouteWithChildren
   DashboardProjectsLayoutRoute: typeof DashboardProjectsLayoutRouteWithChildren
+  DashboardReportsLayoutRoute: typeof DashboardReportsLayoutRouteWithChildren
   DashboardAdminRouteRoute: typeof DashboardAdminRouteRoute
   DashboardDirectoryRouteRoute: typeof DashboardDirectoryRouteRoute
-  DashboardReportsRouteRoute: typeof DashboardReportsRouteRoute
   DashboardDirectoryContractorsRouteRoute: typeof DashboardDirectoryContractorsRouteRoute
   DashboardDirectoryEmployeesRouteRoute: typeof DashboardDirectoryEmployeesRouteRoute
   DashboardDirectoryEquipmentsRouteRoute: typeof DashboardDirectoryEquipmentsRouteRoute
@@ -518,9 +570,9 @@ const DashboardLayoutRouteChildren: DashboardLayoutRouteChildren = {
   DashboardChatLayoutRoute: DashboardChatLayoutRouteWithChildren,
   DashboardDocketsLayoutRoute: DashboardDocketsLayoutRouteWithChildren,
   DashboardProjectsLayoutRoute: DashboardProjectsLayoutRouteWithChildren,
+  DashboardReportsLayoutRoute: DashboardReportsLayoutRouteWithChildren,
   DashboardAdminRouteRoute: DashboardAdminRouteRoute,
   DashboardDirectoryRouteRoute: DashboardDirectoryRouteRoute,
-  DashboardReportsRouteRoute: DashboardReportsRouteRoute,
   DashboardDirectoryContractorsRouteRoute:
     DashboardDirectoryContractorsRouteRoute,
   DashboardDirectoryEmployeesRouteRoute: DashboardDirectoryEmployeesRouteRoute,

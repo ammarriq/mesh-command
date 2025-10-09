@@ -91,7 +91,8 @@ export function ProjectHeader({ project }: Props) {
                                 className="object-cover object-top"
                                 src={user.image}
                             />
-                            <AvatarFallback className="rounded-none border-2 border-white text-sm">
+
+                            <AvatarFallback className="size-10 rounded-none border-2 border-white text-sm">
                                 {user.name
                                     .split(" ")
                                     .map((o) => o[0])
