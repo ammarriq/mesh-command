@@ -16,7 +16,7 @@ interface Props {
     project: Project
 }
 
-export function ProjectHeader({ project }: Props) {
+function ProjectHeader({ project }: Props) {
     const budgetConsumed = 40
     const progress = 59
 
@@ -82,6 +82,7 @@ export function ProjectHeader({ project }: Props) {
                 <div className="flex items-center gap-1">
                     {project.users?.map((user, index) => (
                         <Avatar
+                            key={user.id}
                             className={cn(
                                 "size-10 rounded-none border-2 border-white",
                                 index !== 0 ? "-ml-4" : "",
@@ -204,3 +205,5 @@ function HalfCircularProgressBar({
         </div>
     )
 }
+
+export default ProjectHeader

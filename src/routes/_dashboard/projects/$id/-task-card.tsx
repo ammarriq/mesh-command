@@ -1,5 +1,6 @@
 import type { Task } from "@/types/task"
 
+import { useSortable } from "@dnd-kit/react/sortable"
 import { CheckCircle2, MoreHorizontal, Plus } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -15,15 +16,34 @@ import TimerIcon from "@/icons/timer"
 import TwoUsersIcon from "@/icons/two-users"
 import { cn } from "@/lib/utils"
 
+interface Props {
+    task: Task
+    index: number
+    column: string
+}
+
 const PRIORITY_COLORS = {
     High: "bg-red-100 text-red-600",
     Medium: "bg-gray-100 text-gray-600",
     Low: "bg-green-100 text-green-600",
 }
 
-function TaskCard({ task }: { task: Task }) {
+function TaskCard({ task, index, column }: Props) {
+    const { ref, isDragging } = useSortable({
+        id: task.id,
+        index: index,
+        group: column,
+        type: "task",
+    })
+
     return (
-        <aside className="flex flex-col items-stretch rounded-2xl bg-white p-4">
+        <aside
+            className={cn(
+                "flex flex-col items-stretch rounded-2xl bg-white p-4",
+                isDragging ? "shadow-lg" : "",
+            )}
+            ref={ref}
+        >
             <header className="flex items-center justify-between">
                 <span
                     className={cn(
@@ -93,13 +113,10 @@ function TaskCard({ task }: { task: Task }) {
             </div>
 
             <footer className="mt-3 flex items-center">
-                {task.users.map((user, index) => (
+                {task.users.map((user) => (
                     <Avatar
                         key={user.id}
-                        className={cn(
-                            "size-9 rounded-sm border-2 border-white",
-                            index !== 0 ? "-ml-4" : "",
-                        )}
+                        className="size-9 rounded-sm border-2 border-white not-first:-ml-4"
                     >
                         <AvatarImage
                             className="object-cover object-top"

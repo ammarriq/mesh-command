@@ -1,3 +1,7 @@
+import React from "react"
+
+import { CollisionPriority } from "@dnd-kit/abstract"
+import { useDroppable } from "@dnd-kit/react"
 import { Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -9,8 +13,15 @@ interface Props {
 }
 
 function Column({ title, taskCount, children }: Props) {
+    const { ref } = useDroppable({
+        id: title,
+        type: "column",
+        accept: ["task"],
+        collisionPriority: CollisionPriority.Low,
+    })
+
     return (
-        <section className="bg-light-bg flex w-full max-w-105 shrink-0 flex-col rounded-sm">
+        <section className="bg-light-bg flex size-full min-h-0 max-w-105 min-w-92 shrink-0 grow flex-col overflow-hidden rounded-sm">
             <header className={cn("flex items-center justify-between px-3")}>
                 <div
                     className={cn(
@@ -47,7 +58,10 @@ function Column({ title, taskCount, children }: Props) {
                 </div>
             </header>
 
-            <div className="flex-1 space-y-3 overflow-y-auto px-2 py-4">
+            <div
+                className="min-h-0 flex-1 space-y-3 overflow-y-auto px-2 py-4"
+                ref={ref}
+            >
                 {children}
             </div>
         </section>

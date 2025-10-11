@@ -1,9 +1,14 @@
 import type { Project as IProject } from "@/types/project"
 
+import { useState } from "react"
+
+import { move } from "@dnd-kit/helpers"
+import { DragDropProvider } from "@dnd-kit/react"
+
 import { categories } from "../-sample"
 
 import Column from "./-column"
-import { ProjectHeader } from "./-project-header"
+import ProjectHeader from "./-project-header"
 import TaskCard from "./-task-card"
 
 interface Props {
@@ -15,29 +20,44 @@ function Project({ projectId }: Props) {
         .flatMap((o) => o.projects)
         .find((project) => project.id === projectId)
 
+    const [groupedTasks, setGroupedTasks] = useState(() => {
+        const o = selectedProject?.tasks || []
+        return {
+            backlog: o.filter((task) => task.status === "backlog"),
+            "in-progress": o.filter((task) => task.status === "in-progress"),
+            completed: o.filter((task) => task.status === "completed"),
+        }
+    })
+
     if (!selectedProject) return null
 
-    const tasksByStatus = Object.groupBy(
-        selectedProject.tasks,
-        (task) => task.status,
-    )
-
     return (
-        <div className="@container flex flex-1 flex-col overflow-hidden bg-white p-2">
+        <div className="@container flex grow flex-col overflow-hidden bg-white p-2">
             <ProjectHeader project={selectedProject} />
 
-            <section className="flex size-full gap-2 overflow-x-auto">
-                {Object.entries(tasksByStatus).map(([status, tasks]) => (
-                    <Column
-                        key={status}
-                        title={status}
-                        taskCount={tasks.length}
-                    >
-                        {tasks.map((task) => (
-                            <TaskCard key={task.id} task={task} />
-                        ))}
-                    </Column>
-                ))}
+            <section className="flex size-full grow gap-2 overflow-x-auto overflow-y-hidden">
+                <DragDropProvider
+                    onDragOver={(event) => {
+                        setGroupedTasks((prevItems) => move(prevItems, event))
+                    }}
+                >
+                    {Object.entries(groupedTasks).map(([columnName, tasks]) => (
+                        <Column
+                            key={columnName}
+                            title={columnName}
+                            taskCount={tasks.length}
+                        >
+                            {tasks.map((task, index) => (
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    index={index}
+                                    column={columnName}
+                                />
+                            ))}
+                        </Column>
+                    ))}
+                </DragDropProvider>
             </section>
         </div>
     )
