@@ -32,10 +32,10 @@ function Project({ projectId }: Props) {
     if (!selectedProject) return null
 
     return (
-        <div className="@container flex grow flex-col overflow-hidden bg-white p-2">
+        <div className="flex h-full min-h-0 flex-col overflow-hidden bg-white p-2">
             <ProjectHeader project={selectedProject} />
 
-            <section className="flex size-full grow gap-2 overflow-x-auto overflow-y-hidden">
+            <section className="flex h-full gap-2 overflow-x-auto overflow-y-hidden pb-2">
                 <DragDropProvider
                     onDragOver={(event) => {
                         setGroupedTasks((prevItems) => move(prevItems, event))

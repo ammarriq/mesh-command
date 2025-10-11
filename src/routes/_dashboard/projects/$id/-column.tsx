@@ -21,7 +21,7 @@ function Column({ title, taskCount, children }: Props) {
     })
 
     return (
-        <section className="bg-light-bg flex size-full min-h-0 max-w-105 min-w-92 shrink-0 grow flex-col overflow-hidden rounded-sm">
+        <section className="bg-light-bg flex size-full max-w-105 min-w-92 shrink-0 flex-col overflow-hidden rounded-sm">
             <header className={cn("flex items-center justify-between px-3")}>
                 <div
                     className={cn(
