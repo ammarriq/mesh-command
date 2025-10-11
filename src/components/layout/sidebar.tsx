@@ -19,7 +19,7 @@ interface NavItem {
 
 interface SideBarItemProps {
     item: NavItem
-    isActive: boolean
+    isActive?: boolean
 }
 
 const NAV_ITEMS: Array<NavItem> = [
@@ -60,6 +60,8 @@ function SideBarItem({ isActive, item }: SideBarItemProps) {
 function Sidebar() {
     const { pathname } = useLocation()
 
+    const urlPrefix = "/" + pathname.split("/").filter(Boolean)[0]
+
     return (
         <section className="flex flex-col justify-between p-4">
             <nav className="flex flex-col gap-2">
@@ -67,7 +69,7 @@ function Sidebar() {
                     <SideBarItem
                         key={item.href}
                         item={item}
-                        isActive={pathname === item.href}
+                        isActive={item.href.startsWith(urlPrefix)}
                     />
                 ))}
             </nav>
@@ -79,7 +81,6 @@ function Sidebar() {
                         icon: LogoutIcon,
                         title: "Logout",
                     }}
-                    isActive={pathname === "/logout"}
                 />
             </nav>
         </section>

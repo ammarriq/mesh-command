@@ -132,14 +132,17 @@ export function ProjectHeader({ project }: Props) {
             <section className="mt-4 flex w-full flex-col gap-3 2xl:hidden">
                 <div>
                     <div className="text-text-secondary mb-1 flex items-center gap-2 text-xs">
-                        <Progress value={budgetConsumed} className="max-w-80" />
+                        <Progress
+                            value={budgetConsumed}
+                            className="h-3 max-w-80"
+                        />
                         <span>{budgetConsumed}% Budget Consumed</span>
                     </div>
                 </div>
 
                 <div>
                     <div className="text-text-secondary mb-1 flex items-center gap-2 text-xs">
-                        <Progress value={progress} className="max-w-80" />
+                        <Progress value={progress} className="h-3 max-w-80" />
                         <span>{progress}% Progress</span>
                     </div>
                 </div>
@@ -166,7 +169,7 @@ function HalfCircularProgressBar({
         <div className="flex flex-col items-center">
             <div className="relative h-12 w-16">
                 <svg
-                    className="h-full w-full"
+                    className="size-full"
                     viewBox="0 0 100 50"
                     xmlns="http://www.w3.org/2000/svg"
                 >

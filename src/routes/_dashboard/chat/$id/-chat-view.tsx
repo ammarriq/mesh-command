@@ -1,32 +1,26 @@
-import type { MessagePair } from "@/types/chat"
-
 import React, { useState } from "react"
 
 import { RobotMsg } from "@/components/shared/robot-msg"
 import { UserMsg } from "@/components/shared/user-msg"
 import { RobotIcon } from "@/icons/robot"
-import { useChatStore, useSelectedChat } from "@/store"
+
+import { chats } from "../-sample"
 
 import MessageForm from "./-message-form"
 
-function ChatView() {
+interface Props {
+    chatId: string
+}
+
+function ChatView({ chatId }: Props) {
     const [isRenamingChat, setIsRenamingChat] = useState(false)
     const [chatName, setChatName] = useState("")
 
-    const selectedChat = useSelectedChat()
-    const updateChat = useChatStore((state) => state.updateChat)
+    const [selectedChat, setSelectedChat] = useState(() => {
+        return chats.find((chat) => chat.id === chatId)
+    })
 
     if (!selectedChat) return null
-
-    const createUserMessage = (userMsg: string) => ({
-        message: userMsg,
-        createdAt: new Date().toISOString(),
-    })
-
-    const createRobotResponse = (userMsg: string) => ({
-        response: `I understand your message: "${userMsg}". This is a generic robot response for now.`,
-        createdAt: new Date().toISOString(),
-    })
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -35,36 +29,37 @@ function ChatView() {
 
         if (!userMsg) return
 
-        const userMessage = createUserMessage(userMsg)
-        const currentMessages = selectedChat.messages
+        setSelectedChat((prev) => {
+            if (!prev) return prev
 
-        const tempMessagePair: MessagePair = [
-            userMessage,
-            { response: "", createdAt: "" },
-        ]
+            const messages = [...prev.messages]
+            messages.push({
+                message: userMsg,
+                uid: "user-1",
+                createdAt: new Date().toISOString(),
+            })
 
-        const updatedChat = {
-            ...selectedChat,
-            messages: [...currentMessages, tempMessagePair],
-        }
-
-        updateChat(updatedChat)
-        e.currentTarget.reset()
+            const updatedChat = { ...prev, messages }
+            return updatedChat
+        })
 
         setTimeout(() => {
-            const robotResponse = createRobotResponse(userMsg)
-            const completeMessagePair: MessagePair = [
-                userMessage,
-                robotResponse,
-            ]
+            setSelectedChat((prev) => {
+                if (!prev) return prev
 
-            const finalUpdatedChat = {
-                ...selectedChat,
-                messages: [...currentMessages, completeMessagePair],
-            }
+                const messages = [...prev.messages]
+                messages.push({
+                    message: `I understand your message: "${userMsg}". This is a generic robot response for now`,
+                    uid: "robot-1",
+                    createdAt: new Date().toISOString(),
+                })
 
-            updateChat(finalUpdatedChat)
-        }, 2000)
+                const updatedChat = { ...prev, messages }
+                return updatedChat
+            })
+        }, 1000)
+
+        e.currentTarget.reset()
     }
 
     const handleRenameChat = () => {
@@ -74,7 +69,11 @@ function ChatView() {
 
     const handleSaveRename = () => {
         if (!chatName.trim()) return
-        updateChat({ ...selectedChat, name: chatName.trim() })
+        setSelectedChat((prev) => {
+            if (!prev) return prev
+            const updatedChat = { ...prev, name: chatName.trim() }
+            return updatedChat
+        })
         setIsRenamingChat(false)
     }
 
@@ -133,18 +132,23 @@ function ChatView() {
                 <div className="flex-1 space-y-1 py-4 pl-4">
                     {selectedChat.messages.map((messagePair, index) => (
                         <React.Fragment key={index}>
-                            <UserMsg
-                                msg={messagePair[0].message}
-                                time={messagePair[0].createdAt}
-                            />
+                            {messagePair.uid === "user-1" ? (
+                                <UserMsg
+                                    msg={messagePair.message}
+                                    time={messagePair.createdAt}
+                                />
+                            ) : null}
 
-                            <RobotMsg
-                                response={messagePair[1].response}
-                                time={messagePair[1].createdAt}
-                                model={
-                                    selectedChat.selectedModel || "Deepseek-R1"
-                                }
-                            />
+                            {messagePair.uid === "robot-1" ? (
+                                <RobotMsg
+                                    response={messagePair.message}
+                                    time={messagePair.createdAt}
+                                    model={
+                                        selectedChat.selectedModel ||
+                                        "Deepseek-R1"
+                                    }
+                                />
+                            ) : null}
                         </React.Fragment>
                     ))}
                 </div>

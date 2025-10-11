@@ -56,7 +56,7 @@ export type SelectedModel = "OpenAI 04" | "Deepseek-R1"
 export interface Chat {
     id: string
     name: string
-    messages: Array<MessagePair>
+    messages: Array<{ message: string; uid: string; createdAt: string }>
     selectedModel?: SelectedModel
 }
 

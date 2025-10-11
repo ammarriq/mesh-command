@@ -7,5 +7,6 @@ export const Route = createFileRoute("/_dashboard/chat/$id/")({
 })
 
 function RouteComponent() {
-    return <ChatView />
+    const params = Route.useParams()
+    return <ChatView chatId={params.id} />
 }
