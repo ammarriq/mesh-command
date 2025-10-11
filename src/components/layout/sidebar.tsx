@@ -1,5 +1,7 @@
 "use client"
 
+import type { ComponentType, SVGProps } from "react"
+
 import { Link, useLocation } from "@tanstack/react-router"
 
 import ChatIcon from "@/icons/chat"
@@ -14,7 +16,7 @@ import { cn } from "@/lib/utils"
 interface NavItem {
     title: string
     href: string
-    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+    icon: ComponentType<SVGProps<SVGSVGElement>>
 }
 
 interface SideBarItemProps {
