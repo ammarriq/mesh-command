@@ -2,6 +2,8 @@ import type { Project } from "@/store"
 
 import { useMemo } from "react"
 
+import { TrendingDownIcon, TrendingUpIcon } from "lucide-react"
+
 import { ChartAreaInteractive } from "@/components/ui/chart-area-interactive"
 import { ChartPieDonut } from "@/components/ui/chart-pie-donut"
 import { ChartTooltipAdvanced } from "@/components/ui/chart-tooltip-advanced"
@@ -33,6 +35,49 @@ function Reports({ projectId }: Props) {
     return (
         <div className="px-2">
             <ProjectHeader project={selectedProject} />
+
+            <h2 className="border-b pb-6 text-xl font-semibold">Overview</h2>
+
+            <div className="mb-4 grid grid-cols-4">
+                <div className="border-primary space-y-2 border-b-4 py-6">
+                    <span className="text-foreground/50 block text-base font-medium">
+                        Total budget
+                    </span>
+                    <h3 className="text-4xl font-semibold">$250K</h3>
+                </div>
+                <div className="space-y-2 py-6">
+                    <span className="text-foreground/50 block text-base font-medium">
+                        Available
+                    </span>
+                    <h3 className="text-4xl font-semibold">$10.2K</h3>
+                </div>
+                <div className="space-y-2 py-6">
+                    <span className="block text-base font-medium text-red-500">
+                        Burn rate
+                    </span>
+
+                    <hgroup className="flex items-center gap-3">
+                        <h3 className="text-4xl font-semibold">46.2%</h3>
+                        <div className="flex max-w-fit items-center gap-1 rounded-full border border-red-600 px-1.5 py-0.5 text-sm font-semibold select-none">
+                            <TrendingDownIcon className="size-4 text-red-600" />
+                            <span className="text-red-600">0.2%</span>
+                        </div>
+                    </hgroup>
+                </div>
+                <div className="space-y-2 py-6">
+                    <span className="block text-base font-medium text-amber-900">
+                        Task completion
+                    </span>
+
+                    <hgroup className="flex items-center gap-3">
+                        <h3 className="text-4xl font-semibold">46.2%</h3>
+                        <div className="flex max-w-fit items-center gap-1 rounded-full border border-green-600 px-1.5 py-0.5 text-sm font-semibold select-none">
+                            <TrendingUpIcon className="size-4 text-green-600" />
+                            <span className="text-green-600">12%</span>
+                        </div>
+                    </hgroup>
+                </div>
+            </div>
 
             <ChartAreaInteractive />
 
