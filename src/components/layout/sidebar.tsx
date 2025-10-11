@@ -32,32 +32,28 @@ const NAV_ITEMS: Array<NavItem> = [
 ]
 function SideBarItem({ isActive, item }: SideBarItemProps) {
     return (
-        <li key={item.href}>
-            <Link
-                to={item.href}
-                aria-current={isActive ? "page" : undefined}
+        <Link
+            to={item.href}
+            aria-current={isActive ? "page" : undefined}
+            className={cn(
+                "flex size-20 flex-col items-center rounded-[4px] py-4",
+                isActive ? "bg-primary/20 text-primary" : "text-text-secondary",
+            )}
+        >
+            <item.icon
+                className="size-6"
+                fill={isActive ? "#5F0101" : "#78829D"}
+                stroke={isActive ? "#5F0101" : "#78829D"}
+            />
+            <span
                 className={cn(
-                    "flex size-20 flex-col items-center rounded-[4px] py-4",
-                    isActive
-                        ? "bg-primary/20 text-primary"
-                        : "text-text-secondary",
+                    isActive ? "text-primary" : "text-text-secondary",
+                    "text-base font-medium",
                 )}
             >
-                <item.icon
-                    className="size-6"
-                    fill={isActive ? "#5F0101" : "#78829D"}
-                    stroke={isActive ? "#5F0101" : "#78829D"}
-                />
-                <span
-                    className={cn(
-                        isActive ? "text-primary" : "text-text-secondary",
-                        "text-base font-medium",
-                    )}
-                >
-                    {item.title}
-                </span>
-            </Link>
-        </li>
+                {item.title}
+            </span>
+        </Link>
     )
 }
 
@@ -66,7 +62,7 @@ function Sidebar() {
 
     return (
         <section className="flex flex-col justify-between p-4">
-            <ul className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-2">
                 {NAV_ITEMS.map((item) => (
                     <SideBarItem
                         key={item.href}
@@ -74,9 +70,9 @@ function Sidebar() {
                         isActive={pathname === item.href}
                     />
                 ))}
-            </ul>
+            </nav>
 
-            <div className="mt-auto pt-4">
+            <nav className="mt-auto pt-4">
                 <SideBarItem
                     item={{
                         href: "/logout",
@@ -85,7 +81,7 @@ function Sidebar() {
                     }}
                     isActive={pathname === "/logout"}
                 />
-            </div>
+            </nav>
         </section>
     )
 }
