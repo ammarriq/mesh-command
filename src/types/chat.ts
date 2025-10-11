@@ -1,20 +1,8 @@
-export type SelectedModel = "Deepseek-R1" | "OpenAI 04";
+import type { SelectedModel } from "./selected-model.ts"
 
-export type UserMessage = {
-  message: string;
-  createdAt: string; // ISO string
-};
-
-export type ModelResponse = {
-  response: string;
-  createdAt: string; // ISO string
-};
-
-export type MessagePair = [UserMessage, ModelResponse];
-
-export interface PrivateChat {
-  id: number;
-  name: string;
-  selectedModel: SelectedModel | null;
-  messages: MessagePair[] | null;
+export interface Chat {
+    id: string
+    name: string
+    messages: Array<{ message: string; uid: string; createdAt: string }>
+    selectedModel?: SelectedModel
 }

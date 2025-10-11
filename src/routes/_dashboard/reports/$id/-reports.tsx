@@ -1,4 +1,4 @@
-import type { Project } from "@/store"
+import type { Project } from "@/types/project"
 
 import { useMemo } from "react"
 

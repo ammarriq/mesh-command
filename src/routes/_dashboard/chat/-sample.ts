@@ -1,4 +1,4 @@
-import type { Chat } from "@/store"
+import type { Chat } from "@/types/chat"
 
 export const chats: Array<Chat> = [
     {

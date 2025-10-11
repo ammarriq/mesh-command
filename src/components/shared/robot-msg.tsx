@@ -1,4 +1,4 @@
-import type { SelectedModel } from "@/types/chat"
+import type { SelectedModel } from "@/types/model"
 
 import { RobotMsgInfoBadge } from "@/components/shared/robot-msg-info-badge"
 import { Separator } from "@/components/ui/separator"

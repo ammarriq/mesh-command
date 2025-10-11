@@ -1,4 +1,4 @@
-import type { Project } from "@/store"
+import type { Project } from "@/types/project"
 
 import ProjectContentItem from "@/components/shared/project-content-item"
 import TabActions from "@/components/shared/tab-actions"

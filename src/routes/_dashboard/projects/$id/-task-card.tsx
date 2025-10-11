@@ -1,4 +1,4 @@
-import type { Task } from "@/store"
+import type { Task } from "@/types/task"
 
 import { CheckCircle2, MoreHorizontal, Plus } from "lucide-react"
 

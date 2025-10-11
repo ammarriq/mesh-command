@@ -1,6 +1,6 @@
-import type { Project } from "@/store"
-
 import { useMemo } from "react"
+
+import { Project } from "@/types/project"
 
 import { categories } from "../-sample"
 

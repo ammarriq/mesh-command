@@ -1,4 +1,4 @@
-import type { ProjectCategory } from "@/store"
+import type { ProjectCategory } from "@/types/project-category"
 
 export const categories: Array<ProjectCategory> = [
     {

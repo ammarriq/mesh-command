@@ -1,4 +1,4 @@
-import type { SelectedModel } from "@/types/chat"
+import type { SelectedModel } from "@/types/model"
 
 import { useMemo, useState } from "react"
 
