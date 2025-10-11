@@ -3,8 +3,8 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { Copy, Edit } from "lucide-react"
 
-import { SearchInput } from "@/components/shared/search-input"
-import { StatusBadge } from "@/components/shared/status-badge"
+import { SearchInput } from "@/components/search-input"
+import { StatusBadge } from "@/components/status-badge"
 import { Button } from "@/components/ui/button"
 import {
     Table,

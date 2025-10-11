@@ -1,6 +1,4 @@
-import { useMemo } from "react"
-
-import { Project } from "@/types/project"
+import type { Project as IProject } from "@/types/project"
 
 import { categories } from "../-sample"
 
@@ -9,15 +7,13 @@ import { ProjectHeader } from "./-project-header"
 import TaskCard from "./-task-card"
 
 interface Props {
-    projectId: Project["id"]
+    projectId: IProject["id"]
 }
 
 function Project({ projectId }: Props) {
-    const selectedProject = useMemo(() => {
-        return categories
-            .flatMap((o) => o.projects)
-            .find((project) => project.id === projectId)
-    }, [])
+    const selectedProject = categories
+        .flatMap((o) => o.projects)
+        .find((project) => project.id === projectId)
 
     if (!selectedProject) return null
 
@@ -32,7 +28,11 @@ function Project({ projectId }: Props) {
 
             <section className="flex size-full gap-2 overflow-x-auto">
                 {Object.entries(tasksByStatus).map(([status, tasks]) => (
-                    <Column title={status} taskCount={tasks.length}>
+                    <Column
+                        key={status}
+                        title={status}
+                        taskCount={tasks.length}
+                    >
                         {tasks.map((task) => (
                             <TaskCard key={task.id} task={task} />
                         ))}

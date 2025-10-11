@@ -95,6 +95,7 @@ function TaskCard({ task }: { task: Task }) {
             <footer className="mt-3 flex items-center">
                 {task.users.map((user, index) => (
                     <Avatar
+                        key={user.id}
                         className={cn(
                             "size-9 rounded-sm border-2 border-white",
                             index !== 0 ? "-ml-4" : "",

@@ -30,6 +30,7 @@ const NAV_ITEMS: Array<NavItem> = [
     { title: "Directory", href: "/directory", icon: TwoUsersIcon },
     { title: "Admin", href: "/admin", icon: ShieldIcon },
 ]
+
 function SideBarItem({ isActive, item }: SideBarItemProps) {
     return (
         <Link

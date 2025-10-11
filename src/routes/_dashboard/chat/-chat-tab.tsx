@@ -1,7 +1,7 @@
 import type { Project } from "@/types/project"
 
-import ProjectContentItem from "@/components/shared/project-content-item"
-import TabActions from "@/components/shared/tab-actions"
+import ProjectContentItem from "@/components/project-content-item"
+import TabActions from "@/components/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
 

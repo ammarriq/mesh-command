@@ -1,16 +1,16 @@
-import React, { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react"
 
 interface Props {
-  title: string;
+    title: string
 }
 
 function FormHeading({ title, children }: Props & PropsWithChildren) {
-  return (
-    <header className="flex flex-col items-start gap-2">
-      <h1 className="text-2xl sm:text-3xl text-text-primary">{title}</h1>
-      {children}
-    </header>
-  );
+    return (
+        <header className="flex flex-col items-start gap-2">
+            <h1 className="text-text-primary text-2xl sm:text-3xl">{title}</h1>
+            {children}
+        </header>
+    )
 }
 
-export default FormHeading;
+export default FormHeading

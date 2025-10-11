@@ -1,6 +1,6 @@
 import type { SelectedModel } from "@/types/model"
 
-import { RobotMsgInfoBadge } from "@/components/shared/robot-msg-info-badge"
+import { RobotMsgInfoBadge } from "@/components/robot-msg-info-badge"
 import { Separator } from "@/components/ui/separator"
 import DeepseekIcon from "@/icons/deep-seek"
 import { OpenaiIcon } from "@/icons/open-ai"

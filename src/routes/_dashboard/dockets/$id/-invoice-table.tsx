@@ -1,6 +1,6 @@
 import dayjs from "dayjs"
 
-import { PaymentBadge } from "@/components/shared/payment-badge"
+import { PaymentBadge } from "@/components/payment-badge"
 import { Button } from "@/components/ui/button"
 import {
     Table,

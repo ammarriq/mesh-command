@@ -1,4 +1,3 @@
-import React from "react"
 import LogoIcon from "@/icons/logo"
 
 interface LogoProps {
@@ -29,4 +28,5 @@ export function LogoText({ isNavBar }: LogoProps) {
         </hgroup>
     )
 }
+
 export default Logo

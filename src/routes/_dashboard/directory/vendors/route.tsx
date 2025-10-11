@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { Copy, Edit } from "lucide-react"
 
-import { StatusBadge } from "@/components/shared/status-badge"
+import { StatusBadge } from "@/components/status-badge"
 import { Button } from "@/components/ui/button"
 import {
     Table,

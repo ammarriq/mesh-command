@@ -1,6 +1,6 @@
 import SearchIcon from "@/icons/search-normal"
 
-import { Input } from "../ui/input"
+import { Input } from "./ui/input"
 
 interface SearchInputProps {
     isChatTab?: boolean

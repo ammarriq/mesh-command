@@ -1,13 +1,9 @@
-"use client"
-
 import { FullScreenIcon } from "@/icons/full-screen"
 import { SplitScreenIcon } from "@/icons/split-screen"
-import { useAppStore, useSplitScreen } from "@/store"
 
-import { ActionButton } from "../shared/action-button"
-import CustomDropDown from "../shared/custom-drop-down"
-import Logo from "../shared/logo"
-import { SearchInput } from "../shared/search-input"
+import { ActionButton } from "../action-button"
+import Logo from "../logo"
+import { SearchInput } from "../search-input"
 
 interface SplitScreenBtnProps {
     type?: "full" | "split"
@@ -44,9 +40,6 @@ function SplitScreenBtn({ type, isSplitScreen, onClick }: SplitScreenBtnProps) {
 }
 
 function NavBar() {
-    const { toggleSplitScreen } = useAppStore()
-    const isSplitScreen = useSplitScreen()
-
     return (
         <nav className="w-full rounded-xs bg-white">
             <section className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-2">
@@ -55,13 +48,13 @@ function NavBar() {
 
                     <div className="border-primary hidden items-center border xl:flex">
                         <SplitScreenBtn
-                            isSplitScreen={isSplitScreen}
-                            onClick={toggleSplitScreen}
+                            isSplitScreen={false}
+                            onClick={() => {}}
                             type="full"
                         />
                         <SplitScreenBtn
-                            isSplitScreen={isSplitScreen}
-                            onClick={toggleSplitScreen}
+                            isSplitScreen={false}
+                            onClick={() => {}}
                             type="split"
                         />
                     </div>
@@ -70,17 +63,16 @@ function NavBar() {
                 <div className="flex items-center gap-2">
                     <SearchInput />
                     <ActionButton type={"notification"} />
-                    <CustomDropDown type="settings">
-                        <div className="relative size-12">
-                            <img
-                                src="/users/1.jpg"
-                                alt="Profile"
-                                width={48}
-                                height={48}
-                                className="border-Bg-Dark bg-light-bg size-12 rounded-xs border object-cover"
-                            />
-                        </div>
-                    </CustomDropDown>
+
+                    <div className="relative size-12">
+                        <img
+                            src="/users/1.jpg"
+                            alt="Profile"
+                            width={48}
+                            height={48}
+                            className="border-Bg-Dark bg-light-bg size-12 rounded-xs border object-cover"
+                        />
+                    </div>
                 </div>
             </section>
         </nav>

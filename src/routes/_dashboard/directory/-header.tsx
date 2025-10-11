@@ -1,6 +1,6 @@
 import { Link, linkOptions } from "@tanstack/react-router"
 
-import { SearchInput } from "@/components/shared/search-input"
+import { SearchInput } from "@/components/search-input"
 
 const menuList = linkOptions([
     {

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 
-import { RobotMsg } from "@/components/shared/robot-msg"
-import { UserMsg } from "@/components/shared/user-msg"
+import { RobotMsg } from "@/components/robot-msg"
+import { UserMsg } from "@/components/user-msg"
 import { RobotIcon } from "@/icons/robot"
 
 import { chats } from "../-sample"
