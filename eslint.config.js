@@ -21,6 +21,7 @@ const config = [
         },
 
         rules: {
+            "@typescript-eslint/array-type": "array",
             "react/react-in-jsx-scope": "off",
             "sort-imports": "off",
             "import/order": "off",

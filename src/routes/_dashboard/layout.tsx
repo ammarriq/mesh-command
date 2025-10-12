@@ -1,8 +1,8 @@
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router"
 
-import NavBar from "@/components/layout/nav-bar"
-import Sidebar from "@/components/layout/sidebar"
 import CrossCircleIcon from "@/icons/cross-circle"
+import NavBar from "@/routes/_dashboard/-nav-bar"
+import Sidebar from "@/routes/_dashboard/-sidebar"
 
 export const Route = createFileRoute("/_dashboard")({
     component: LayoutComponent,
