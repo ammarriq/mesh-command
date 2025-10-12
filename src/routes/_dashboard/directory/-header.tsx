@@ -45,13 +45,13 @@ function Header() {
                 <SearchInput />
             </header>
 
-            <div className="border-y-Bg-Dark border-y py-8">
-                <div className="border-Bg-Dark *:data-[status=active]:bg-primary-light *:data-[status=active]:text-primary *:border-Bg-Dark *:text-foreground flex h-10 max-w-fit overflow-hidden rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:not-last-of-type:border-r *:data-[status=active]:border-y-0 *:data-[status=active]:font-medium">
+            <div className="border-y-Bg-Dark overflow-hidden border-y py-8">
+                <div className="border-Bg-Dark *:data-[status=active]:bg-primary-light *:data-[status=active]:text-primary *:border-Bg-Dark *:text-foreground flex h-auto max-w-fit overflow-hidden overflow-x-auto rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:not-last-of-type:border-r *:data-[status=active]:border-y-0 *:data-[status=active]:font-medium">
                     {menuList.map((item) => (
                         <Link
                             key={item.to}
                             to={item.to}
-                            className="grid place-items-center text-sm"
+                            className="grid place-items-center py-2.25 text-sm"
                         >
                             {item.name}
                         </Link>

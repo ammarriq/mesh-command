@@ -29,21 +29,24 @@ function RouteComponent() {
     return (
         <main
             data-add-form={addFormOpen}
-            className="col-span-2 grid h-full bg-white has-[.form-dialog]:grid data-[add-form=true]:grid-cols-[minmax(0,1fr)_auto]"
+            className="col-span-2 grid h-full grid-cols-1 bg-white data-[add-form=true]:grid-cols-[minmax(0,1fr)_auto]"
         >
-            <div className="grid w-full grid-rows-[auto_auto_minmax(0,1fr)] p-6">
+            <div className="grid w-full grid-rows-[auto_auto_minmax(0,1fr)] overflow-hidden p-6">
                 <Header />
-                <section className="border-y-Bg-Dark mt-8 flex gap-8 border-y py-8">
-                    <hgroup className="w-full max-w-60 flex-shrink-0">
-                        <h3 className="text-lg font-medium text-gray-900">
-                            Locations
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                            Here are listings of locations and addresses.
-                        </p>
+
+                <section className="border-y-Bg-Dark mt-8 grid w-full grid-rows-[auto_minmax(0,1fr)] items-center gap-8 border-y py-8 @5xl:grid-cols-[auto_minmax(0,1fr)] @5xl:items-stretch">
+                    <hgroup className="flex w-full flex-shrink-0 flex-col gap-4 @2xl:flex-row @5xl:max-w-60 @5xl:flex-col">
+                        <div>
+                            <h3 className="text-lg font-medium text-gray-900">
+                                Locations
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                                Here are listings of locations and addresses.
+                            </p>
+                        </div>
 
                         <Button
-                            className="bg-primary-light text-primary hover:bg-primary-light/80 mt-4 rounded-xs"
+                            className="bg-primary-light text-primary hover:bg-primary-light/80 max-w-fit rounded-xs @2xl:ml-auto @5xl:ml-0"
                             onClick={() => setAddFormOpen(true)}
                         >
                             Add New Location

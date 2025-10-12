@@ -49,15 +49,26 @@ function RouteComponent() {
                     <SearchInput />
                 </header>
 
-                <Tabs defaultValue="people" className="w-full">
+                <Tabs defaultValue="people" className="w-full" overflow-hidden>
                     <TabsList className="w-full py-6 *:py-6">
-                        <TabsTrigger value="people">
+                        <TabsTrigger
+                            value="people"
+                            className="whitespace-nowrap"
+                        >
                             People Management
                         </TabsTrigger>
-                        <TabsTrigger value="dockets" disabled>
+                        <TabsTrigger
+                            value="dockets"
+                            className="whitespace-nowrap"
+                            disabled
+                        >
                             Dockets Management
                         </TabsTrigger>
-                        <TabsTrigger value="integrations" disabled>
+                        <TabsTrigger
+                            value="integrations"
+                            className="whitespace-nowrap"
+                            disabled
+                        >
                             Integrations
                         </TabsTrigger>
                     </TabsList>
@@ -65,10 +76,10 @@ function RouteComponent() {
                     <TabsContent value="people" className="space-y-6">
                         <Tabs
                             defaultValue="manager"
-                            className="grid w-full grid-rows-[auto_auto_minmax(0,1fr)] px-6 pt-4 pb-6"
+                            className="grid w-full grid-rows-[auto_auto_minmax(0,1fr)] pt-4 pb-6"
                         >
-                            <div className="border-y-Bg-Dark border-b pb-8">
-                                <TabsList className="border-Bg-Dark *:border-Bg-Dark *:text-foreground flex h-10 max-w-fit overflow-hidden rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:py-0 *:text-sm *:whitespace-nowrap *:not-last-of-type:border-r *:data-[state=active]:border-y-0 *:data-[state=active]:font-medium">
+                            <div className="overflow-x-auto">
+                                <TabsList className="border-Bg-Dark *:border-Bg-Dark *:text-foreground flex h-auto max-w-fit overflow-hidden rounded-lg border p-0 *:h-full *:border-y-0 *:px-4 *:py-2.5 *:text-sm *:whitespace-nowrap *:not-last-of-type:border-r *:data-[state=active]:border-y-0 *:data-[state=active]:font-medium">
                                     <TabsTrigger
                                         value="manager"
                                         className="data-[state=active]:bg-primary-light data-[state=active]:text-primary"
@@ -108,19 +119,21 @@ function RouteComponent() {
 
                             <TabsContent
                                 value="manager"
-                                className="border-y-Bg-Dark mt-8 flex gap-8 border-y py-8"
+                                className="border-y-Bg-Dark mt-8 grid w-full grid-rows-[auto_minmax(0,1fr)] items-center gap-8 border-y py-8 @5xl:grid-cols-[auto_minmax(0,1fr)] @5xl:items-stretch"
                             >
-                                <hgroup className="w-full max-w-60 flex-shrink-0">
-                                    <h3 className="text-lg font-medium text-gray-900">
-                                        Add New Manager
-                                    </h3>
-                                    <p className="text-sm text-gray-600">
-                                        Here are list of managers who are also
-                                        admins.
-                                    </p>
+                                <hgroup className="flex w-full flex-shrink-0 flex-col gap-4 @2xl:flex-row @5xl:max-w-60 @5xl:flex-col">
+                                    <div>
+                                        <h3 className="text-lg font-medium text-gray-900">
+                                            Add New Manager
+                                        </h3>
+                                        <p className="text-sm text-gray-600">
+                                            Here are list of managers who are
+                                            also admins.
+                                        </p>
+                                    </div>
 
                                     <Button
-                                        className="bg-primary-light text-primary hover:bg-primary-light/80 mt-4 rounded-xs"
+                                        className="bg-primary-light text-primary hover:bg-primary-light/80 max-w-fit rounded-xs @2xl:ml-auto @5xl:ml-0"
                                         onClick={() => setAddFormOpen(true)}
                                     >
                                         Add New Manager
