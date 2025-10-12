@@ -2,8 +2,10 @@
 
 import type { ComponentType, SVGProps } from "react"
 
+import React from "react"
 import { Link, useLocation } from "@tanstack/react-router"
 
+import { useSplitScreen } from "@/context/split-screen"
 import ChatIcon from "@/icons/chat"
 import LogoutIcon from "@/icons/logout"
 import OpenFolderIcon from "@/icons/open-folder"
@@ -12,7 +14,6 @@ import ShieldIcon from "@/icons/shield"
 import TrendUpIcon from "@/icons/trend-up"
 import TwoUsersIcon from "@/icons/two-users"
 import { cn } from "@/lib/utils"
-import { useSplitScreen } from "@/context/split-screen"
 
 interface NavItem {
     title: string
@@ -26,7 +27,7 @@ interface SideBarItemProps {
     onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
-const NAV_ITEMS: Array<NavItem> = [
+const NAV_ITEMS: NavItem[] = [
     { title: "Chat", href: "/chat", icon: ChatIcon },
     { title: "Projects", href: "/projects", icon: ProjectsIcon },
     { title: "Dockets", href: "/dockets", icon: OpenFolderIcon },
@@ -64,7 +65,7 @@ function SideBarItem({ isActive, item, onClick }: SideBarItemProps) {
 }
 
 function Sidebar() {
-    const { isActive, activeTabs, onTabClick } = useSplitScreen()
+    const { isActive, activeTabs, onToggle, onTabClick } = useSplitScreen()
     const { pathname } = useLocation()
 
     const urlPrefix = "/" + pathname.split("/").filter(Boolean)[0]
@@ -85,6 +86,15 @@ function Sidebar() {
                         item={item}
                         isActive={isPageActive(item.href)}
                         onClick={(e) => {
+                            if (
+                                item.href === "/directory" ||
+                                item.href === "/admin"
+                            ) {
+                                onToggle(false)
+                                onTabClick(() => [item.href])
+                                return
+                            }
+
                             if (isActive) {
                                 // Split screen active: keep exactly two tabs -> [current active url, clicked]
                                 // Prevent navigation to stay on current view while adding the second tab

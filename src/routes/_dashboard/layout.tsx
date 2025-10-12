@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router"
 
 import Docket from "@/components/split-screen/docket"
 import Project from "@/components/split-screen/project"
+import Reports from "@/components/split-screen/reports"
 import { useSplitScreen } from "@/context/split-screen"
 import CrossCircleIcon from "@/icons/cross-circle"
 import NavBar from "@/routes/_dashboard/-nav-bar"
@@ -73,6 +74,10 @@ function LayoutComponent() {
                                     />
                                 ) : tab === "/dockets" ? (
                                     <Docket
+                                        projectId={selectedProject ?? undefined}
+                                    />
+                                ) : tab === "/reports" ? (
+                                    <Reports
                                         projectId={selectedProject ?? undefined}
                                     />
                                 ) : null}

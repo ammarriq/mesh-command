@@ -86,7 +86,7 @@ function Reports({ projectId }: Props) {
                     <ChartTooltipAdvanced />
                 </aside>
 
-                <aside className="flex w-full">
+                <aside className="flex">
                     <ChartPieDonut />
 
                     <ul className="pt-8 pr-8">

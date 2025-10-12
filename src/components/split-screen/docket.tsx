@@ -23,7 +23,16 @@ function Docket({ projectId }: Props) {
         .flatMap((o) => o.projects)
         .find((project) => project.id === (projectId ? +projectId : ""))
 
-    if (!selectedProject) return null
+    if (!selectedProject) {
+        return (
+            <div className="grid size-full place-items-center p-4">
+                <p className="text-foreground/60 text-sm">
+                    Select a project to view details
+                </p>
+            </div>
+        )
+    }
+
     if (selectedProject.dockets?.length === 0) {
         return (
             <div className="flex items-center justify-center">

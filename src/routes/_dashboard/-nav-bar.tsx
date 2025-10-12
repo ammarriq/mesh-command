@@ -18,7 +18,13 @@ function NavBar({ activePath }: Props) {
                 <div className="flex items-center gap-5">
                     <Logo />
 
-                    <div className="border-primary *:data-[active=true]:bg-primary *:text-primary *:group hidden items-center border *:grid *:size-10 *:place-items-center *:bg-white *:data-[active=true]:text-white xl:flex *:2xl:size-12">
+                    <div
+                        data-hidden={
+                            activePath === "/directory" ||
+                            activePath === "/admin"
+                        }
+                        className="border-primary *:data-[active=true]:bg-primary *:text-primary *:group hidden items-center border *:grid *:size-10 *:place-items-center *:bg-white *:data-[active=true]:text-white data-[hidden=true]:hidden xl:flex *:2xl:size-12"
+                    >
                         <button
                             type="button"
                             data-active={!isActive}
