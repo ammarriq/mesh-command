@@ -4,5 +4,5 @@ export interface Docket {
     id: number
     name: string
     status: "Active" | "On-hold" | "Completed" | "active" | "completed"
-    projects: Array<DocketProject>
+    projects: DocketProject[]
 }

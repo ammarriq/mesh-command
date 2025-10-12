@@ -10,7 +10,7 @@ export interface Project {
     budget?: string
     contractor?: string
     warning?: string | null
-    users?: Array<User>
-    tasks: Array<Task>
-    dockets?: Array<Docket>
+    users?: User[]
+    tasks: Task[]
+    dockets?: Docket[]
 }

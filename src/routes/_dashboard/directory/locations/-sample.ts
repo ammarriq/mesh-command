@@ -1,4 +1,6 @@
-export const locations = [
+import type { Location } from "@/types/location"
+
+export const locations: Location[] = [
     {
         id: 1,
         name: "Sarah's Appartment",

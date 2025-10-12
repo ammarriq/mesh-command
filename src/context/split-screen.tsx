@@ -1,27 +1,24 @@
-import { createContext, PropsWithChildren, use, useState } from "react"
+import type { Project } from "@/types/project"
+import type { PropsWithChildren } from "react"
+
+import { createContext, use, useState } from "react"
 
 interface ContextType {
     isActive: boolean
-    selectedProject: string | null
+    selectedProject: Project["id"] | null
     activeTabs: string[]
     onToggle: (isActive: boolean) => void
-    onProjectSelect: (projectId: string | null) => void
+    onProjectSelect: (projectId: ContextType["selectedProject"]) => void
     onTabClick: (value: string[] | ((prevState: string[]) => string[])) => void
 }
 
-const SplitScreenContext = createContext<ContextType>({
-    isActive: false,
-    activeTabs: [],
-    selectedProject: null,
-    onProjectSelect: () => {},
-    onToggle: () => {},
-    onTabClick: () => {},
-})
+const SplitScreenContext = createContext<ContextType | null>(null)
 
 export function SplitScreenProvider({ children }: PropsWithChildren) {
     const [isActive, setIsActive] = useState(false)
-    const [activeTabs, setActiveTabs] = useState<string[]>([])
-    const [selectedProject, setSelectedProject] = useState<string | null>(null)
+    const [activeTabs, setActiveTabs] = useState<ContextType["activeTabs"]>([])
+    const [selectedProject, setSelectedProject] =
+        useState<ContextType["selectedProject"]>(null)
 
     return (
         <SplitScreenContext.Provider

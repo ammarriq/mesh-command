@@ -8,6 +8,6 @@ export interface Task {
     priority: "High" | "Medium" | "Low"
     assignedTo: string
     deadline: string
-    linkedDocs?: Array<string>
-    users: Array<User>
+    linkedDocs?: string[]
+    users: User[]
 }

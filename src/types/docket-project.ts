@@ -10,5 +10,5 @@ export interface DocketProject {
     budgetConsumed: number
     progress: number
     filingCapacity: number
-    invoices: Array<Invoice>
+    invoices: Invoice[]
 }

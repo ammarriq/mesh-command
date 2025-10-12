@@ -1,4 +1,6 @@
-export const equipments = [
+import type { Equipment } from "@/types/equipment"
+
+export const equipments: Equipment[] = [
     {
         id: 1,
         name: "Bulldozer",

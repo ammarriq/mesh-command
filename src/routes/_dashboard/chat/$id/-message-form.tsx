@@ -1,6 +1,6 @@
 import type { SelectedModel } from "@/types/model"
 
-import { useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 
 import DeepseekIcon from "@/icons/deep-seek"
 import LinkSquareIcon from "@/icons/link-square"
@@ -41,7 +41,7 @@ function MessageForm({ selectedModel, onSubmit }: Props) {
             color: "text-[#4D6BFE]",
             strokeColor: "stroke-[#4D6BFE]",
         }
-    }, [])
+    }, [selectedModel])
 
     return (
         <form
@@ -56,7 +56,10 @@ function MessageForm({ selectedModel, onSubmit }: Props) {
 
                     <div className="flex flex-wrap gap-2">
                         {attachedFiles.map((file, index) => (
-                            <div className="flex items-center gap-2 rounded bg-white px-2 py-1 text-xs">
+                            <div
+                                key={file.name}
+                                className="flex items-center gap-2 rounded bg-white px-2 py-1 text-xs"
+                            >
                                 <span className="text-text-primary">
                                     {file.name}
                                 </span>

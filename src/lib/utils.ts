@@ -1,13 +1,15 @@
-import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import type { ClassValue } from "clsx"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: Array<ClassValue>) {
+    return twMerge(clsx(inputs))
 }
 
 export const formatTime = (isoString: string): string => {
-  return new Date(isoString).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+    return new Date(isoString).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+    })
 }

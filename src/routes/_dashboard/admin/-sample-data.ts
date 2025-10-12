@@ -1,4 +1,6 @@
-export const managers = [
+import type { Manager } from "@/types/manager"
+
+export const managers: Manager[] = [
     {
         id: 1,
         name: "Natali Craig",

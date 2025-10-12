@@ -3,6 +3,7 @@ import type { Project } from "@/types/project"
 import ProjectList from "@/components/project-list"
 import TabActions from "@/components/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useSplitScreen } from "@/context/split-screen"
 import { cn } from "@/lib/utils"
 
 import { categories } from "../projects/-sample"
@@ -27,6 +28,8 @@ function ChatTab({
     onSelectChat,
     onSelectProject,
 }: Props) {
+    const { isActive } = useSplitScreen()
+
     return (
         <Tabs
             defaultValue="private"
@@ -72,7 +75,7 @@ function ChatTab({
                         projects={category.projects}
                         showCreateButton={false}
                         selectedProject={selectedProject}
-                        onSelectProject={onSelectProject}
+                        onSelectProject={isActive ? () => {} : onSelectProject}
                     />
                 ))}
             </TabsContent>

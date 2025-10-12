@@ -13,7 +13,7 @@ interface Props {
     title: string
     selectedProject?: Project["id"]
 
-    projects: Array<Project>
+    projects: Project[]
 
     showCreateButton?: boolean
     isChatTab?: boolean
@@ -28,7 +28,7 @@ function ProjectList({
     isChatTab = false,
     onSelectProject,
 }: Props) {
-    const { onProjectSelect } = useSplitScreen()
+    const { selectedProject: projectId, onProjectSelect } = useSplitScreen()
 
     const texts = {
         Active: "In-Progress",
@@ -72,11 +72,14 @@ function ProjectList({
                         {projects.map((project) => (
                             <button
                                 key={project.id}
-                                data-selected={selectedProject === project.id}
+                                data-selected={
+                                    selectedProject === project.id ||
+                                    (projectId ? +projectId : "") === project.id
+                                }
                                 className="text-text-primary data-[selected=true]:bg-muted flex w-full items-center gap-1 rounded-xs p-2 text-left text-sm"
                                 onClick={() => {
                                     onSelectProject(project.id)
-                                    onProjectSelect(`${project.id}`)
+                                    onProjectSelect(project.id)
                                 }}
                             >
                                 <span>{project.title}</span>

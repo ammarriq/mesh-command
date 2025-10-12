@@ -1,4 +1,6 @@
-export const teams = [
+import type { Team } from "@/types/team"
+
+export const teams: Team[] = [
     {
         id: 1,
         name: "Natali Craig",

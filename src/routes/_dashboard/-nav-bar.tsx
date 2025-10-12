@@ -5,8 +5,12 @@ import { useSplitScreen } from "@/context/split-screen"
 import { FullScreenIcon } from "@/icons/full-screen"
 import { SplitScreenIcon } from "@/icons/split-screen"
 
-function NavBar() {
-    const { isActive, onToggle } = useSplitScreen()
+interface Props {
+    activePath?: string
+}
+
+function NavBar({ activePath }: Props) {
+    const { isActive, onToggle, onTabClick } = useSplitScreen()
 
     return (
         <nav className="w-full rounded-xs bg-white">
@@ -17,8 +21,15 @@ function NavBar() {
                     <div className="border-primary *:data-[active=true]:bg-primary *:text-primary *:group hidden items-center border *:grid *:size-10 *:place-items-center *:bg-white *:data-[active=true]:text-white xl:flex *:2xl:size-12">
                         <button
                             type="button"
-                            onClick={() => onToggle(false)}
                             data-active={!isActive}
+                            onClick={() => {
+                                onToggle(false)
+                                onTabClick((prev) => {
+                                    return prev.filter(
+                                        (tab) => tab === activePath,
+                                    )
+                                })
+                            }}
                         >
                             <FullScreenIcon
                                 className="size-6"
@@ -29,8 +40,8 @@ function NavBar() {
 
                         <button
                             type="button"
-                            onClick={() => onToggle(true)}
                             data-active={isActive}
+                            onClick={() => onToggle(true)}
                         >
                             <SplitScreenIcon
                                 className="size-6"

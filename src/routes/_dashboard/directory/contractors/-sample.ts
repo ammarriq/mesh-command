@@ -1,4 +1,6 @@
-export const contractors = [
+import type { Contractor } from "@/types/contractor"
+
+export const contractors: Contractor[] = [
     {
         id: 1,
         name: "Natali Craig",
