@@ -28,7 +28,7 @@ function LayoutComponent() {
                         </div>
                     </header>
 
-                    <aside className="grid size-full max-h-[calc(100vh-10rem)] flex-1 grid-cols-[400px_1fr] bg-white">
+                    <aside className="@container grid size-full max-h-[calc(100vh-10rem)] flex-1 grid-cols-[400px_1fr] bg-white">
                         <Outlet />
                     </aside>
                 </section>

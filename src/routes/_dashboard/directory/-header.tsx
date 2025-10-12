@@ -32,7 +32,7 @@ const menuList = linkOptions([
 function Header() {
     return (
         <>
-            <header className="flex items-start justify-between">
+            <header className="flex flex-col items-start justify-between @5xl:flex-row">
                 <hgroup className="mb-8">
                     <h1 className="mb-1 text-3xl font-semibold text-gray-900">
                         MeshCommand Directory
@@ -41,6 +41,7 @@ function Header() {
                         Manage and view all people, equipment and locations.
                     </p>
                 </hgroup>
+
                 <SearchInput />
             </header>
 

@@ -1,7 +1,5 @@
 import type { Project } from "@/types/project"
 
-import { useMemo } from "react"
-
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react"
 
 import { ChartAreaInteractive } from "@/components/ui/chart-area-interactive"
@@ -9,7 +7,7 @@ import { ChartPieDonut } from "@/components/ui/chart-pie-donut"
 import { ChartTooltipAdvanced } from "@/components/ui/chart-tooltip-advanced"
 
 import { categories } from "../../projects/-sample"
-import { ProjectHeader } from "../../projects/$id/-project-header"
+import ProjectHeader from "../../projects/$id/-project-header"
 
 interface Props {
     projectId?: Project["id"]
@@ -24,21 +22,19 @@ function Reports({ projectId }: Props) {
         { color: "var(--Bg-Dark)", label: "Other" },
     ]
 
-    const selectedProject = useMemo(() => {
-        return categories
-            .flatMap((o) => o.projects)
-            .find((project) => project.id === projectId)
-    }, [])
+    const selectedProject = categories
+        .flatMap((o) => o.projects)
+        .find((project) => project.id === projectId)
 
     if (!selectedProject) return null
 
     return (
-        <div className="px-2">
+        <div className="overflow-y-auto px-2">
             <ProjectHeader project={selectedProject} />
 
             <h2 className="border-b pb-6 text-xl font-semibold">Overview</h2>
 
-            <div className="mb-4 grid grid-cols-4">
+            <div className="mb-4 grid @4xl:grid-cols-2 @7xl:grid-cols-4">
                 <div className="border-primary space-y-2 border-b-4 py-6">
                     <span className="text-foreground/50 block text-base font-medium">
                         Total budget
@@ -85,12 +81,12 @@ function Reports({ projectId }: Props) {
                 Departmental Budget Usage
             </h2>
 
-            <div className="flex gap-8">
+            <div className="flex flex-col-reverse gap-8 @7xl:flex-row">
                 <aside className="flex-1">
                     <ChartTooltipAdvanced />
                 </aside>
 
-                <aside className="flex">
+                <aside className="flex w-full">
                     <ChartPieDonut />
 
                     <ul className="pt-8 pr-8">

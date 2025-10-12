@@ -1,11 +1,10 @@
-import { useMemo } from "react"
 import { createFileRoute } from "@tanstack/react-router"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DownloadCloudIcon } from "@/icons/download-cloud"
 
 import { categories } from "../../projects/-sample"
-import { ProjectHeader } from "../../projects/$id/-project-header"
+import ProjectHeader from "../../projects/$id/-project-header"
 
 import { InvoiceTable } from "./-invoice-table"
 
@@ -16,11 +15,9 @@ export const Route = createFileRoute("/_dashboard/dockets/$id/")({
 function RouteComponent() {
     const params = Route.useParams()
 
-    const selectedProject = useMemo(() => {
-        return categories
-            .flatMap((o) => o.projects)
-            .find((project) => project.id === +params.id)
-    }, [])
+    const selectedProject = categories
+        .flatMap((o) => o.projects)
+        .find((project) => project.id === +params.id)
 
     if (!selectedProject) return null
     if (selectedProject.dockets?.length === 0) {
