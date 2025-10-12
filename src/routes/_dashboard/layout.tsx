@@ -4,6 +4,7 @@ import CrossCircleIcon from "@/icons/cross-circle"
 import NavBar from "@/routes/_dashboard/-nav-bar"
 import Sidebar from "@/routes/_dashboard/-sidebar"
 import { useSplitScreen } from "@/context/split-screen"
+import Project from "@/components/split-screen/project"
 
 export const Route = createFileRoute("/_dashboard")({
     component: LayoutComponent,
@@ -26,37 +27,49 @@ function LayoutComponent() {
             <section className="grid h-full grid-cols-[auto_minmax(0,1fr)]">
                 <Sidebar />
 
-                <section className="bg-Bg-Dark grid size-full grid-rows-[auto_minmax(0,1fr)] p-4">
-                    <header className="bg-light-bg border-Bg-Dark flex border-b">
-                        {activeTabList.map((tab) => (
-                            <div
-                                key={tab}
-                                className="border-Bg-Dark flex w-full max-w-56 items-center justify-between gap-6 border-r bg-white px-2 py-1"
-                            >
-                                <h3 className="text-sm font-medium capitalize">
-                                    {tab.replace("/", "")}
-                                </h3>
-
-                                <button
-                                    data-url-prefix={urlPrefix}
-                                    data-tab={tab}
-                                    onClick={() => {
-                                        if (urlPrefix === tab) return
-                                        onTabClick((prev) =>
-                                            prev.filter((id) => id !== tab),
-                                        )
-                                    }}
+                <div
+                    data-split-view={activeTabList.length > 1}
+                    className="bg-Bg-Dark grid w-full gap-4 p-4 data-[split-view=true]:grid-cols-[minmax(0,1fr)_480px]"
+                >
+                    {activeTabList.map((tab) => (
+                        <section className="grid size-full grid-rows-[auto_minmax(0,1fr)]">
+                            <header className="bg-light-bg border-Bg-Dark flex border-b">
+                                <div
+                                    key={tab}
+                                    className="border-Bg-Dark flex w-full max-w-56 items-center justify-between gap-6 border-r bg-white px-2 py-1"
                                 >
-                                    <CrossCircleIcon className="size-4 cursor-pointer" />
-                                </button>
-                            </div>
-                        ))}
-                    </header>
+                                    <h3 className="text-sm font-medium capitalize">
+                                        {tab.replace("/", "")}
+                                    </h3>
 
-                    <aside className="@container grid size-full max-h-[calc(100vh-10rem)] flex-1 grid-cols-[400px_1fr] bg-white">
-                        <Outlet />
-                    </aside>
-                </section>
+                                    <button
+                                        data-url-prefix={urlPrefix}
+                                        data-tab={tab}
+                                        onClick={() => {
+                                            if (urlPrefix === tab) return
+                                            onTabClick((prev) =>
+                                                prev.filter((id) => id !== tab),
+                                            )
+                                        }}
+                                    >
+                                        <CrossCircleIcon className="size-4 cursor-pointer" />
+                                    </button>
+                                </div>
+                            </header>
+
+                            <aside
+                                data-active-url={urlPrefix === tab}
+                                className="@container size-full max-h-[calc(100vh-10rem)] flex-1 grid-cols-[400px_1fr] overflow-hidden bg-white data-[active-url=true]:grid"
+                            >
+                                {urlPrefix === tab ? (
+                                    <Outlet />
+                                ) : tab === "/projects" ? (
+                                    <Project projectId={1} />
+                                ) : null}
+                            </aside>
+                        </section>
+                    ))}
+                </div>
             </section>
         </main>
     )

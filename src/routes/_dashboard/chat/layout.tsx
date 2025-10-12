@@ -13,19 +13,33 @@ export const Route = createFileRoute("/_dashboard/chat")({
 
 function RouteComponent() {
     const navigate = useNavigate()
-    const params = useParams({
+    const chatParams = useParams({
         from: "/_dashboard/chat/$id/",
+        shouldThrow: false,
+    })
+
+    const projectParams = useParams({
+        from: "/_dashboard/chat/project/$id/",
         shouldThrow: false,
     })
 
     return (
         <>
             <ChatTab
-                selectedChat={params?.id}
+                selectedChat={chatParams?.id}
+                selectedProject={projectParams ? +projectParams?.id : undefined}
                 onSelectChat={(id) => {
-                    navigate({ to: "/chat/$id", params: { id } })
+                    navigate({
+                        to: "/chat/$id",
+                        params: { id },
+                    })
                 }}
-                onSelectProject={() => {}}
+                onSelectProject={(id) => {
+                    navigate({
+                        to: "/chat/project/$id",
+                        params: { id: `${id}` },
+                    })
+                }}
             />
             <Outlet />
         </>

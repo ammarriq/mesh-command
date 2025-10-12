@@ -33,6 +33,7 @@ import { Route as DashboardDirectoryEquipmentsRouteRouteImport } from './routes/
 import { Route as DashboardDirectoryEmployeesRouteRouteImport } from './routes/_dashboard/directory/employees/route'
 import { Route as DashboardDirectoryContractorsRouteRouteImport } from './routes/_dashboard/directory/contractors/route'
 import { Route as DashboardChatIdRouteRouteImport } from './routes/_dashboard/chat/$id/route'
+import { Route as DashboardChatProjectIdRouteRouteImport } from './routes/_dashboard/chat/project/$id/route'
 
 const DashboardLayoutRoute = DashboardLayoutRouteImport.update({
   id: '/_dashboard',
@@ -161,6 +162,12 @@ const DashboardChatIdRouteRoute = DashboardChatIdRouteRouteImport.update({
   path: '/$id/',
   getParentRoute: () => DashboardChatLayoutRoute,
 } as any)
+const DashboardChatProjectIdRouteRoute =
+  DashboardChatProjectIdRouteRouteImport.update({
+    id: '/project/$id/',
+    path: '/project/$id/',
+    getParentRoute: () => DashboardChatLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof RouteRoute
@@ -186,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
   '/reports/$id': typeof DashboardReportsIdRouteRoute
+  '/chat/project/$id': typeof DashboardChatProjectIdRouteRoute
 }
 export interface FileRoutesByTo {
   '/': typeof RouteRoute
@@ -207,6 +215,7 @@ export interface FileRoutesByTo {
   '/dockets/$id': typeof DashboardDocketsIdRouteRoute
   '/projects/$id': typeof DashboardProjectsIdRouteRoute
   '/reports/$id': typeof DashboardReportsIdRouteRoute
+  '/chat/project/$id': typeof DashboardChatProjectIdRouteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -234,6 +243,7 @@ export interface FileRoutesById {
   '/_dashboard/dockets/$id/': typeof DashboardDocketsIdRouteRoute
   '/_dashboard/projects/$id/': typeof DashboardProjectsIdRouteRoute
   '/_dashboard/reports/$id/': typeof DashboardReportsIdRouteRoute
+  '/_dashboard/chat/project/$id/': typeof DashboardChatProjectIdRouteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -261,6 +271,7 @@ export interface FileRouteTypes {
     | '/dockets/$id'
     | '/projects/$id'
     | '/reports/$id'
+    | '/chat/project/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -282,6 +293,7 @@ export interface FileRouteTypes {
     | '/dockets/$id'
     | '/projects/$id'
     | '/reports/$id'
+    | '/chat/project/$id'
   id:
     | '__root__'
     | '/'
@@ -308,6 +320,7 @@ export interface FileRouteTypes {
     | '/_dashboard/dockets/$id/'
     | '/_dashboard/projects/$id/'
     | '/_dashboard/reports/$id/'
+    | '/_dashboard/chat/project/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -487,17 +500,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardChatIdRouteRouteImport
       parentRoute: typeof DashboardChatLayoutRoute
     }
+    '/_dashboard/chat/project/$id/': {
+      id: '/_dashboard/chat/project/$id/'
+      path: '/project/$id'
+      fullPath: '/chat/project/$id'
+      preLoaderRoute: typeof DashboardChatProjectIdRouteRouteImport
+      parentRoute: typeof DashboardChatLayoutRoute
+    }
   }
 }
 
 interface DashboardChatLayoutRouteChildren {
   DashboardChatRouteRoute: typeof DashboardChatRouteRoute
   DashboardChatIdRouteRoute: typeof DashboardChatIdRouteRoute
+  DashboardChatProjectIdRouteRoute: typeof DashboardChatProjectIdRouteRoute
 }
 
 const DashboardChatLayoutRouteChildren: DashboardChatLayoutRouteChildren = {
   DashboardChatRouteRoute: DashboardChatRouteRoute,
   DashboardChatIdRouteRoute: DashboardChatIdRouteRoute,
+  DashboardChatProjectIdRouteRoute: DashboardChatProjectIdRouteRoute,
 }
 
 const DashboardChatLayoutRouteWithChildren =

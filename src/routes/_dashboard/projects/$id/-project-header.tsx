@@ -23,10 +23,10 @@ function ProjectHeader({ project }: Props) {
     return (
         <header className="bg-white pt-2 pb-6">
             {/* First row: title, info, progress, avatar group */}
-            <section className="flex flex-col gap-4 2xl:flex-row 2xl:items-center 2xl:justify-between">
+            <section className="flex flex-col gap-4 @7xl:flex-row @7xl:items-center @7xl:justify-between">
                 <div className="flex flex-col gap-1">
                     <hgroup className="flex items-center gap-4">
-                        <h1 className="text-text-primary truncate text-2xl font-medium whitespace-nowrap 2xl:max-w-none">
+                        <h1 className="text-text-primary truncate text-2xl font-medium whitespace-nowrap @2xl:max-w-none">
                             {project.title}
                         </h1>
                     </hgroup>
@@ -67,7 +67,7 @@ function ProjectHeader({ project }: Props) {
                 </div>
 
                 {/* Progress indicators for 2xl and above, placed before avatar group */}
-                <div className="ml-auto hidden items-center gap-6 2xl:flex">
+                <div className="ml-auto hidden items-center gap-6 @7xl:flex">
                     <HalfCircularProgressBar
                         value={budgetConsumed}
                         label="Budget Consumed"
@@ -130,7 +130,7 @@ function ProjectHeader({ project }: Props) {
             </section>
 
             {/* Second row: shadcn progress bars, only visible below 2xl, hidden above */}
-            <section className="mt-4 flex w-full flex-col gap-3 2xl:hidden">
+            <section className="mt-4 flex w-full flex-col gap-3 @7xl:hidden">
                 <div>
                     <div className="text-text-secondary mb-1 flex items-center gap-2 text-xs">
                         <Progress
@@ -199,7 +199,7 @@ function HalfCircularProgressBar({
                 </p>
             </div>
 
-            <p className="-mt-1 pb-2 text-center text-[11px] font-medium">
+            <p className="-mt-1 pb-2 text-center text-[11px] font-medium whitespace-nowrap">
                 {label}
             </p>
         </div>
