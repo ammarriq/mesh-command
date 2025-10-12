@@ -2,11 +2,12 @@ import type { Project } from "@/types/project"
 
 import { useCallback } from "react"
 
-import ProjectContentItem from "@/components/project-content-item"
+import ProjectList from "@/components/project-list"
 import TabActions from "@/components/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { categories } from "./-sample"
+import { useSplitScreen } from "@/context/split-screen"
 
 const tabsConfig = [
     { value: "active", label: "Active", status: "active" as const },
@@ -26,6 +27,8 @@ export default function ProjectSelectorTab({
     onSelectProject,
     showCreateButton = false,
 }: Props) {
+    const { onProjectSelect } = useSplitScreen()
+
     const getCategories = useCallback(
         (status: "active" | "on-hold" | "completed") => {
             const filtered = categories.filter(({ projects }) => {
@@ -62,7 +65,7 @@ export default function ProjectSelectorTab({
                     className="border-r-Bg-Dark flex flex-col gap-3 p-2"
                 >
                     {getCategories(tab.status).map((category) => (
-                        <ProjectContentItem
+                        <ProjectList
                             key={category.id}
                             title={category.name}
                             showCreateButton={showCreateButton}
@@ -70,7 +73,10 @@ export default function ProjectSelectorTab({
                             projects={category.projects.filter(({ status }) => {
                                 return status.toLowerCase() === tab.status
                             })}
-                            onSelectProject={onSelectProject}
+                            onSelectProject={(url) => {
+                                onSelectProject(url)
+                                onProjectSelect(`${url}`)
+                            }}
                         />
                     ))}
                 </TabsContent>

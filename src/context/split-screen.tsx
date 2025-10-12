@@ -2,8 +2,10 @@ import { createContext, PropsWithChildren, use, useState } from "react"
 
 interface ContextType {
     isActive: boolean
+    selectedProject: string | null
     activeTabs: string[]
     onToggle: (isActive: boolean) => void
+    onProjectSelect: (projectId: string | null) => void
     onTabOpen: (tabId: string) => void
     onTabClose: (tabId: string) => void
 }
@@ -11,6 +13,8 @@ interface ContextType {
 const SplitScreenContext = createContext<ContextType>({
     isActive: false,
     activeTabs: [],
+    selectedProject: null,
+    onProjectSelect: () => {},
     onToggle: () => {},
     onTabOpen: () => {},
     onTabClose: () => {},
@@ -19,6 +23,7 @@ const SplitScreenContext = createContext<ContextType>({
 export function SplitScreenProvider({ children }: PropsWithChildren) {
     const [isActive, setIsActive] = useState(false)
     const [activeTabs, setActiveTabs] = useState<string[]>([])
+    const [selectedProject, setSelectedProject] = useState<string | null>(null)
 
     const onTabOpen = (tabId: string) => {
         if (!activeTabs.includes(tabId)) {
@@ -35,6 +40,8 @@ export function SplitScreenProvider({ children }: PropsWithChildren) {
             value={{
                 isActive,
                 activeTabs,
+                selectedProject,
+                onProjectSelect: setSelectedProject,
                 onToggle: setIsActive,
                 onTabOpen,
                 onTabClose,

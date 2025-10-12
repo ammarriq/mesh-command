@@ -8,7 +8,7 @@ import {
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 
-interface ProjectContentItemProps {
+interface Props {
     title: string
     selectedProject?: Project["id"]
 
@@ -19,14 +19,14 @@ interface ProjectContentItemProps {
     onSelectProject: (id: Project["id"]) => void
 }
 
-function ProjectContentItem({
+function ProjectList({
     title,
     selectedProject,
     projects,
     showCreateButton = false,
     isChatTab = false,
     onSelectProject,
-}: ProjectContentItemProps) {
+}: Props) {
     const texts = {
         Active: "In-Progress",
         "On-Hold": "On-hold",
@@ -91,4 +91,4 @@ function ProjectContentItem({
     )
 }
 
-export default ProjectContentItem
+export default ProjectList

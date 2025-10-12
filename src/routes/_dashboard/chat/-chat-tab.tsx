@@ -1,6 +1,6 @@
 import type { Project } from "@/types/project"
 
-import ProjectContentItem from "@/components/project-content-item"
+import ProjectList from "@/components/project-list"
 import TabActions from "@/components/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { cn } from "@/lib/utils"
@@ -64,7 +64,7 @@ function ChatTab({
                 className="flex flex-col gap-3 overflow-y-auto"
             >
                 {categories.map((category) => (
-                    <ProjectContentItem
+                    <ProjectList
                         isChatTab
                         key={category.id}
                         title={category.name}

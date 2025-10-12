@@ -12,6 +12,7 @@ import ShieldIcon from "@/icons/shield"
 import TrendUpIcon from "@/icons/trend-up"
 import TwoUsersIcon from "@/icons/two-users"
 import { cn } from "@/lib/utils"
+import { useSplitScreen } from "@/context/split-screen"
 
 interface NavItem {
     title: string
@@ -22,6 +23,7 @@ interface NavItem {
 interface SideBarItemProps {
     item: NavItem
     isActive?: boolean
+    onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
 const NAV_ITEMS: Array<NavItem> = [
@@ -33,7 +35,7 @@ const NAV_ITEMS: Array<NavItem> = [
     { title: "Admin", href: "/admin", icon: ShieldIcon },
 ]
 
-function SideBarItem({ isActive, item }: SideBarItemProps) {
+function SideBarItem({ isActive, item, onClick }: SideBarItemProps) {
     return (
         <Link
             to={item.href}
@@ -42,6 +44,7 @@ function SideBarItem({ isActive, item }: SideBarItemProps) {
                 "flex size-20 flex-col items-center rounded-[4px] py-4",
                 isActive ? "bg-primary/20 text-primary" : "text-text-secondary",
             )}
+            onClick={onClick}
         >
             <item.icon
                 className="size-6"
@@ -61,6 +64,7 @@ function SideBarItem({ isActive, item }: SideBarItemProps) {
 }
 
 function Sidebar() {
+    const { isActive, onTabOpen } = useSplitScreen()
     const { pathname } = useLocation()
 
     const urlPrefix = "/" + pathname.split("/").filter(Boolean)[0]
@@ -73,6 +77,12 @@ function Sidebar() {
                         key={item.href}
                         item={item}
                         isActive={item.href.startsWith(urlPrefix)}
+                        onClick={(e) => {
+                            onTabOpen(item.href)
+                            if (isActive) {
+                                e.preventDefault()
+                            }
+                        }}
                     />
                 ))}
             </nav>
