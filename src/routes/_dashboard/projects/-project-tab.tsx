@@ -7,7 +7,6 @@ import TabActions from "@/components/tab-actions"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { categories } from "./-sample"
-import { useSplitScreen } from "@/context/split-screen"
 
 const tabsConfig = [
     { value: "active", label: "Active", status: "active" as const },
@@ -27,8 +26,6 @@ export default function ProjectSelectorTab({
     onSelectProject,
     showCreateButton = false,
 }: Props) {
-    const { onProjectSelect } = useSplitScreen()
-
     const getCategories = useCallback(
         (status: "active" | "on-hold" | "completed") => {
             const filtered = categories.filter(({ projects }) => {
@@ -73,10 +70,7 @@ export default function ProjectSelectorTab({
                             projects={category.projects.filter(({ status }) => {
                                 return status.toLowerCase() === tab.status
                             })}
-                            onSelectProject={(url) => {
-                                onSelectProject(url)
-                                onProjectSelect(`${url}`)
-                            }}
+                            onSelectProject={onSelectProject}
                         />
                     ))}
                 </TabsContent>

@@ -6,8 +6,7 @@ interface ContextType {
     activeTabs: string[]
     onToggle: (isActive: boolean) => void
     onProjectSelect: (projectId: string | null) => void
-    onTabOpen: (tabId: string) => void
-    onTabClose: (tabId: string) => void
+    onTabClick: (value: string[] | ((prevState: string[]) => string[])) => void
 }
 
 const SplitScreenContext = createContext<ContextType>({
@@ -16,24 +15,13 @@ const SplitScreenContext = createContext<ContextType>({
     selectedProject: null,
     onProjectSelect: () => {},
     onToggle: () => {},
-    onTabOpen: () => {},
-    onTabClose: () => {},
+    onTabClick: () => {},
 })
 
 export function SplitScreenProvider({ children }: PropsWithChildren) {
     const [isActive, setIsActive] = useState(false)
     const [activeTabs, setActiveTabs] = useState<string[]>([])
     const [selectedProject, setSelectedProject] = useState<string | null>(null)
-
-    const onTabOpen = (tabId: string) => {
-        if (!activeTabs.includes(tabId)) {
-            setActiveTabs([...activeTabs, tabId])
-        }
-    }
-
-    const onTabClose = (tabId: string) => {
-        setActiveTabs(activeTabs.filter((id) => id !== tabId))
-    }
 
     return (
         <SplitScreenContext.Provider
@@ -43,8 +31,7 @@ export function SplitScreenProvider({ children }: PropsWithChildren) {
                 selectedProject,
                 onProjectSelect: setSelectedProject,
                 onToggle: setIsActive,
-                onTabOpen,
-                onTabClose,
+                onTabClick: setActiveTabs,
             }}
         >
             {children}

@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils"
 import { categories } from "../projects/-sample"
 
 import { chats } from "./-sample"
-import { useSplitScreen } from "@/context/split-screen"
 
 interface Props {
     selectedChat?: (typeof chats)[number]["id"]
@@ -28,8 +27,6 @@ function ChatTab({
     onSelectChat,
     onSelectProject,
 }: Props) {
-    const { onProjectSelect } = useSplitScreen()
-
     return (
         <Tabs
             defaultValue="private"
@@ -51,6 +48,7 @@ function ChatTab({
             >
                 {chats.map((chat) => (
                     <button
+                        key={chat.id}
                         onClick={() => onSelectChat(chat.id)}
                         className={cn(
                             `text-text-primary px-2 py-2 text-start`,
@@ -74,10 +72,7 @@ function ChatTab({
                         projects={category.projects}
                         showCreateButton={false}
                         selectedProject={selectedProject}
-                        onSelectProject={(projectId) => {
-                            onSelectProject(projectId)
-                            onProjectSelect(`${projectId}`)
-                        }}
+                        onSelectProject={onSelectProject}
                     />
                 ))}
             </TabsContent>

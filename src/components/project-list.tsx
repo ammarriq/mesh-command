@@ -7,6 +7,7 @@ import {
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { useSplitScreen } from "@/context/split-screen"
 
 interface Props {
     title: string
@@ -27,6 +28,8 @@ function ProjectList({
     isChatTab = false,
     onSelectProject,
 }: Props) {
+    const { onProjectSelect } = useSplitScreen()
+
     const texts = {
         Active: "In-Progress",
         "On-Hold": "On-hold",
@@ -71,7 +74,10 @@ function ProjectList({
                                 key={project.id}
                                 data-selected={selectedProject === project.id}
                                 className="text-text-primary data-[selected=true]:bg-muted flex w-full items-center gap-1 rounded-xs p-2 text-left text-sm"
-                                onClick={() => onSelectProject(project.id)}
+                                onClick={() => {
+                                    onSelectProject(project.id)
+                                    onProjectSelect(`${project.id}`)
+                                }}
                             >
                                 <span>{project.title}</span>
 

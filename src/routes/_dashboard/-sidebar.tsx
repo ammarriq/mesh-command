@@ -64,10 +64,17 @@ function SideBarItem({ isActive, item, onClick }: SideBarItemProps) {
 }
 
 function Sidebar() {
-    const { isActive, onTabOpen } = useSplitScreen()
+    const { isActive, activeTabs, onTabClick } = useSplitScreen()
     const { pathname } = useLocation()
 
     const urlPrefix = "/" + pathname.split("/").filter(Boolean)[0]
+
+    const isPageActive = (tab: string) => {
+        return (
+            activeTabs.some((activeTab) => activeTab === tab) ||
+            tab === urlPrefix
+        )
+    }
 
     return (
         <section className="flex flex-col justify-between p-4">
@@ -76,11 +83,22 @@ function Sidebar() {
                     <SideBarItem
                         key={item.href}
                         item={item}
-                        isActive={item.href.startsWith(urlPrefix)}
+                        isActive={isPageActive(item.href)}
                         onClick={(e) => {
-                            onTabOpen(item.href)
                             if (isActive) {
+                                // Split screen active: keep exactly two tabs -> [current active url, clicked]
+                                // Prevent navigation to stay on current view while adding the second tab
                                 e.preventDefault()
+                                onTabClick(() => {
+                                    const active = urlPrefix
+                                    const clicked = item.href
+                                    if (active === clicked) return [active]
+                                    return [active, clicked]
+                                })
+                            } else {
+                                // Split screen not active: only the clicked (soon-to-be active) tab
+                                onTabClick(() => [item.href])
+                                // Allow normal navigation
                             }
                         }}
                     />
