@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { categories } from "../projects/-sample"
 
 import { chats } from "./-sample"
+import { useSplitScreen } from "@/context/split-screen"
 
 interface Props {
     selectedChat?: (typeof chats)[number]["id"]
@@ -27,6 +28,8 @@ function ChatTab({
     onSelectChat,
     onSelectProject,
 }: Props) {
+    const { onProjectSelect } = useSplitScreen()
+
     return (
         <Tabs
             defaultValue="private"
@@ -71,7 +74,10 @@ function ChatTab({
                         projects={category.projects}
                         showCreateButton={false}
                         selectedProject={selectedProject}
-                        onSelectProject={onSelectProject}
+                        onSelectProject={(projectId) => {
+                            onSelectProject(projectId)
+                            onProjectSelect(`${projectId}`)
+                        }}
                     />
                 ))}
             </TabsContent>
