@@ -26,7 +26,7 @@ function Docket({ projectId }: Props) {
     if (!selectedProject) return null
     if (selectedProject.dockets?.length === 0) {
         return (
-            <div className="flex h-screen items-center justify-center">
+            <div className="flex items-center justify-center">
                 No dockets available for this project.
             </div>
         )
@@ -72,9 +72,10 @@ function Docket({ projectId }: Props) {
     ]
 
     return (
-        <div className="flex flex-1 flex-col overflow-hidden p-2">
+        <div className="grid h-full flex-1 grid-cols-1 grid-rows-[auto_minmax(0,1fr)] p-2">
             <ProjectHeader project={selectedProject} />
-            <div className="flex h-full flex-1 flex-col space-y-4 overflow-hidden bg-white">
+
+            <div className="grid grid-rows-[auto_minmax(0,1fr)] gap-y-4 bg-white">
                 <hgroup className="flex items-center justify-between">
                     <h2 className="text-xl font-semibold text-gray-900">
                         Billing and invoicing
@@ -84,14 +85,17 @@ function Docket({ projectId }: Props) {
                     </button>
                 </hgroup>
 
-                <Tabs defaultValue="invoices" className="gap-4">
-                    <div className="w-full rounded-sm">
+                <Tabs
+                    defaultValue="invoices"
+                    className="flex grow flex-col gap-4 overflow-hidden"
+                >
+                    <div className="bg-Bg-Dark overflow-x-auto rounded-sm">
                         <TabsList className="bg-Bg-Dark flex h-auto w-full justify-start gap-2 rounded-md border p-1">
                             {tabsData.map((item) => (
                                 <TabsTrigger
                                     key={item.value}
                                     value={item.value}
-                                    className="block h-8 max-w-fit flex-0 rounded-sm border-none p-0 px-3 whitespace-nowrap data-[state=active]:bg-white data-[state=active]:shadow"
+                                    className="block max-w-fit flex-0 rounded-sm border-none px-3 py-2.25 whitespace-nowrap data-[state=active]:bg-white data-[state=active]:shadow"
                                 >
                                     {item.label}
                                 </TabsTrigger>
@@ -103,7 +107,7 @@ function Docket({ projectId }: Props) {
                         <TabsContent
                             key={item.value}
                             value={item.value}
-                            className="p-0"
+                            className="overflow-hidden overflow-y-auto rounded-md border p-0"
                         >
                             {item.content}
                         </TabsContent>

@@ -1,6 +1,6 @@
 import type { ProjectCategory } from "@/types/project-category"
 
-export const categories: Array<ProjectCategory> = [
+export const categories: ProjectCategory[] = [
     {
         id: 1,
         name: "Steward 3890 Poplar Dr.",
@@ -173,6 +173,14 @@ export const categories: Array<ProjectCategory> = [
                                     {
                                         id: "7",
                                         number: "Invoice #001 - Jun 2022",
+                                        date: "Jun 1, 2022",
+                                        amount: 10.0,
+                                        status: "Paid",
+                                        fileUploaded: "Jun 1, 2022",
+                                    },
+                                    {
+                                        id: "8",
+                                        number: "Invoice #001 - Sep 2022",
                                         date: "Jun 1, 2022",
                                         amount: 10.0,
                                         status: "Paid",

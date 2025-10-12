@@ -49,7 +49,7 @@ function RouteComponent() {
                     <SearchInput />
                 </header>
 
-                <Tabs defaultValue="people" className="w-full" overflow-hidden>
+                <Tabs defaultValue="people" className="w-full overflow-hidden">
                     <TabsList className="w-full py-6 *:py-6">
                         <TabsTrigger
                             value="people"
